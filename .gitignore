@@ -1,0 +1,6 @@
+node_modules/
+.wrangler/
+.dev.vars
+*.log
+# Career Arsenal extraction lives only in Drive (personal data); test/arsenal-import.test.js reads it if present.
+arsenal-import-prep.json

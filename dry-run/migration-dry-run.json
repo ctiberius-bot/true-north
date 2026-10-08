@@ -1,0 +1,1288 @@
+{
+  "generated_at": "2026-10-08T14:48:58.571Z",
+  "input_sql_sha256": null,
+  "input_counts": {
+    "observations": 218,
+    "research_tasks": 219,
+    "unbound_tasks": 1
+  },
+  "projected": {
+    "active_deduplicated_tasks": 60,
+    "actionable_deduplicated_tasks": 59,
+    "unrelated_observations": 33,
+    "legacy_occurrence_tasks_superseded": 185,
+    "by_source": {
+      "jobright": {
+        "active_tasks": 24,
+        "observations": 114
+      },
+      "ladders": {
+        "active_tasks": 21,
+        "observations": 43
+      },
+      "linkedin": {
+        "active_tasks": 14,
+        "observations": 28
+      }
+    }
+  },
+  "conflicts": [],
+  "unbound_tasks": [
+    {
+      "id": "fixture-task-001",
+      "source": "indeed",
+      "task_kind": "fetch_listing",
+      "url": "https://example.invalid/jobs/fixture-001",
+      "status": "complete",
+      "attempts": 1,
+      "error_code": null,
+      "canonical_job_id": "fixture-job-001"
+    }
+  ],
+  "mappings": [
+    {
+      "canonical_id": "research_00f09c2dc74f6331ffe447db738a5241",
+      "source": "jobright",
+      "task_kind": "fetch_listing",
+      "url": "https://jobright.ai/jobs/info/6a5fa5dff68dd368023e7b63",
+      "observation_count": 3,
+      "legacy_task_ids": [
+        "1a117bded9a89ba5:3",
+        "1a117bded9a89ba5:4",
+        "1a117bded9a89ba5:5"
+      ],
+      "statuses": [
+        "pending"
+      ],
+      "canonical_job_ids": [],
+      "checkpoint_count": 0
+    },
+    {
+      "canonical_id": "research_03675a18e84213de1d16c47e7906a72c",
+      "source": "jobright",
+      "task_kind": "fetch_listing",
+      "url": "https://jobright.ai/jobs/info/6a730fff32ebbc14ffb4d09d",
+      "observation_count": 18,
+      "legacy_task_ids": [
+        "1a1177233092cbde:10",
+        "1a1177233092cbde:11",
+        "1a1177233092cbde:9",
+        "1a1178e5c5cf56ae:10",
+        "1a1178e5c5cf56ae:11",
+        "1a1178e5c5cf56ae:9",
+        "1a1179980cd03a68:10",
+        "1a1179980cd03a68:11",
+        "1a1179980cd03a68:9",
+        "1a117bded9a89ba5:10",
+        "1a117bded9a89ba5:11",
+        "1a117bded9a89ba5:9",
+        "1a117c4c10e855d0:10",
+        "1a117c4c10e855d0:11",
+        "1a117c4c10e855d0:9",
+        "1a117f2aa300ae9e:12",
+        "1a117f2aa300ae9e:13",
+        "1a117f2aa300ae9e:14"
+      ],
+      "statuses": [
+        "pending"
+      ],
+      "canonical_job_ids": [],
+      "checkpoint_count": 0
+    },
+    {
+      "canonical_id": "research_08878e6f58a100e2e7307cf626c0e377",
+      "source": "ladders",
+      "task_kind": "fetch_listing",
+      "url": "https://t.ladders.co/f/a/ZfyOnwVKK-IaCj1ioJ0V2g~~/AARvnRA~/08S7FQcWlTow0_AM2SnrMayhMGUJND9_mvyIfvbSiaSpjFXlaKy_w0NGStRTya95h2wU6s53XKWQlQszYgDDR46vSC31Ti-pfMPQBifU18hV0nYNpL17LzHdXSQ_QvsA4eP1M-dQwz-0zjozrfIA2W9lT2cZ6nvw3SsTwoKLmursODirnDptTqYp5bi7IoLOJw7mv5q0jCU9pDYZOibb10xCCh7gL7xfJNwy3IMQtNOFf8mme4XU_s5WQrgWsemWd0Dz1OavYvS38WXumC2KPjemW6FMMhWjPESIetG5vhRV1MZnpOh-tXgdJsWFjN8OrBUV3C1yLseqVX3wuLzX6D3aAFlhMhvwGTpIgqTbFUQrR8sIgrXFhSLkUqD-MZE6EJePvPpTvilZchmL0J-i51P3AyUlhmafTixJxhFIuM7bDliagOZmMuIqL_6N6Cre2aXQlmRIDkEPhA2znbtiUKIbaRNgOTU28yqUXYKwgu4VyW4UisQriFtg5fkfZypYBWUfpyPWgMQogAmfUrNsq-VWupAda1-5A3jORCjKQPpH_B4-7HSfAut02mr6NB4tlSjiZ3RDrLdKbasUvTkpVHmDTyaRAbtExHieQbXPCKNnEa0Biv1coa1NhiEiZ2kvFqXJiOnV9__wyaRtkiJi5L0hWqjPMci_3V79zSnTco2yAelvknvgyeH2z0v5BJ9s9Ak4qkFradtzcfDgSbMZIIYlFAz5gz6Stqu0DiclSqitwGwBmWyb3bjw9JWgkQfl5M1rYdJB65bC18Kzvpiq3A~~",
+      "observation_count": 2,
+      "legacy_task_ids": [
+        "1a117ed7d2de7091:41",
+        "1a117ed7d2de7091:43"
+      ],
+      "statuses": [
+        "pending"
+      ],
+      "canonical_job_ids": [],
+      "checkpoint_count": 0
+    },
+    {
+      "canonical_id": "research_0a42828c97d40cbf6503c194eb7b54b2",
+      "source": "jobright",
+      "task_kind": "fetch_listing",
+      "url": "https://jobright.ai/jobs/info/6ac68ebcd9621c5b283a970e",
+      "observation_count": 3,
+      "legacy_task_ids": [
+        "1a117c4c10e855d0:3",
+        "1a117c4c10e855d0:4",
+        "1a117c4c10e855d0:5"
+      ],
+      "statuses": [
+        "pending"
+      ],
+      "canonical_job_ids": [],
+      "checkpoint_count": 0
+    },
+    {
+      "canonical_id": "research_0b29c56a62d64564f057ed1d840e71a4",
+      "source": "ladders",
+      "task_kind": "fetch_listing",
+      "url": "https://t.ladders.co/f/a/Vb456DRHopX05dmQofOgMA~~/AARvnRA~/8hqMKeg7xa_4ZWyQM8C_-bUeIVE4aqCxq3aKf5q57MTRem-LTvn2eq9nXDjtCEdIwlFm3rsqgjgNxaLW58XElb_qpaje7vbosXB313ynYJ_RW7EXGDCmywmIbhQgK2ysEo7UM7hU0RHwMCo5R2GiRwxulJDPeubTT8cqX_kbrFEt284620OAraIQf50mjmwpWSmQlcPsMwiBk6NaLiX0AXbhtbXIRxmmE7VMo5yrNr6RyJVaygYzDsx34pJHPqdlUvyPYncniLRK55291q2qHD9-2U_unutggndYcHY99-ijZEE69ssEejv4tVAKFznCNd0nPp3ZFEFGHZ70weExKoX7aiiRD48A0E4yUhPIEfDCO6CKNB7Evie5oJXbLpwE",
+      "observation_count": 1,
+      "legacy_task_ids": [
+        "1a117ed7d2de7091:54"
+      ],
+      "statuses": [
+        "pending"
+      ],
+      "canonical_job_ids": [],
+      "checkpoint_count": 0
+    },
+    {
+      "canonical_id": "research_0f4f1932de3e84ce8f1dabfd897f08fa",
+      "source": "ladders",
+      "task_kind": "fetch_listing",
+      "url": "https://t.ladders.co/f/a/jhiLYmPVYSJly2vYrOCm2A~~/AARvnRA~/kqKH3KnwYaB8YG-S2cWFFLxG330aR5chu5TcdgvQ6Wl7aN5ABbQWijrZ0FUkm8OwcFF4J4VtNaPlGhCCya4c2vXu7jgiMH-lJ0UzvpSnyOJpsiy2_GBh4K3FKDNVRgbiL5k0FD2zVvlXYcf-Lpl3VFPPf4AdyPRw6hrlW-79UvyGn8Gz2jZ0n5c7o9DhF-auv9Y9e06nAG03S8AyA5Dg8AVu9tfq9QJynI9IluYbf88YClbiXrPU7XA7o1W3neigezcdXE5TUqTtoH14MJFHXnH3kECGJbN-lKjRnXm4DFIC7iIo5eHELNZt5NPqQnhobpfrT_aZCR63HAVGapSBMmE4H-TMKc_Wx0Upw9VMhagFRBDvTVFuwxb2b9h9OEn-BGODKg2_yFQXYsHYdtqkM7k8In96xpfowfLAgBVO1VQbHmYAdIeLMwsL9YPkrGgP2VRDyGa7Xery47MZp7fvHwVMC0P9GtH0_32Yw_aTzyWJeDamzXEfUp77kWLH96TM",
+      "observation_count": 3,
+      "legacy_task_ids": [
+        "1a117ed7d2de7091:13",
+        "1a117ed7d2de7091:14",
+        "1a117ed7d2de7091:15"
+      ],
+      "statuses": [
+        "pending"
+      ],
+      "canonical_job_ids": [],
+      "checkpoint_count": 0
+    },
+    {
+      "canonical_id": "research_0fac6c220685d60b63a30b2adc77d2b4",
+      "source": "linkedin",
+      "task_kind": "fetch_listing",
+      "url": "https://www.linkedin.com/jobs/view/4471958160",
+      "observation_count": 2,
+      "legacy_task_ids": [
+        "1a117d398d95d311:7",
+        "1a117d398d95d311:8"
+      ],
+      "statuses": [
+        "pending"
+      ],
+      "canonical_job_ids": [],
+      "checkpoint_count": 0
+    },
+    {
+      "canonical_id": "research_16aed52c619d54909befcef2ba19a329",
+      "source": "jobright",
+      "task_kind": "fetch_listing",
+      "url": "https://jobright.ai/jobs/info/6ac557e0d9621c5b283a4c43",
+      "observation_count": 9,
+      "legacy_task_ids": [
+        "1a1179980cd03a68:15",
+        "1a1179980cd03a68:16",
+        "1a1179980cd03a68:17",
+        "1a117bded9a89ba5:15",
+        "1a117bded9a89ba5:16",
+        "1a117bded9a89ba5:17",
+        "1a117c4c10e855d0:15",
+        "1a117c4c10e855d0:16",
+        "1a117c4c10e855d0:17"
+      ],
+      "statuses": [
+        "pending"
+      ],
+      "canonical_job_ids": [],
+      "checkpoint_count": 0
+    },
+    {
+      "canonical_id": "research_18b773a6b6685af272fe4b218f6cf252",
+      "source": "linkedin",
+      "task_kind": "fetch_listing",
+      "url": "https://www.linkedin.com/jobs/view/4474410032",
+      "observation_count": 2,
+      "legacy_task_ids": [
+        "1a11765bd0fe8751:15",
+        "1a11765bd0fe8751:16"
+      ],
+      "statuses": [
+        "pending"
+      ],
+      "canonical_job_ids": [],
+      "checkpoint_count": 0
+    },
+    {
+      "canonical_id": "research_21b0f2c30dea4297c167c78b22b101cf",
+      "source": "ladders",
+      "task_kind": "fetch_listing",
+      "url": "https://t.ladders.co/f/a/ME6rHv6w7H5Jtj3db2jCjA~~/AARvnRA~/YfroF_dnlXHBjQ6CD-bAcCNBCYlu9iCsqTB9JYpm2iPDGtk4DZIZgcb0678_PNdyYvvk3c4GZm6Cj37u9gVyVROC5kcU1ZMdhrE7ICsz8R2ioHjyN8ZvTMOmfm7gZI9s",
+      "observation_count": 1,
+      "legacy_task_ids": [
+        "1a117ed7d2de7091:51"
+      ],
+      "statuses": [
+        "pending"
+      ],
+      "canonical_job_ids": [],
+      "checkpoint_count": 0
+    },
+    {
+      "canonical_id": "research_2d199c3f22647606bec024a191c5c98b",
+      "source": "jobright",
+      "task_kind": "walk_discovery",
+      "url": "https://jobright.ai/jobs/recommend",
+      "observation_count": 6,
+      "legacy_task_ids": [
+        "1a1177233092cbde:18",
+        "1a1178e5c5cf56ae:18",
+        "1a1179980cd03a68:18",
+        "1a117bded9a89ba5:18",
+        "1a117c4c10e855d0:18",
+        "1a117f2aa300ae9e:18"
+      ],
+      "statuses": [
+        "pending"
+      ],
+      "canonical_job_ids": [],
+      "checkpoint_count": 0
+    },
+    {
+      "canonical_id": "research_3016fe3eeb9bf1f7819c98c10fc00875",
+      "source": "jobright",
+      "task_kind": "fetch_listing",
+      "url": "https://jobright.ai/jobs/info/6ac5c8c74ac55253f5d7822d",
+      "observation_count": 18,
+      "legacy_task_ids": [
+        "1a1177233092cbde:12",
+        "1a1177233092cbde:13",
+        "1a1177233092cbde:14",
+        "1a1178e5c5cf56ae:12",
+        "1a1178e5c5cf56ae:13",
+        "1a1178e5c5cf56ae:14",
+        "1a1179980cd03a68:12",
+        "1a1179980cd03a68:13",
+        "1a1179980cd03a68:14",
+        "1a117bded9a89ba5:12",
+        "1a117bded9a89ba5:13",
+        "1a117bded9a89ba5:14",
+        "1a117c4c10e855d0:12",
+        "1a117c4c10e855d0:13",
+        "1a117c4c10e855d0:14",
+        "1a117f2aa300ae9e:15",
+        "1a117f2aa300ae9e:16",
+        "1a117f2aa300ae9e:17"
+      ],
+      "statuses": [
+        "pending"
+      ],
+      "canonical_job_ids": [],
+      "checkpoint_count": 0
+    },
+    {
+      "canonical_id": "research_32ec32c92e1c5a4274219a35f66bb4c5",
+      "source": "linkedin",
+      "task_kind": "fetch_listing",
+      "url": "https://www.linkedin.com/jobs/view/4475119533",
+      "observation_count": 2,
+      "legacy_task_ids": [
+        "1a11765bd0fe8751:13",
+        "1a11765bd0fe8751:14"
+      ],
+      "statuses": [
+        "pending"
+      ],
+      "canonical_job_ids": [],
+      "checkpoint_count": 0
+    },
+    {
+      "canonical_id": "research_3821e889b4009b2e42822247670384c3",
+      "source": "linkedin",
+      "task_kind": "fetch_listing",
+      "url": "https://www.linkedin.com/jobs/view/4476340288",
+      "observation_count": 2,
+      "legacy_task_ids": [
+        "1a117d398d95d311:15",
+        "1a117d398d95d311:16"
+      ],
+      "statuses": [
+        "pending"
+      ],
+      "canonical_job_ids": [],
+      "checkpoint_count": 0
+    },
+    {
+      "canonical_id": "research_428512ce301ee8f0a361fab1a2f27f08",
+      "source": "jobright",
+      "task_kind": "fetch_listing",
+      "url": "https://jobright.ai/jobs/info/6ac686648ff3fb9b3bc8d8ef",
+      "observation_count": 3,
+      "legacy_task_ids": [
+        "1a1179980cd03a68:6",
+        "1a1179980cd03a68:7",
+        "1a1179980cd03a68:8"
+      ],
+      "statuses": [
+        "pending"
+      ],
+      "canonical_job_ids": [],
+      "checkpoint_count": 0
+    },
+    {
+      "canonical_id": "research_43cc1915bfcd4b65237e3ce68969b995",
+      "source": "ladders",
+      "task_kind": "fetch_listing",
+      "url": "https://t.ladders.co/f/a/tRBsixdsdBGSw4tI_57cXA~~/AARvnRA~/R51Nkw3eyyz9BrzWeu8dsrGnwUnxEDJQTw9moBRRLBzOMBxRxkLoROmsmr-i8sAwYirpQ3OB3E8j823qf23HCyggvDXmDPmdIDj_-Kpn7HJmPacwHe407v8S5Swj7hcs_ySGPLTt1oEBa__EYYWPhEtVY5aQVpb5n-nR5-ZnrxPJVty8NsNZINKpdHbDFyRGqc7u_UJnICHiYtSRc4jypzdCCiF_WaQvsLcYQR96yq6QfGHRIuZ69EgDH3M2kzVxm3PEgI70YlOIrUI1flIjyrUmt52CcQ-Zzy-5XCfbrYqNJbP-YMuCJ-puKrx2qmli1WrTkU-H9iAmDruAqugcnm8wxWWQmJgi_L4CRBWs-uqg5gegYNl3GAcpu9065eH95pXZHxQvZhhKri8JsFMGc6Vo-JfxymS4Y3buGMRWRzy8KD4ADfERu7WcLn6tLBnGqBStXTlvwv12K0akVftmZOQsxu3SM-pWyJ-75Q-b5Os~",
+      "observation_count": 3,
+      "legacy_task_ids": [
+        "1a117ed7d2de7091:33",
+        "1a117ed7d2de7091:34",
+        "1a117ed7d2de7091:35"
+      ],
+      "statuses": [
+        "pending"
+      ],
+      "canonical_job_ids": [],
+      "checkpoint_count": 0
+    },
+    {
+      "canonical_id": "research_44725b14c8625e78bbb56fd6c4f9dd87",
+      "source": "ladders",
+      "task_kind": "fetch_listing",
+      "url": "https://t.ladders.co/f/a/_u_dH5jp7l_KyPt-JgOSGQ~~/AARvnRA~/ZbX6GCYMyjAznk_O1H6_k1jPE5s-NxxeShtqfv8Typ-kSKELFoB6BBCtPItBzoI_xr9Nqqj-hhrYO1JJizOBxzrKNQtgHV01mima9faghADIbMGMBn098tC-uGLv_zeW",
+      "observation_count": 1,
+      "legacy_task_ids": [
+        "1a117ed7d2de7091:50"
+      ],
+      "statuses": [
+        "pending"
+      ],
+      "canonical_job_ids": [],
+      "checkpoint_count": 0
+    },
+    {
+      "canonical_id": "research_453defff1b03c2e93f908788b23b608a",
+      "source": "linkedin",
+      "task_kind": "walk_discovery",
+      "url": "https://www.linkedin.com/comm/jobs/search-results/?keywords=Senior+Enterprise+Architect&distance=25.0&f_TPR=a1791239071-&geoId=104090524",
+      "observation_count": 2,
+      "legacy_task_ids": [
+        "1a117d398d95d311:17",
+        "1a117d398d95d311:4"
+      ],
+      "statuses": [
+        "pending"
+      ],
+      "canonical_job_ids": [],
+      "checkpoint_count": 0
+    },
+    {
+      "canonical_id": "research_4ab775c6aea5f1a42370ad4976710c2e",
+      "source": "ladders",
+      "task_kind": "fetch_listing",
+      "url": "https://t.ladders.co/f/a/VXF_m4xTbd8R748Z0WjfAQ~~/AARvnRA~/y2RqzBgP_bWeDXPTPVfL4gADE3TGlZvjZFEp4mVdm6eRyxR9GzuogsDNrpdlGFTtqlBpKn7LBcYsCq9ltpPMNRS4JpkSprtB5WfU-ENqc94_iQA6LHbIUPFv_iA7m1Dd",
+      "observation_count": 1,
+      "legacy_task_ids": [
+        "1a117ed7d2de7091:49"
+      ],
+      "statuses": [
+        "pending"
+      ],
+      "canonical_job_ids": [],
+      "checkpoint_count": 0
+    },
+    {
+      "canonical_id": "research_4c7e307c29531c70d77416f75c454d49",
+      "source": "linkedin",
+      "task_kind": "fetch_listing",
+      "url": "https://www.linkedin.com/jobs/view/4476373377",
+      "observation_count": 2,
+      "legacy_task_ids": [
+        "1a11765bd0fe8751:10",
+        "1a11765bd0fe8751:9"
+      ],
+      "statuses": [
+        "pending"
+      ],
+      "canonical_job_ids": [],
+      "checkpoint_count": 0
+    },
+    {
+      "canonical_id": "research_5075344992517b27313333840f139054",
+      "source": "jobright",
+      "task_kind": "fetch_listing",
+      "url": "https://jobright.ai/jobs/info/6ac68ecc0e027c0f3b3b308f",
+      "observation_count": 3,
+      "legacy_task_ids": [
+        "1a117bded9a89ba5:0",
+        "1a117bded9a89ba5:1",
+        "1a117bded9a89ba5:2"
+      ],
+      "statuses": [
+        "pending"
+      ],
+      "canonical_job_ids": [],
+      "checkpoint_count": 0
+    },
+    {
+      "canonical_id": "research_52fd79852d81940409def35c0b68ba75",
+      "source": "ladders",
+      "task_kind": "fetch_listing",
+      "url": "https://t.ladders.co/f/a/LhtjMWWQzrkbiq4Z5yjStg~~/AARvnRA~/aMgNBJN7enez85VKdeJEzBFJMtbvbWyblrLFulCR7tx371pxyrcv2im--51CniqmH6alIUWCmttNSVTkBYzMC5gL1uBSZ5_kkC7mTTsZ4NUoDk9OyOl6CxUuZHo0SdaNZe2eQQwmAW5q0pJ2XadSmJtMnqrcyCaHz2EunV0CQFDwRey9Q-rqjGdeG4rrFQdrGbx5aOePb0TYIWQkfxm5gvc1T2rHGy8XEFpGBXhEdy49bBm6MrXGYmjah72LZJNeaa_UsMhH9fBJleaRKSAXFjeRCOQ3iqNeL3eb4R6aZZwZAZFJEgSRznFZPOX9gHzUpsQKaFM2MIUB1WDr51_1JcgsRFchOzA_9lLU6qguhAGWWje-EPbHgKY57g29Knu68u8H44GRlMg9NiYrygdM70Jxx35PlcitcTJdBHULkXXlEqW2OQfNpaBU6wIKq070rCLlfIulR_pn26Miz6tiOw~~",
+      "observation_count": 3,
+      "legacy_task_ids": [
+        "1a117ed7d2de7091:5",
+        "1a117ed7d2de7091:6",
+        "1a117ed7d2de7091:7"
+      ],
+      "statuses": [
+        "pending"
+      ],
+      "canonical_job_ids": [],
+      "checkpoint_count": 0
+    },
+    {
+      "canonical_id": "research_5565026b45d0e75f7c719c912beb16a6",
+      "source": "jobright",
+      "task_kind": "fetch_listing",
+      "url": "https://jobright.ai/jobs/info/6ac675614ac55253f5d7a37b",
+      "observation_count": 3,
+      "legacy_task_ids": [
+        "1a1177233092cbde:3",
+        "1a1177233092cbde:4",
+        "1a1177233092cbde:5"
+      ],
+      "statuses": [
+        "pending"
+      ],
+      "canonical_job_ids": [],
+      "checkpoint_count": 0
+    },
+    {
+      "canonical_id": "research_5bcd67b7613533d86db04c822ed9c0db",
+      "source": "jobright",
+      "task_kind": "fetch_listing",
+      "url": "https://jobright.ai/jobs/info/6ac69a95372c01f6cd73e291",
+      "observation_count": 3,
+      "legacy_task_ids": [
+        "1a117f2aa300ae9e:3",
+        "1a117f2aa300ae9e:4",
+        "1a117f2aa300ae9e:5"
+      ],
+      "statuses": [
+        "pending"
+      ],
+      "canonical_job_ids": [],
+      "checkpoint_count": 0
+    },
+    {
+      "canonical_id": "research_61279824c88ab5c57c0eb7491d916da8",
+      "source": "ladders",
+      "task_kind": "fetch_listing",
+      "url": "https://t.ladders.co/f/a/Nmmi19aJI0zPkSjjl65Plg~~/AARvnRA~/K0gE7cGPViPMerS1UXlb-_zB0ER9f7n10ldZKjhcuyjS88juk-JcRJGNeBWSC9K_E8fvaZqIL1iLQd-qSTmMq9nGeukZhJg42FzjVYlfAud9aP-RayllJ3unBbonsUN9-HjXrISiSzDu0uCi2YrVMemk_H6J7Wf7KYOBBaZtDk316sv3OSCNRYWVDZwTJ_gtYzcO_CQ89ML73PmNZgWj3rZPzLhb5u5EtY3eX5YQ3qbZpy0zLSMSpX45F4fVE5ZIVztbfONgpDkhWN5vIfQjDM7QDxM-9e_OJsDH_SwquLkplm5UmtEJarjyMhBhtSiG-g1ZKUfvV04lg2LACYx6BSeTcsFLVKmyb_wQLMiYeqBzjKBPDRI1CeR6S6dXhHZpJfl8gaq-yCshRWhRR8HEmj-1EmNrPicP34X4WyvoFLzwMB33qKxQK7kutL_JT2Vn12lG7pRT_XnpbkFaEfHz6g~~",
+      "observation_count": 3,
+      "legacy_task_ids": [
+        "1a117ed7d2de7091:17",
+        "1a117ed7d2de7091:18",
+        "1a117ed7d2de7091:19"
+      ],
+      "statuses": [
+        "pending"
+      ],
+      "canonical_job_ids": [],
+      "checkpoint_count": 0
+    },
+    {
+      "canonical_id": "research_651450f2158fa420ac357d9b68e7afd2",
+      "source": "linkedin",
+      "task_kind": "fetch_listing",
+      "url": "https://www.linkedin.com/jobs/view/4476342747",
+      "observation_count": 2,
+      "legacy_task_ids": [
+        "1a117d398d95d311:10",
+        "1a117d398d95d311:9"
+      ],
+      "statuses": [
+        "pending"
+      ],
+      "canonical_job_ids": [],
+      "checkpoint_count": 0
+    },
+    {
+      "canonical_id": "research_69b45e7a00b02c06be13ae6bb6275338",
+      "source": "linkedin",
+      "task_kind": "fetch_listing",
+      "url": "https://www.linkedin.com/jobs/view/4474684993",
+      "observation_count": 2,
+      "legacy_task_ids": [
+        "1a11765bd0fe8751:5",
+        "1a11765bd0fe8751:6"
+      ],
+      "statuses": [
+        "pending"
+      ],
+      "canonical_job_ids": [],
+      "checkpoint_count": 0
+    },
+    {
+      "canonical_id": "research_72bcfb8bd97a68dde6f4775afd13cd98",
+      "source": "linkedin",
+      "task_kind": "fetch_listing",
+      "url": "https://www.linkedin.com/jobs/view/4474417076",
+      "observation_count": 2,
+      "legacy_task_ids": [
+        "1a11765bd0fe8751:11",
+        "1a11765bd0fe8751:12"
+      ],
+      "statuses": [
+        "pending"
+      ],
+      "canonical_job_ids": [],
+      "checkpoint_count": 0
+    },
+    {
+      "canonical_id": "research_7340d007254641742faf10679185037c",
+      "source": "ladders",
+      "task_kind": "fetch_listing",
+      "url": "https://t.ladders.co/f/a/61fRBm1cvecrCi22UtCbNA~~/AARvnRA~/jK1ADmYbFLxMGsXkeT72NHlV6agGIJzv1bTjmyJ3i8r0F_4mcUCLrfhRvAe_aMV8sOxuDnU_qWX0QMIYFnkp0O-2RpOFndkqDi3zVNvNNKX8Qq14d_rjcC0yIQ7Y99XFujalK-oyZ_fkrHK6X8W-B31ALAioPP4vx7BZIlNG_jaCuiWWNtK1milwRbhwGuNXql5V5xeHRFCojfSrB45XXLblviyMomeImImSmgGI6r-IeDSAy9JBxYTZwnDinBnkJMs6H3ZVdNSWXHkMDEpPfhzLtKe8fnJ9d6MbhOTxxvhuCNkM9uRehQe1CcnZklKe8rbiq91908pxbhxCJthxksYc5o_AGonaASg4L6fqSepxzhenIrrV6NaZCOKcLcgoajf2JmqoUCsyxNyWo89FhQ~~",
+      "observation_count": 1,
+      "legacy_task_ids": [
+        "1a117ed7d2de7091:55"
+      ],
+      "statuses": [
+        "pending"
+      ],
+      "canonical_job_ids": [],
+      "checkpoint_count": 0
+    },
+    {
+      "canonical_id": "research_8105c377faf36eb9cbf99c861874bff6",
+      "source": "linkedin",
+      "task_kind": "fetch_listing",
+      "url": "https://www.linkedin.com/jobs/view/4431768865",
+      "observation_count": 2,
+      "legacy_task_ids": [
+        "1a117d398d95d311:11",
+        "1a117d398d95d311:12"
+      ],
+      "statuses": [
+        "pending"
+      ],
+      "canonical_job_ids": [],
+      "checkpoint_count": 0
+    },
+    {
+      "canonical_id": "research_813d1528d5fb032f6121bb97f8953769",
+      "source": "ladders",
+      "task_kind": "fetch_listing",
+      "url": "https://t.ladders.co/f/a/254NrIP7zRiHVQF4UIKUwA~~/AARvnRA~/aMgNBJN7enez85VKdeJEzBFJMtbvbWyblrLFulCR7tx7OYy94lht6AbmwTSKcpU7YgZPbgLGGOXaDMWez7ROB6kLhiVD8uPACZ8QWQd4ApL0U2l1FHr1k7_-5Bnau__U9bTwJl10F--uI33lmdkVvfQaSbOZ56ioqcHpwMPFtUT_35N3Eg96V1IlkXsUBUVBs1K58YA_Pl-fKc4vQICSnEu1uCHnJofQAM4CSSK4QRXCmRBc9khxJrOc0PuxlJjFnXu35j-XN62JzpEpRRgHHFMpowUoyu0WkxYrS0LflYwSqw4anBsMZNPhO9EY5Of54O9nGLhVeGxHEnvbjqOI8uVmrIPOh1ViFA7pX1nNa4XNWJjgYB56GYALyhWexdmzkqyVz1vDTQ-pwgOYkvD9C07FEnMcDKAArD_d_-rqt1lMNV5YCVTSpj69DrRfAhT0-wtFGW0v3z3IanrZwr775A~~",
+      "observation_count": 3,
+      "legacy_task_ids": [
+        "1a117ed7d2de7091:10",
+        "1a117ed7d2de7091:11",
+        "1a117ed7d2de7091:9"
+      ],
+      "statuses": [
+        "pending"
+      ],
+      "canonical_job_ids": [],
+      "checkpoint_count": 0
+    },
+    {
+      "canonical_id": "research_891876668ef73be9b13507408d2b267f",
+      "source": "linkedin",
+      "task_kind": "fetch_listing",
+      "url": "https://www.linkedin.com/jobs/view/4476389551",
+      "observation_count": 2,
+      "legacy_task_ids": [
+        "1a11765bd0fe8751:7",
+        "1a11765bd0fe8751:8"
+      ],
+      "statuses": [
+        "pending"
+      ],
+      "canonical_job_ids": [],
+      "checkpoint_count": 0
+    },
+    {
+      "canonical_id": "research_8bbca81b31b581c2b43d1294cc77b1a7",
+      "source": "ladders",
+      "task_kind": "fetch_listing",
+      "url": "https://t.ladders.co/f/a/tIBg0HTqJ4o6TvxgZ66VVA~~/AARvnRA~/1NApQBJYgXYdd64ezOg4jCHkfopkokF_QLp5yQ4Rmj1yHf64-uSD3lI69-uPk8Wap4ttvDiKIU9pQfdoSPBT0S05UGeW6S_78oE0eJlF8RIAXU-lK3V1ranHa0j-lgzLfHsbQdXIlHxCPJqOCPVY2elzSayib2D3yQ6cFVfym3GQLTg6QNl4O_uT0F2FUTiCvvfC6Sjhl78Z3H8KYcnTa9VjAYVSd0ga6XvEaCHxHubityKZN_Qk0Wk-_T26iWsBXzaUlBQDaM6tH2tUKSIz79_1ipBRo9_1jozX6FFciXkZku3IY20CLM1UIz1Ds1br-aczdEyt84Sybjw84d1G0hcXRjKpgX5iQlqC_5LhjydLDEyJJDcxdhAz4CV6l7_w1UdxHf_gCKAxapmkSDJjiozrnikvDbyxWTU84tna-ZzS3tD_PZJy8fZbVMQhZFrLOZ6RejFrhEk-jdCBhnORkQ~~",
+      "observation_count": 3,
+      "legacy_task_ids": [
+        "1a117ed7d2de7091:37",
+        "1a117ed7d2de7091:38",
+        "1a117ed7d2de7091:39"
+      ],
+      "statuses": [
+        "pending"
+      ],
+      "canonical_job_ids": [],
+      "checkpoint_count": 0
+    },
+    {
+      "canonical_id": "research_8dd2a40c5d6342a1952c3af1d288c222",
+      "source": "ladders",
+      "task_kind": "fetch_listing",
+      "url": "https://t.ladders.co/f/a/StzW7D-vG58H1UFgRe_uoA~~/AARvnRA~/yVj77DH4qchthMWDPoI87McxPNlXbBccrFlneBeGKRJiY_5pSgB9YrlZpTAw9FKUyx1wTDYImtau76TY0qpmOcQKboRIVv6smz70-Spgg_r1JW0QnKx2YPofh9aHDrwTP738K4bPWM6gL6_sDTLUos1DSUpslVIJbS54WHqyaD8brdxLyHaIcikJut7Be-4enuLQkvQa7Ssj0ZsS54c1PzS6AI4M-_43mSIhGy9F6MQq09VzbqSPT5F4K7F5ScHKS5SCDECjXhh2roDSGt1e4MiA3cqEiS2X_yMCsrV8-19h51TrfdJgbgZk9M21BP7UpBOOwBqITdO1wxETGMf93cKgh-RJ2orCGuo4VBwOYhEZVtYqkFl1ceLmZTm43_RvEQqIsKLcyndbuQHazNbUXouPxEcJXSMEJbPR6f7Pn-1m1OPk2MpGjHp40O4ECD6Nu_nPo_j1S6kH411ph3HNvw~~",
+      "observation_count": 3,
+      "legacy_task_ids": [
+        "1a117ed7d2de7091:25",
+        "1a117ed7d2de7091:26",
+        "1a117ed7d2de7091:27"
+      ],
+      "statuses": [
+        "pending"
+      ],
+      "canonical_job_ids": [],
+      "checkpoint_count": 0
+    },
+    {
+      "canonical_id": "research_93055c5615d38ef025f2d26cdd19492c",
+      "source": "jobright",
+      "task_kind": "fetch_listing",
+      "url": "https://jobright.ai/jobs/info/6a76bd74bb6ca93ae5613641",
+      "observation_count": 3,
+      "legacy_task_ids": [
+        "1a117bded9a89ba5:6",
+        "1a117bded9a89ba5:7",
+        "1a117bded9a89ba5:8"
+      ],
+      "statuses": [
+        "pending"
+      ],
+      "canonical_job_ids": [],
+      "checkpoint_count": 0
+    },
+    {
+      "canonical_id": "research_961c7234b1ccab356d3684f0c776f246",
+      "source": "jobright",
+      "task_kind": "fetch_listing",
+      "url": "https://jobright.ai/jobs/info/6a8f205f382b237ac80c4779",
+      "observation_count": 3,
+      "legacy_task_ids": [
+        "1a117f2aa300ae9e:0",
+        "1a117f2aa300ae9e:1",
+        "1a117f2aa300ae9e:2"
+      ],
+      "statuses": [
+        "pending"
+      ],
+      "canonical_job_ids": [],
+      "checkpoint_count": 0
+    },
+    {
+      "canonical_id": "research_a105d2252dcb7ae04a26f57e4bbc6948",
+      "source": "linkedin",
+      "task_kind": "walk_discovery",
+      "url": "https://www.linkedin.com/comm/jobs/search-results/?keywords=Vice+President+Strategy&f_TPR=a1791240163-&geoId=103644278",
+      "observation_count": 2,
+      "legacy_task_ids": [
+        "1a11765bd0fe8751:17",
+        "1a11765bd0fe8751:4"
+      ],
+      "statuses": [
+        "pending"
+      ],
+      "canonical_job_ids": [],
+      "checkpoint_count": 0
+    },
+    {
+      "canonical_id": "research_a9db3f642dfba466b4ef99ca279be0b0",
+      "source": "jobright",
+      "task_kind": "fetch_listing",
+      "url": "https://jobright.ai/jobs/info/6ac68c47372c01f6cd73dba5",
+      "observation_count": 3,
+      "legacy_task_ids": [
+        "1a1179980cd03a68:0",
+        "1a1179980cd03a68:1",
+        "1a1179980cd03a68:2"
+      ],
+      "statuses": [
+        "pending"
+      ],
+      "canonical_job_ids": [],
+      "checkpoint_count": 0
+    },
+    {
+      "canonical_id": "research_adf4c09a17ff9ad1e8ff14ed2e4241e3",
+      "source": "ladders",
+      "task_kind": "fetch_listing",
+      "url": "https://t.ladders.co/f/a/dE9c3hu_cEcYD-G0Eceg9Q~~/AARvnRA~/KQ06C1VkRD9BNRNzL_BztIDVADt6GjOCMfmK-yzXAc47aDdZbcbBvSrCiUrVoesxsPGpzimO8LTpx7ULdGGwm_I_Ak4usT82-YfsOyLZsXblAsA3q5LpStHudFw1uG7WPyr8jeNyY2tzimrfDSqIGi4V66H8UgC-4KExY_dn1u09yeCenFsbqk-uHYURYHy80GDdciVqI8kvLIqIoXlm7clEd56u30Ewg97sC3PJrQS480vMSH7kZaLrIBhqRoPbYXZ1C5JnG8548MDqhMHpIcYaMe7RClHCGfdwW96lnnhKty2-Xmzt0-AwiC_7E9iLVeq5-TXQecc-REr5E3XTsYyjbX7G73a6IWCPNCbHGaJrZQ35gZ1xhFcZiI8H4rQTz05OilEOTIwOLDL9exjh9Q~~",
+      "observation_count": 1,
+      "legacy_task_ids": [
+        "1a117ed7d2de7091:45"
+      ],
+      "statuses": [
+        "pending"
+      ],
+      "canonical_job_ids": [],
+      "checkpoint_count": 0
+    },
+    {
+      "canonical_id": "research_b547a610cb8aba35fe6e10ca91c3c9e4",
+      "source": "ladders",
+      "task_kind": "fetch_listing",
+      "url": "https://t.ladders.co/f/a/aMGJEijYLPFRLedM-6wCRw~~/AARvnRA~/xMCK7VLma9T5XL7imKhTdE6xfRR76uC2xlsZMmhM3PF7ppYSSniOAC4AmT2rc2y1Jia02TYHEJ67vs5TGH9qt99XeL3ffoVWtwCHFjx3pznMSXCTQrqcfvT-FVhJTTY2TkgDsLSNGLzM1goSFHAP7jBD0sNGmjNMsENQgjkMybth9A4E-1tAPJ5Wp8mWrGuSk6Ib2HHl6Rri443dN862nmnXoH6_3akiMHkjaNlrY8DLVOvxEcMQm1rhMElIZDzJDUMQt3z6_pBhZOwM9e0A-FugCaGpd8XwFvA5QiMAiZm-RsmykkYNwzztPTTZXx07xfdC2viLpIt4qqb9WMwUntwWcx_9_54JZSwb-fnGkgulXkCUus3SFp3c7NQNwOQ8drm41HM1VtcAslXz_sUvBaj-BFQ-FoOBBDN0x78YtPfVvaC2_8MNSKdCtfNQZ2Kt_eagztApfR0QtlFFaXLlmD0MxHaIKHE3RGgEM2OiXxF9ueeMc5s95oFOI0Vw6Jbf",
+      "observation_count": 3,
+      "legacy_task_ids": [
+        "1a117ed7d2de7091:21",
+        "1a117ed7d2de7091:22",
+        "1a117ed7d2de7091:23"
+      ],
+      "statuses": [
+        "pending"
+      ],
+      "canonical_job_ids": [],
+      "checkpoint_count": 0
+    },
+    {
+      "canonical_id": "research_b69f577a1eb8f8492014224fa1d5c06d",
+      "source": "jobright",
+      "task_kind": "fetch_listing",
+      "url": "https://jobright.ai/jobs/info/6ac68601d9621c5b283a939c",
+      "observation_count": 3,
+      "legacy_task_ids": [
+        "1a1178e5c5cf56ae:6",
+        "1a1178e5c5cf56ae:7",
+        "1a1178e5c5cf56ae:8"
+      ],
+      "statuses": [
+        "pending"
+      ],
+      "canonical_job_ids": [],
+      "checkpoint_count": 0
+    },
+    {
+      "canonical_id": "research_bb92c039a241c6885909a69f813e8e1b",
+      "source": "ladders",
+      "task_kind": "fetch_listing",
+      "url": "https://t.ladders.co/f/a/ObqG7nFrCF8VOktvrbUoHg~~/AARvnRA~/GJBDBe_U9kXDRxM_sluQQ47chbO_-k6cQg0Jo_Uj5YsHMDwQiRMYfDhrn8V-Xs6NtkFY39jInZbRtgMNPnRPyxSteZsgFP2IPYEDo0XEQm2HFuS9cWfJVSYXq6SMqw8ZDXUoTaxSEcqnXOUqmVI6Ut4_FkjvyHywsfEjdiq3EXVPEHe7B9j3B_Vv97QiSAE9V2xxrbKgYi_qbzteLvh3aPN6ERr9Om_k8BHiuMmk8nOF5Hm4jZMS3_sitslm1xyKxhnhL8riLmfUpgKPtzkHi3S43j6u4xzXx99jyXONvFuRp7fhVE2aTDadR4XIvTQiJvmNA4BB3pbb6g5XcDKktx3o_7NpJ8bugkXgeNnu77sjkJGs_zGbFBQszUBPBM0ui6RdZoZHEO8xao4I5ChlDcWcb0JjvyUUcHXeYzJZnW3dS56DxcQljvl2ijNER0I-XKvgNOn_6X_hXpryQRgupw~~",
+      "observation_count": 3,
+      "legacy_task_ids": [
+        "1a117ed7d2de7091:29",
+        "1a117ed7d2de7091:30",
+        "1a117ed7d2de7091:31"
+      ],
+      "statuses": [
+        "pending"
+      ],
+      "canonical_job_ids": [],
+      "checkpoint_count": 0
+    },
+    {
+      "canonical_id": "research_bf5a67f3eacb3623c84c995ccb2a2ea0",
+      "source": "ladders",
+      "task_kind": "fetch_listing",
+      "url": "https://t.ladders.co/f/a/iMt1xT8eTAbKYrDMEI6Fxw~~/AARvnRA~/EmEez9fyIKZHBFMPIwaA6ebJkd7tvRPzzw8GCwUkxZ44umgNGj9EJDKxHXfDQe9Zqw4Mf1CASfdMOhnH4iylGtEHN5EfKU849UT0W2BoqJ2GMVKzKavhN9bXQy0AFzx1diUhRKHfzCZRrVVAOvzLQ6ZCj9Iwizhork2UED7B7q4vVOOxhHrqMU-HerYY_k9GPB6Oue-mSfLpfvzr70h0ncLCx9honI6qDZQ-bwvmWlnXCrD6u9-bI3v84CpImNE1YMGfR7BIIyWMqM1GkQLDy6Xl1ZeIJ3aiCLS5C7wwqyVYmDfvygz3vebajVIiml1W48NhnERyEExoMCZe7gPQ2Lra8VGPEvhx3obE6gXqUYLjIZ40ReceAorTD0Al0PpeiAChR1cCBW2zpiEBuu7U8f7rPIXzlU1Cb4Sgw6MJ85OK3o3UO-4I5oWFlUxQEBv3GWf3exJCeiwSjRtJpTCBTJnlGkDasZ7HSXHhcJx_iK2ykk-IEvFfCz7kUKt3REPG99-rcU7I0bXvLOGcaiyfwXV-v0x8A-Qer58Har53FiDmcmsVwifopnRw3G-4GVDjHuRitVCqR_JU76DSu9xWD073C9pDHvsx1NevQObRaYC2U9277wCRtFos0MoWVLLUXO52_lnTvkiigebSh2uOC02EuQJn6gOEnz-aKWATwnLWZqT1KRYRVeAqhCbal0xjN5TyWmdifKHbDftEpNcN82ZqU6GgR904EOwPhVKBMISgfOOHyefHW-s7K41qQcy69mSEskzyavNT-CqdWyWqhw~~",
+      "observation_count": 2,
+      "legacy_task_ids": [
+        "1a117ed7d2de7091:40",
+        "1a117ed7d2de7091:42"
+      ],
+      "statuses": [
+        "pending"
+      ],
+      "canonical_job_ids": [],
+      "checkpoint_count": 0
+    },
+    {
+      "canonical_id": "research_c13d40b591c52c02dc6ab4330b1cddb7",
+      "source": "linkedin",
+      "task_kind": "fetch_listing",
+      "url": "https://www.linkedin.com/jobs/view/4458530009",
+      "observation_count": 2,
+      "legacy_task_ids": [
+        "1a117d398d95d311:13",
+        "1a117d398d95d311:14"
+      ],
+      "statuses": [
+        "pending"
+      ],
+      "canonical_job_ids": [],
+      "checkpoint_count": 0
+    },
+    {
+      "canonical_id": "research_c5c241c9b28a34cee7d59f33e9d663db",
+      "source": "jobright",
+      "task_kind": "fetch_listing",
+      "url": "https://jobright.ai/jobs/info/6a60ddc1d51f6101c8fb90d7",
+      "observation_count": 3,
+      "legacy_task_ids": [
+        "1a117f2aa300ae9e:10",
+        "1a117f2aa300ae9e:11",
+        "1a117f2aa300ae9e:9"
+      ],
+      "statuses": [
+        "pending"
+      ],
+      "canonical_job_ids": [],
+      "checkpoint_count": 0
+    },
+    {
+      "canonical_id": "research_d0b5b62437ae29eb0ac20a3b10df4c41",
+      "source": "ladders",
+      "task_kind": "fetch_listing",
+      "url": "https://t.ladders.co/f/a/a0LKm-i4u7M0BJr1ONPYew~~/AARvnRA~/ZZoG6JxwF9Tq7mRnzW7219McOGqMonSJolOnrUgtRspfAoo-w7uAON65Ywp6TsJ4RHz4h2YqWxV1DLnXtbx3eTdRr38Tq6ntVgfDqqOw3JZbFK_51KC538sCTFLaS6YvIdpO980oHMDh0WPtj_Dh3I8jJH-J5gkgc9SGNeudvb5xuSG7npCsnNcpmDVo7OmfM3FWLzN6bzIi-Moc8B3PgZdqnsa1axLwpyErCykTCk2kVJW3Jic3RdOoF8Bmg37yjqSAofrYq6ahefLvcIm7fUXz5Dvcz4fqjKPAVM6xEGWqurL9gywtCbnX3I1RKT2cAi3t5NJeKZwaBiV6RbpFl7D1HbTNF4H9IU1a5ENmtzE1UqDfPwm3Sud2XWsEdcseCWDkZDavxV8w_EdsxPz4uj_potPedyrbhJQYukS4tG4VKfdM59GAtXbBhpvNxQfzbqGKwPjhx3r_E1EaSbYxkkWRfdceyGYsB14yeuZH30Q~",
+      "observation_count": 3,
+      "legacy_task_ids": [
+        "1a117ed7d2de7091:1",
+        "1a117ed7d2de7091:2",
+        "1a117ed7d2de7091:3"
+      ],
+      "statuses": [
+        "pending"
+      ],
+      "canonical_job_ids": [],
+      "checkpoint_count": 0
+    },
+    {
+      "canonical_id": "research_d0cfcd4f2aa216050f095046e2222907",
+      "source": "jobright",
+      "task_kind": "fetch_listing",
+      "url": "https://jobright.ai/jobs/info/6ac68a9c8ff3fb9b3bc8da04",
+      "observation_count": 3,
+      "legacy_task_ids": [
+        "1a117c4c10e855d0:0",
+        "1a117c4c10e855d0:1",
+        "1a117c4c10e855d0:2"
+      ],
+      "statuses": [
+        "pending"
+      ],
+      "canonical_job_ids": [],
+      "checkpoint_count": 0
+    },
+    {
+      "canonical_id": "research_d29b89967b6d2951a146ddd393299979",
+      "source": "jobright",
+      "task_kind": "fetch_listing",
+      "url": "https://jobright.ai/jobs/info/6ac68a78d9621c5b283a949f",
+      "observation_count": 3,
+      "legacy_task_ids": [
+        "1a1178e5c5cf56ae:0",
+        "1a1178e5c5cf56ae:1",
+        "1a1178e5c5cf56ae:2"
+      ],
+      "statuses": [
+        "pending"
+      ],
+      "canonical_job_ids": [],
+      "checkpoint_count": 0
+    },
+    {
+      "canonical_id": "research_d40b136eee84d8e41ce18a6bf8b90417",
+      "source": "ladders",
+      "task_kind": "fetch_listing",
+      "url": "https://www.facebook.com/groups/TheClimbLadders",
+      "observation_count": 1,
+      "legacy_task_ids": [
+        "1a117ed7d2de7091:53"
+      ],
+      "statuses": [
+        "pending"
+      ],
+      "canonical_job_ids": [],
+      "checkpoint_count": 0
+    },
+    {
+      "canonical_id": "research_d53a03b43f87518cb3f0fd94a59a57d3",
+      "source": "jobright",
+      "task_kind": "fetch_listing",
+      "url": "https://jobright.ai/jobs/info/6ac676b0372c01f6cd73d44d",
+      "observation_count": 3,
+      "legacy_task_ids": [
+        "1a1177233092cbde:0",
+        "1a1177233092cbde:1",
+        "1a1177233092cbde:2"
+      ],
+      "statuses": [
+        "pending"
+      ],
+      "canonical_job_ids": [],
+      "checkpoint_count": 0
+    },
+    {
+      "canonical_id": "research_d827101610e8f694a99cec3f1bb0c9b0",
+      "source": "jobright",
+      "task_kind": "fetch_listing",
+      "url": "https://jobright.ai/jobs/info/6ac67b110e027c0f3b3b29ee",
+      "observation_count": 3,
+      "legacy_task_ids": [
+        "1a117c4c10e855d0:6",
+        "1a117c4c10e855d0:7",
+        "1a117c4c10e855d0:8"
+      ],
+      "statuses": [
+        "pending"
+      ],
+      "canonical_job_ids": [],
+      "checkpoint_count": 0
+    },
+    {
+      "canonical_id": "research_db20b40679a499275c9dd35d2e90e6af",
+      "source": "jobright",
+      "task_kind": "fetch_listing",
+      "url": "https://jobright.ai/jobs/info/6ac68d850e027c0f3b3b2ff4",
+      "observation_count": 3,
+      "legacy_task_ids": [
+        "1a1179980cd03a68:3",
+        "1a1179980cd03a68:4",
+        "1a1179980cd03a68:5"
+      ],
+      "statuses": [
+        "pending"
+      ],
+      "canonical_job_ids": [],
+      "checkpoint_count": 0
+    },
+    {
+      "canonical_id": "research_e09966e3a64c9b7fd06cc41e7bbabde1",
+      "source": "linkedin",
+      "task_kind": "fetch_listing",
+      "url": "https://www.linkedin.com/jobs/view/4476360483",
+      "observation_count": 2,
+      "legacy_task_ids": [
+        "1a117d398d95d311:5",
+        "1a117d398d95d311:6"
+      ],
+      "statuses": [
+        "pending"
+      ],
+      "canonical_job_ids": [],
+      "checkpoint_count": 0
+    },
+    {
+      "canonical_id": "research_e5d90f2d676d934f3e4ae08b91105bbc",
+      "source": "jobright",
+      "task_kind": "fetch_listing",
+      "url": "https://jobright.ai/jobs/info/6ac64f964ac55253f5d797b4",
+      "observation_count": 6,
+      "legacy_task_ids": [
+        "1a1177233092cbde:15",
+        "1a1177233092cbde:16",
+        "1a1177233092cbde:17",
+        "1a1178e5c5cf56ae:15",
+        "1a1178e5c5cf56ae:16",
+        "1a1178e5c5cf56ae:17"
+      ],
+      "statuses": [
+        "pending"
+      ],
+      "canonical_job_ids": [],
+      "checkpoint_count": 0
+    },
+    {
+      "canonical_id": "research_e6b60de6d32f35784f42d3a8f1d681fe",
+      "source": "jobright",
+      "task_kind": "fetch_listing",
+      "url": "https://jobright.ai/jobs/info/6ac6a2f60e027c0f3b3b38fb",
+      "observation_count": 3,
+      "legacy_task_ids": [
+        "1a117f2aa300ae9e:6",
+        "1a117f2aa300ae9e:7",
+        "1a117f2aa300ae9e:8"
+      ],
+      "statuses": [
+        "pending"
+      ],
+      "canonical_job_ids": [],
+      "checkpoint_count": 0
+    },
+    {
+      "canonical_id": "research_fa5b226bf66cd5910b1643bcdff9c3a1",
+      "source": "jobright",
+      "task_kind": "fetch_listing",
+      "url": "https://jobright.ai/jobs/info/6ac686994ac55253f5d7a97e",
+      "observation_count": 3,
+      "legacy_task_ids": [
+        "1a1178e5c5cf56ae:3",
+        "1a1178e5c5cf56ae:4",
+        "1a1178e5c5cf56ae:5"
+      ],
+      "statuses": [
+        "pending"
+      ],
+      "canonical_job_ids": [],
+      "checkpoint_count": 0
+    },
+    {
+      "canonical_id": "research_fafb6aa88bbd7782a0b6209142028a7e",
+      "source": "jobright",
+      "task_kind": "fetch_listing",
+      "url": "https://jobright.ai/jobs/info/6ac67a21372c01f6cd73d5d3",
+      "observation_count": 3,
+      "legacy_task_ids": [
+        "1a1177233092cbde:6",
+        "1a1177233092cbde:7",
+        "1a1177233092cbde:8"
+      ],
+      "statuses": [
+        "pending"
+      ],
+      "canonical_job_ids": [],
+      "checkpoint_count": 0
+    },
+    {
+      "canonical_id": "research_fc2f66f2f6de3d6d09029e073a36706d",
+      "source": "ladders",
+      "task_kind": "fetch_listing",
+      "url": "https://t.ladders.co/f/a/2YJPf3sNfAtZ3KLhZnmpYw~~/AARvnRA~/ZrzBBRQ5gITZmkREVEBtwkm9fYv8hpsuGKG-Iksis3SSTFKeR4840huKUq1-Kt9lmXBElXfynzja31qCkl33pu2EnKi-O-ZIX2UuYKTdsiUH20kllIS0xqxQjAKtym53Q2hmQNqsZLirjXPSl7qDrV_q5hFStBt-UDfHw2IVG7ptC4fS-zWSaH03KYmx35Lq",
+      "observation_count": 1,
+      "legacy_task_ids": [
+        "1a117ed7d2de7091:52"
+      ],
+      "statuses": [
+        "pending"
+      ],
+      "canonical_job_ids": [],
+      "checkpoint_count": 0
+    },
+    {
+      "canonical_id": "research_fdfeb6c37d879e67ad85bdf99a74207e",
+      "source": "ladders",
+      "task_kind": "fetch_listing",
+      "url": "https://t.ladders.co/f/a/5dvzFE_4oUy6yXn-lJDTSQ~~/AARvnRA~/8xXgekYOB6FKurhUFdDthKa6Ixt4u6kp8zzpZfIf33Ehn5w3EiYw822gYstYgv33VVHQjve_ZR8HOsy-ftmCVI9NYvUrmERlNt_myohBl0_FD15DsNQagTQjwmTNqbxm_IZLQC33qETgfpVMZu3yEKZppMWz51yi5s8qt438BE2aKOHKUr2LHvhsIV9sOCLo_6DHkXO1LGrwxdZmLOirtOPXQYLUhbMchDTfwBryk0zw8EgsDKEjeyKjns6iACumnrr3WNoHABEd6VsdiefWe-HrPRksqX35F5EI19Rka18Hvg-tguHkJnVD1Sh7mqJLsrW__RSVDeyNmxEClFuC0NO3R_S8xWP9bdP8PgqvKVF8tG6zkgdg_JFZG9xJyyNS",
+      "observation_count": 1,
+      "legacy_task_ids": [
+        "1a117ed7d2de7091:44"
+      ],
+      "statuses": [
+        "pending"
+      ],
+      "canonical_job_ids": [],
+      "checkpoint_count": 0
+    }
+  ],
+  "unrelated": [
+    {
+      "observation_id": "1a11765bd0fe8751:0",
+      "source": "linkedin",
+      "url": "https://www.linkedin.com/comm/feed/?lipi=urn%3Ali%3Apage%3Aemail_email_job_alert_digest_01%3BmtaHqSlGSoqrZhVzjB6u%2Fw%3D%3D&midToken=AQH6C-CZv_cXgg&midSig=1YHlLqko4RAYs1&trkEmail=eml-email_job_alert_digest_01-header-0-home_glimmer_static_badging_with_count-null-3l3im%7Emuydodmk%7Egi-null-null&eid=3l3im-muydodmk-gi&otpToken=NDFhMTdlMDdlODhiYzkwNzE1ZGRiOGJmM2NlM2U3NTg3Yjk2YzZlZjI3YjhiNmYzYjJjNGJmZWIyNDNlNzE2NGQyZDZkNjhhM2E3ZmUwZjI0ZDAyOGI4ZmYyMWIyMDhmMzU1NmIxMTdiYjY4MDlhYzRjNzZlZDMyYTlmNjNkYzdlMjMzY2QsMiwx",
+      "title_hint": null,
+      "legacy_task_id": "1a11765bd0fe8751:0"
+    },
+    {
+      "observation_id": "1a11765bd0fe8751:1",
+      "source": "linkedin",
+      "url": "https://www.linkedin.com/comm/messaging/?lipi=urn%3Ali%3Apage%3Aemail_email_job_alert_digest_01%3BmtaHqSlGSoqrZhVzjB6u%2Fw%3D%3D&midToken=AQH6C-CZv_cXgg&midSig=1YHlLqko4RAYs1&trkEmail=eml-email_job_alert_digest_01-header-0-messaging_glimmer-null-3l3im%7Emuydodmk%7Egi-null-null&eid=3l3im-muydodmk-gi&otpToken=NDFhMTdlMDdlODhiYzkwNzE1ZGRiOGJmM2NlM2U3NTg3Yjk2YzZlZjI3YjhiNmYzYjJjNGJmZWIyNDNlNzE2NGQyZDZkNjhhM2E3ZmUwZjI0ZDAyOGI4ZmYyMWIyMDhmMzU1NmIxMTdiYjY4MDlhYzRjNzZlZDMyYTlmNjNkYzdlMjMzY2QsMiwx",
+      "title_hint": null,
+      "legacy_task_id": "1a11765bd0fe8751:1"
+    },
+    {
+      "observation_id": "1a11765bd0fe8751:18",
+      "source": "linkedin",
+      "url": "https://www.linkedin.com/comm/widgets/promo?lipi=urn%3Ali%3Apage%3Aemail_email_job_alert_digest_01%3BmtaHqSlGSoqrZhVzjB6u%2Fw%3D%3D&midToken=AQH6C-CZv_cXgg&midSig=1YHlLqko4RAYs1&trkEmail=eml-email_job_alert_digest_01-widget%7Epromo%7Ev1-0-footer%7Elink-null-3l3im%7Emuydodmk%7Egi-null-null&eid=3l3im-muydodmk-gi&otpToken=NDFhMTdlMDdlODhiYzkwNzE1ZGRiOGJmM2NlM2U3NTg3Yjk2YzZlZjI3YjhiNmYzYjJjNGJmZWIyNDNlNzE2NGQyZDZkNjhhM2E3ZmUwZjI0ZDAyOGI4ZmYyMWIyMDhmMzU1NmIxMTdiYjY4MDlhYzRjNzZlZDMyYTlmNjNkYzdlMjMzY2QsMiwx",
+      "title_hint": "Install LinkedIn Widgets Stay updated at a glance Add widget",
+      "legacy_task_id": "1a11765bd0fe8751:18"
+    },
+    {
+      "observation_id": "1a11765bd0fe8751:19",
+      "source": "linkedin",
+      "url": "https://www.linkedin.com/comm/jobs/alerts?lipi=urn%3Ali%3Apage%3Aemail_email_job_alert_digest_01%3BmtaHqSlGSoqrZhVzjB6u%2Fw%3D%3D&midToken=AQH6C-CZv_cXgg&midSig=1YHlLqko4RAYs1&trkEmail=eml-email_job_alert_digest_01-footer-0-manage_alerts_button_ssid_9035122410_fmid_3l3im%7Emuydodmk%7Egi-null-3l3im%7Emuydodmk%7Egi-null-null&eid=3l3im-muydodmk-gi&otpToken=NDFhMTdlMDdlODhiYzkwNzE1ZGRiOGJmM2NlM2U3NTg3Yjk2YzZlZjI3YjhiNmYzYjJjNGJmZWIyNDNlNzE2NGQyZDZkNjhhM2E3ZmUwZjI0ZDAyOGI4ZmYyMWIyMDhmMzU1NmIxMTdiYjY4MDlhYzRjNzZlZDMyYTlmNjNkYzdlMjMzY2QsMiwx",
+      "title_hint": "Manage job alerts",
+      "legacy_task_id": "1a11765bd0fe8751:19"
+    },
+    {
+      "observation_id": "1a11765bd0fe8751:2",
+      "source": "linkedin",
+      "url": "https://www.linkedin.com/comm/mynetwork/?lipi=urn%3Ali%3Apage%3Aemail_email_job_alert_digest_01%3BmtaHqSlGSoqrZhVzjB6u%2Fw%3D%3D&midToken=AQH6C-CZv_cXgg&midSig=1YHlLqko4RAYs1&trkEmail=eml-email_job_alert_digest_01-header-0-my_network_glimmer-null-3l3im%7Emuydodmk%7Egi-null-null&eid=3l3im-muydodmk-gi&otpToken=NDFhMTdlMDdlODhiYzkwNzE1ZGRiOGJmM2NlM2U3NTg3Yjk2YzZlZjI3YjhiNmYzYjJjNGJmZWIyNDNlNzE2NGQyZDZkNjhhM2E3ZmUwZjI0ZDAyOGI4ZmYyMWIyMDhmMzU1NmIxMTdiYjY4MDlhYzRjNzZlZDMyYTlmNjNkYzdlMjMzY2QsMiwx",
+      "title_hint": null,
+      "legacy_task_id": "1a11765bd0fe8751:2"
+    },
+    {
+      "observation_id": "1a11765bd0fe8751:20",
+      "source": "linkedin",
+      "url": "https://www.linkedin.com/comm/feed/?lipi=urn%3Ali%3Apage%3Aemail_email_job_alert_digest_01%3BmtaHqSlGSoqrZhVzjB6u%2Fw%3D%3D&midToken=AQH6C-CZv_cXgg&midSig=1YHlLqko4RAYs1&trkEmail=eml-email_job_alert_digest_01-footer-0-logoGlimmer-null-3l3im%7Emuydodmk%7Egi-null-null&eid=3l3im-muydodmk-gi&otpToken=NDFhMTdlMDdlODhiYzkwNzE1ZGRiOGJmM2NlM2U3NTg3Yjk2YzZlZjI3YjhiNmYzYjJjNGJmZWIyNDNlNzE2NGQyZDZkNjhhM2E3ZmUwZjI0ZDAyOGI4ZmYyMWIyMDhmMzU1NmIxMTdiYjY4MDlhYzRjNzZlZDMyYTlmNjNkYzdlMjMzY2QsMiwx",
+      "title_hint": null,
+      "legacy_task_id": "1a11765bd0fe8751:20"
+    },
+    {
+      "observation_id": "1a11765bd0fe8751:3",
+      "source": "linkedin",
+      "url": "https://www.linkedin.com/comm/notifications/?lipi=urn%3Ali%3Apage%3Aemail_email_job_alert_digest_01%3BmtaHqSlGSoqrZhVzjB6u%2Fw%3D%3D&midToken=AQH6C-CZv_cXgg&midSig=1YHlLqko4RAYs1&trkEmail=eml-email_job_alert_digest_01-header-0-notifications_glimmer-null-3l3im%7Emuydodmk%7Egi-null-null&eid=3l3im-muydodmk-gi&otpToken=NDFhMTdlMDdlODhiYzkwNzE1ZGRiOGJmM2NlM2U3NTg3Yjk2YzZlZjI3YjhiNmYzYjJjNGJmZWIyNDNlNzE2NGQyZDZkNjhhM2E3ZmUwZjI0ZDAyOGI4ZmYyMWIyMDhmMzU1NmIxMTdiYjY4MDlhYzRjNzZlZDMyYTlmNjNkYzdlMjMzY2QsMiwx",
+      "title_hint": null,
+      "legacy_task_id": "1a11765bd0fe8751:3"
+    },
+    {
+      "observation_id": "1a1177233092cbde:19",
+      "source": "jobright",
+      "url": "https://jobright.ai/?retarget=jobalert",
+      "title_hint": "Update Job Alert Preference",
+      "legacy_task_id": "1a1177233092cbde:19"
+    },
+    {
+      "observation_id": "1a1178e5c5cf56ae:19",
+      "source": "jobright",
+      "url": "https://jobright.ai/?retarget=jobalert",
+      "title_hint": "Update Job Alert Preference",
+      "legacy_task_id": "1a1178e5c5cf56ae:19"
+    },
+    {
+      "observation_id": "1a1179980cd03a68:19",
+      "source": "jobright",
+      "url": "https://jobright.ai/?retarget=jobalert",
+      "title_hint": "Update Job Alert Preference",
+      "legacy_task_id": "1a1179980cd03a68:19"
+    },
+    {
+      "observation_id": "1a117bded9a89ba5:19",
+      "source": "jobright",
+      "url": "https://jobright.ai/?retarget=jobalert",
+      "title_hint": "Update Job Alert Preference",
+      "legacy_task_id": "1a117bded9a89ba5:19"
+    },
+    {
+      "observation_id": "1a117c4c10e855d0:19",
+      "source": "jobright",
+      "url": "https://jobright.ai/?retarget=jobalert",
+      "title_hint": "Update Job Alert Preference",
+      "legacy_task_id": "1a117c4c10e855d0:19"
+    },
+    {
+      "observation_id": "1a117d398d95d311:0",
+      "source": "linkedin",
+      "url": "https://www.linkedin.com/comm/feed/?lipi=urn%3Ali%3Apage%3Aemail_email_job_alert_digest_01%3BX8yn4az%2FTO6Bqf1X2isn4g%3D%3D&midToken=AQH6C-CZv_cXgg&midSig=2qJUn5ak2JAYs1&trkEmail=eml-email_job_alert_digest_01-header-0-home_glimmer_static_badging_with_count-null-3l3im%7Emuyhyoo6%7Ecn-null-null&eid=3l3im-muyhyoo6-cn&otpToken=ZWJhM2MyZDEzMTRmMWE2MWE1ZDU5MDdhYWJmN2EyYzBhZWVkYWQ5YzY1YTgyYjg5ZTkzNzFkYmUzNTJiNmUyZWMzNmEyMzdjNGZlOGY4YzI4OTliZjRkMjUxMDM0MWM5YjI3MTUxMGQxMWEwMTcxZDAxNDhkYzkxMTI5NTkzYzg4ZDVkNTEsMiwx",
+      "title_hint": null,
+      "legacy_task_id": "1a117d398d95d311:0"
+    },
+    {
+      "observation_id": "1a117d398d95d311:1",
+      "source": "linkedin",
+      "url": "https://www.linkedin.com/comm/messaging/?lipi=urn%3Ali%3Apage%3Aemail_email_job_alert_digest_01%3BX8yn4az%2FTO6Bqf1X2isn4g%3D%3D&midToken=AQH6C-CZv_cXgg&midSig=2qJUn5ak2JAYs1&trkEmail=eml-email_job_alert_digest_01-header-0-messaging_glimmer-null-3l3im%7Emuyhyoo6%7Ecn-null-null&eid=3l3im-muyhyoo6-cn&otpToken=ZWJhM2MyZDEzMTRmMWE2MWE1ZDU5MDdhYWJmN2EyYzBhZWVkYWQ5YzY1YTgyYjg5ZTkzNzFkYmUzNTJiNmUyZWMzNmEyMzdjNGZlOGY4YzI4OTliZjRkMjUxMDM0MWM5YjI3MTUxMGQxMWEwMTcxZDAxNDhkYzkxMTI5NTkzYzg4ZDVkNTEsMiwx",
+      "title_hint": null,
+      "legacy_task_id": "1a117d398d95d311:1"
+    },
+    {
+      "observation_id": "1a117d398d95d311:18",
+      "source": "linkedin",
+      "url": "https://www.linkedin.com/comm/widgets/promo?lipi=urn%3Ali%3Apage%3Aemail_email_job_alert_digest_01%3BX8yn4az%2FTO6Bqf1X2isn4g%3D%3D&midToken=AQH6C-CZv_cXgg&midSig=2qJUn5ak2JAYs1&trkEmail=eml-email_job_alert_digest_01-widget%7Epromo%7Ev1-0-footer%7Elink-null-3l3im%7Emuyhyoo6%7Ecn-null-null&eid=3l3im-muyhyoo6-cn&otpToken=ZWJhM2MyZDEzMTRmMWE2MWE1ZDU5MDdhYWJmN2EyYzBhZWVkYWQ5YzY1YTgyYjg5ZTkzNzFkYmUzNTJiNmUyZWMzNmEyMzdjNGZlOGY4YzI4OTliZjRkMjUxMDM0MWM5YjI3MTUxMGQxMWEwMTcxZDAxNDhkYzkxMTI5NTkzYzg4ZDVkNTEsMiwx",
+      "title_hint": "Install LinkedIn Widgets Stay updated at a glance Add widget",
+      "legacy_task_id": "1a117d398d95d311:18"
+    },
+    {
+      "observation_id": "1a117d398d95d311:19",
+      "source": "linkedin",
+      "url": "https://www.linkedin.com/comm/jobs/alerts?lipi=urn%3Ali%3Apage%3Aemail_email_job_alert_digest_01%3BX8yn4az%2FTO6Bqf1X2isn4g%3D%3D&midToken=AQH6C-CZv_cXgg&midSig=2qJUn5ak2JAYs1&trkEmail=eml-email_job_alert_digest_01-footer-0-manage_alerts_button_ssid_9030887394_fmid_3l3im%7Emuyhyoo6%7Ecn-null-3l3im%7Emuyhyoo6%7Ecn-null-null&eid=3l3im-muyhyoo6-cn&otpToken=ZWJhM2MyZDEzMTRmMWE2MWE1ZDU5MDdhYWJmN2EyYzBhZWVkYWQ5YzY1YTgyYjg5ZTkzNzFkYmUzNTJiNmUyZWMzNmEyMzdjNGZlOGY4YzI4OTliZjRkMjUxMDM0MWM5YjI3MTUxMGQxMWEwMTcxZDAxNDhkYzkxMTI5NTkzYzg4ZDVkNTEsMiwx",
+      "title_hint": "Manage job alerts",
+      "legacy_task_id": "1a117d398d95d311:19"
+    },
+    {
+      "observation_id": "1a117d398d95d311:2",
+      "source": "linkedin",
+      "url": "https://www.linkedin.com/comm/mynetwork/?lipi=urn%3Ali%3Apage%3Aemail_email_job_alert_digest_01%3BX8yn4az%2FTO6Bqf1X2isn4g%3D%3D&midToken=AQH6C-CZv_cXgg&midSig=2qJUn5ak2JAYs1&trkEmail=eml-email_job_alert_digest_01-header-0-my_network_glimmer-null-3l3im%7Emuyhyoo6%7Ecn-null-null&eid=3l3im-muyhyoo6-cn&otpToken=ZWJhM2MyZDEzMTRmMWE2MWE1ZDU5MDdhYWJmN2EyYzBhZWVkYWQ5YzY1YTgyYjg5ZTkzNzFkYmUzNTJiNmUyZWMzNmEyMzdjNGZlOGY4YzI4OTliZjRkMjUxMDM0MWM5YjI3MTUxMGQxMWEwMTcxZDAxNDhkYzkxMTI5NTkzYzg4ZDVkNTEsMiwx",
+      "title_hint": null,
+      "legacy_task_id": "1a117d398d95d311:2"
+    },
+    {
+      "observation_id": "1a117d398d95d311:20",
+      "source": "linkedin",
+      "url": "https://www.linkedin.com/comm/feed/?lipi=urn%3Ali%3Apage%3Aemail_email_job_alert_digest_01%3BX8yn4az%2FTO6Bqf1X2isn4g%3D%3D&midToken=AQH6C-CZv_cXgg&midSig=2qJUn5ak2JAYs1&trkEmail=eml-email_job_alert_digest_01-footer-0-logoGlimmer-null-3l3im%7Emuyhyoo6%7Ecn-null-null&eid=3l3im-muyhyoo6-cn&otpToken=ZWJhM2MyZDEzMTRmMWE2MWE1ZDU5MDdhYWJmN2EyYzBhZWVkYWQ5YzY1YTgyYjg5ZTkzNzFkYmUzNTJiNmUyZWMzNmEyMzdjNGZlOGY4YzI4OTliZjRkMjUxMDM0MWM5YjI3MTUxMGQxMWEwMTcxZDAxNDhkYzkxMTI5NTkzYzg4ZDVkNTEsMiwx",
+      "title_hint": null,
+      "legacy_task_id": "1a117d398d95d311:20"
+    },
+    {
+      "observation_id": "1a117d398d95d311:3",
+      "source": "linkedin",
+      "url": "https://www.linkedin.com/comm/notifications/?lipi=urn%3Ali%3Apage%3Aemail_email_job_alert_digest_01%3BX8yn4az%2FTO6Bqf1X2isn4g%3D%3D&midToken=AQH6C-CZv_cXgg&midSig=2qJUn5ak2JAYs1&trkEmail=eml-email_job_alert_digest_01-header-0-notifications_glimmer-null-3l3im%7Emuyhyoo6%7Ecn-null-null&eid=3l3im-muyhyoo6-cn&otpToken=ZWJhM2MyZDEzMTRmMWE2MWE1ZDU5MDdhYWJmN2EyYzBhZWVkYWQ5YzY1YTgyYjg5ZTkzNzFkYmUzNTJiNmUyZWMzNmEyMzdjNGZlOGY4YzI4OTliZjRkMjUxMDM0MWM5YjI3MTUxMGQxMWEwMTcxZDAxNDhkYzkxMTI5NTkzYzg4ZDVkNTEsMiwx",
+      "title_hint": null,
+      "legacy_task_id": "1a117d398d95d311:3"
+    },
+    {
+      "observation_id": "1a117ed7d2de7091:0",
+      "source": "ladders",
+      "url": "https://t.ladders.co/f/a/a0LKm-i4u7M0BJr1ONPYew~~/AARvnRA~/ZZoG6JxwF9Tq7mRnzW7219McOGqMonSJolOnrUgtRspfAoo-w7uAON65Ywp6TsJ4RHz4h2YqWxV1DLnXtbx3eTdRr38Tq6ntVgfDqqOw3JZbFK_51KC538sCTFLaS6YvIdpO980oHMDh0WPtj_Dh3I8jJH-J5gkgc9SGNeudvb5xuSG7npCsnNcpmDVo7OmfM3FWLzN6bzIi-Moc8B3PgZdqnsa1axLwpyErCykTCk2kVJW3Jic3RdOoF8Bmg37yjqSAofrYq6ahefLvcIm7fUXz5Dvcz4fqjKPAVM6xEGWqurL9gywtCbnX3I1RKT2cAi3t5NJeKZwaBiV6RbpFl7D1HbTNF4H9IU1a5ENmtzE1UqDfPwm3Sud2XWsEdcseCWDkZDavxV8w_EdsxPz4uj_potPedyrbhJQYukS4tG4VKfdM59GAtXbBhpvNxQfzbqGKwPjhx3r_E1EaSbYxkkWRfdceyGYsB14yeuZH30Q~",
+      "title_hint": "Remote",
+      "legacy_task_id": "1a117ed7d2de7091:0"
+    },
+    {
+      "observation_id": "1a117ed7d2de7091:12",
+      "source": "ladders",
+      "url": "https://t.ladders.co/f/a/jhiLYmPVYSJly2vYrOCm2A~~/AARvnRA~/kqKH3KnwYaB8YG-S2cWFFLxG330aR5chu5TcdgvQ6Wl7aN5ABbQWijrZ0FUkm8OwcFF4J4VtNaPlGhCCya4c2vXu7jgiMH-lJ0UzvpSnyOJpsiy2_GBh4K3FKDNVRgbiL5k0FD2zVvlXYcf-Lpl3VFPPf4AdyPRw6hrlW-79UvyGn8Gz2jZ0n5c7o9DhF-auv9Y9e06nAG03S8AyA5Dg8AVu9tfq9QJynI9IluYbf88YClbiXrPU7XA7o1W3neigezcdXE5TUqTtoH14MJFHXnH3kECGJbN-lKjRnXm4DFIC7iIo5eHELNZt5NPqQnhobpfrT_aZCR63HAVGapSBMmE4H-TMKc_Wx0Upw9VMhagFRBDvTVFuwxb2b9h9OEn-BGODKg2_yFQXYsHYdtqkM7k8In96xpfowfLAgBVO1VQbHmYAdIeLMwsL9YPkrGgP2VRDyGa7Xery47MZp7fvHwVMC0P9GtH0_32Yw_aTzyWJeDamzXEfUp77kWLH96TM",
+      "title_hint": "Remote",
+      "legacy_task_id": "1a117ed7d2de7091:12"
+    },
+    {
+      "observation_id": "1a117ed7d2de7091:16",
+      "source": "ladders",
+      "url": "https://t.ladders.co/f/a/Nmmi19aJI0zPkSjjl65Plg~~/AARvnRA~/K0gE7cGPViPMerS1UXlb-_zB0ER9f7n10ldZKjhcuyjS88juk-JcRJGNeBWSC9K_E8fvaZqIL1iLQd-qSTmMq9nGeukZhJg42FzjVYlfAud9aP-RayllJ3unBbonsUN9-HjXrISiSzDu0uCi2YrVMemk_H6J7Wf7KYOBBaZtDk316sv3OSCNRYWVDZwTJ_gtYzcO_CQ89ML73PmNZgWj3rZPzLhb5u5EtY3eX5YQ3qbZpy0zLSMSpX45F4fVE5ZIVztbfONgpDkhWN5vIfQjDM7QDxM-9e_OJsDH_SwquLkplm5UmtEJarjyMhBhtSiG-g1ZKUfvV04lg2LACYx6BSeTcsFLVKmyb_wQLMiYeqBzjKBPDRI1CeR6S6dXhHZpJfl8gaq-yCshRWhRR8HEmj-1EmNrPicP34X4WyvoFLzwMB33qKxQK7kutL_JT2Vn12lG7pRT_XnpbkFaEfHz6g~~",
+      "title_hint": "Remote",
+      "legacy_task_id": "1a117ed7d2de7091:16"
+    },
+    {
+      "observation_id": "1a117ed7d2de7091:20",
+      "source": "ladders",
+      "url": "https://t.ladders.co/f/a/aMGJEijYLPFRLedM-6wCRw~~/AARvnRA~/xMCK7VLma9T5XL7imKhTdE6xfRR76uC2xlsZMmhM3PF7ppYSSniOAC4AmT2rc2y1Jia02TYHEJ67vs5TGH9qt99XeL3ffoVWtwCHFjx3pznMSXCTQrqcfvT-FVhJTTY2TkgDsLSNGLzM1goSFHAP7jBD0sNGmjNMsENQgjkMybth9A4E-1tAPJ5Wp8mWrGuSk6Ib2HHl6Rri443dN862nmnXoH6_3akiMHkjaNlrY8DLVOvxEcMQm1rhMElIZDzJDUMQt3z6_pBhZOwM9e0A-FugCaGpd8XwFvA5QiMAiZm-RsmykkYNwzztPTTZXx07xfdC2viLpIt4qqb9WMwUntwWcx_9_54JZSwb-fnGkgulXkCUus3SFp3c7NQNwOQ8drm41HM1VtcAslXz_sUvBaj-BFQ-FoOBBDN0x78YtPfVvaC2_8MNSKdCtfNQZ2Kt_eagztApfR0QtlFFaXLlmD0MxHaIKHE3RGgEM2OiXxF9ueeMc5s95oFOI0Vw6Jbf",
+      "title_hint": "Remote",
+      "legacy_task_id": "1a117ed7d2de7091:20"
+    },
+    {
+      "observation_id": "1a117ed7d2de7091:24",
+      "source": "ladders",
+      "url": "https://t.ladders.co/f/a/StzW7D-vG58H1UFgRe_uoA~~/AARvnRA~/yVj77DH4qchthMWDPoI87McxPNlXbBccrFlneBeGKRJiY_5pSgB9YrlZpTAw9FKUyx1wTDYImtau76TY0qpmOcQKboRIVv6smz70-Spgg_r1JW0QnKx2YPofh9aHDrwTP738K4bPWM6gL6_sDTLUos1DSUpslVIJbS54WHqyaD8brdxLyHaIcikJut7Be-4enuLQkvQa7Ssj0ZsS54c1PzS6AI4M-_43mSIhGy9F6MQq09VzbqSPT5F4K7F5ScHKS5SCDECjXhh2roDSGt1e4MiA3cqEiS2X_yMCsrV8-19h51TrfdJgbgZk9M21BP7UpBOOwBqITdO1wxETGMf93cKgh-RJ2orCGuo4VBwOYhEZVtYqkFl1ceLmZTm43_RvEQqIsKLcyndbuQHazNbUXouPxEcJXSMEJbPR6f7Pn-1m1OPk2MpGjHp40O4ECD6Nu_nPo_j1S6kH411ph3HNvw~~",
+      "title_hint": "Remote",
+      "legacy_task_id": "1a117ed7d2de7091:24"
+    },
+    {
+      "observation_id": "1a117ed7d2de7091:28",
+      "source": "ladders",
+      "url": "https://t.ladders.co/f/a/ObqG7nFrCF8VOktvrbUoHg~~/AARvnRA~/GJBDBe_U9kXDRxM_sluQQ47chbO_-k6cQg0Jo_Uj5YsHMDwQiRMYfDhrn8V-Xs6NtkFY39jInZbRtgMNPnRPyxSteZsgFP2IPYEDo0XEQm2HFuS9cWfJVSYXq6SMqw8ZDXUoTaxSEcqnXOUqmVI6Ut4_FkjvyHywsfEjdiq3EXVPEHe7B9j3B_Vv97QiSAE9V2xxrbKgYi_qbzteLvh3aPN6ERr9Om_k8BHiuMmk8nOF5Hm4jZMS3_sitslm1xyKxhnhL8riLmfUpgKPtzkHi3S43j6u4xzXx99jyXONvFuRp7fhVE2aTDadR4XIvTQiJvmNA4BB3pbb6g5XcDKktx3o_7NpJ8bugkXgeNnu77sjkJGs_zGbFBQszUBPBM0ui6RdZoZHEO8xao4I5ChlDcWcb0JjvyUUcHXeYzJZnW3dS56DxcQljvl2ijNER0I-XKvgNOn_6X_hXpryQRgupw~~",
+      "title_hint": "Remote",
+      "legacy_task_id": "1a117ed7d2de7091:28"
+    },
+    {
+      "observation_id": "1a117ed7d2de7091:32",
+      "source": "ladders",
+      "url": "https://t.ladders.co/f/a/tRBsixdsdBGSw4tI_57cXA~~/AARvnRA~/R51Nkw3eyyz9BrzWeu8dsrGnwUnxEDJQTw9moBRRLBzOMBxRxkLoROmsmr-i8sAwYirpQ3OB3E8j823qf23HCyggvDXmDPmdIDj_-Kpn7HJmPacwHe407v8S5Swj7hcs_ySGPLTt1oEBa__EYYWPhEtVY5aQVpb5n-nR5-ZnrxPJVty8NsNZINKpdHbDFyRGqc7u_UJnICHiYtSRc4jypzdCCiF_WaQvsLcYQR96yq6QfGHRIuZ69EgDH3M2kzVxm3PEgI70YlOIrUI1flIjyrUmt52CcQ-Zzy-5XCfbrYqNJbP-YMuCJ-puKrx2qmli1WrTkU-H9iAmDruAqugcnm8wxWWQmJgi_L4CRBWs-uqg5gegYNl3GAcpu9065eH95pXZHxQvZhhKri8JsFMGc6Vo-JfxymS4Y3buGMRWRzy8KD4ADfERu7WcLn6tLBnGqBStXTlvwv12K0akVftmZOQsxu3SM-pWyJ-75Q-b5Os~",
+      "title_hint": "Remote",
+      "legacy_task_id": "1a117ed7d2de7091:32"
+    },
+    {
+      "observation_id": "1a117ed7d2de7091:36",
+      "source": "ladders",
+      "url": "https://t.ladders.co/f/a/tIBg0HTqJ4o6TvxgZ66VVA~~/AARvnRA~/1NApQBJYgXYdd64ezOg4jCHkfopkokF_QLp5yQ4Rmj1yHf64-uSD3lI69-uPk8Wap4ttvDiKIU9pQfdoSPBT0S05UGeW6S_78oE0eJlF8RIAXU-lK3V1ranHa0j-lgzLfHsbQdXIlHxCPJqOCPVY2elzSayib2D3yQ6cFVfym3GQLTg6QNl4O_uT0F2FUTiCvvfC6Sjhl78Z3H8KYcnTa9VjAYVSd0ga6XvEaCHxHubityKZN_Qk0Wk-_T26iWsBXzaUlBQDaM6tH2tUKSIz79_1ipBRo9_1jozX6FFciXkZku3IY20CLM1UIz1Ds1br-aczdEyt84Sybjw84d1G0hcXRjKpgX5iQlqC_5LhjydLDEyJJDcxdhAz4CV6l7_w1UdxHf_gCKAxapmkSDJjiozrnikvDbyxWTU84tna-ZzS3tD_PZJy8fZbVMQhZFrLOZ6RejFrhEk-jdCBhnORkQ~~",
+      "title_hint": "Remote",
+      "legacy_task_id": "1a117ed7d2de7091:36"
+    },
+    {
+      "observation_id": "1a117ed7d2de7091:4",
+      "source": "ladders",
+      "url": "https://t.ladders.co/f/a/LhtjMWWQzrkbiq4Z5yjStg~~/AARvnRA~/aMgNBJN7enez85VKdeJEzBFJMtbvbWyblrLFulCR7tx371pxyrcv2im--51CniqmH6alIUWCmttNSVTkBYzMC5gL1uBSZ5_kkC7mTTsZ4NUoDk9OyOl6CxUuZHo0SdaNZe2eQQwmAW5q0pJ2XadSmJtMnqrcyCaHz2EunV0CQFDwRey9Q-rqjGdeG4rrFQdrGbx5aOePb0TYIWQkfxm5gvc1T2rHGy8XEFpGBXhEdy49bBm6MrXGYmjah72LZJNeaa_UsMhH9fBJleaRKSAXFjeRCOQ3iqNeL3eb4R6aZZwZAZFJEgSRznFZPOX9gHzUpsQKaFM2MIUB1WDr51_1JcgsRFchOzA_9lLU6qguhAGWWje-EPbHgKY57g29Knu68u8H44GRlMg9NiYrygdM70Jxx35PlcitcTJdBHULkXXlEqW2OQfNpaBU6wIKq070rCLlfIulR_pn26Miz6tiOw~~",
+      "title_hint": "Remote",
+      "legacy_task_id": "1a117ed7d2de7091:4"
+    },
+    {
+      "observation_id": "1a117ed7d2de7091:46",
+      "source": "ladders",
+      "url": "https://t.ladders.co/f/a/4FaKjAwo-_gaYf1Z281z_w~~/AARvnRA~/NeJGoU1Km3PXejNfpHhatbanF7bWJGTB4mzMzUIu6sVkgr7uxxkiM-FwtYsl3Qm2m16dl4PoBiNkg4DAQH3dHIG4kv1Fri0wsWjVpnoJbdo~",
+      "title_hint": "Ladders, Inc.",
+      "legacy_task_id": "1a117ed7d2de7091:46"
+    },
+    {
+      "observation_id": "1a117ed7d2de7091:47",
+      "source": "ladders",
+      "url": "https://t.ladders.co/f/a/4FaKjAwo-_gaYf1Z281z_w~~/AARvnRA~/NeJGoU1Km3PXejNfpHhatbanF7bWJGTB4mzMzUIu6sVkgr7uxxkiM-FwtYsl3Qm2m16dl4PoBiNkg4DAQH3dHIG4kv1Fri0wsWjVpnoJbdo~",
+      "title_hint": "Ladders, Inc.",
+      "legacy_task_id": "1a117ed7d2de7091:47"
+    },
+    {
+      "observation_id": "1a117ed7d2de7091:48",
+      "source": "ladders",
+      "url": "https://t.ladders.co/f/a/4FaKjAwo-_gaYf1Z281z_w~~/AARvnRA~/NeJGoU1Km3PXejNfpHhatbanF7bWJGTB4mzMzUIu6sVkgr7uxxkiM-FwtYsl3Qm2m16dl4PoBiNkg4DAQH3dHIG4kv1Fri0wsWjVpnoJbdo~",
+      "title_hint": "Ladders, Inc.",
+      "legacy_task_id": "1a117ed7d2de7091:48"
+    },
+    {
+      "observation_id": "1a117ed7d2de7091:8",
+      "source": "ladders",
+      "url": "https://t.ladders.co/f/a/254NrIP7zRiHVQF4UIKUwA~~/AARvnRA~/aMgNBJN7enez85VKdeJEzBFJMtbvbWyblrLFulCR7tx7OYy94lht6AbmwTSKcpU7YgZPbgLGGOXaDMWez7ROB6kLhiVD8uPACZ8QWQd4ApL0U2l1FHr1k7_-5Bnau__U9bTwJl10F--uI33lmdkVvfQaSbOZ56ioqcHpwMPFtUT_35N3Eg96V1IlkXsUBUVBs1K58YA_Pl-fKc4vQICSnEu1uCHnJofQAM4CSSK4QRXCmRBc9khxJrOc0PuxlJjFnXu35j-XN62JzpEpRRgHHFMpowUoyu0WkxYrS0LflYwSqw4anBsMZNPhO9EY5Of54O9nGLhVeGxHEnvbjqOI8uVmrIPOh1ViFA7pX1nNa4XNWJjgYB56GYALyhWexdmzkqyVz1vDTQ-pwgOYkvD9C07FEnMcDKAArD_d_-rqt1lMNV5YCVTSpj69DrRfAhT0-wtFGW0v3z3IanrZwr775A~~",
+      "title_hint": "Remote",
+      "legacy_task_id": "1a117ed7d2de7091:8"
+    },
+    {
+      "observation_id": "1a117f2aa300ae9e:19",
+      "source": "jobright",
+      "url": "https://jobright.ai/?retarget=jobalert",
+      "title_hint": "Update Job Alert Preference",
+      "legacy_task_id": "1a117f2aa300ae9e:19"
+    }
+  ]
+}

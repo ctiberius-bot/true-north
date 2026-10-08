@@ -1,0 +1,19 @@
+name = "true-north-citadel-oauth-core"
+main = "oauth-broker.js"
+compatibility_date = "2026-10-06"
+workers_dev = false
+
+[observability]
+enabled = false
+
+[[durable_objects.bindings]]
+name = "OAUTH_COORDINATOR"
+class_name = "OAuthCoordinator"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["OAuthCoordinator"]
+
+# Normal variable: OAUTH_CLIENT_ID. User-entered secrets: OAUTH_CLIENT_SECRET,
+# TOKEN_ENCRYPTION_KEY. This Worker receives no public route.
+

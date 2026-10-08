@@ -1,0 +1,445 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>True North · Application Review</title>
+  <style>
+    :root {
+      /* Integration owner should replace these with the existing brand tokens. */
+      --tn-font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --tn-display-font: "Oswald", "Arial Narrow", var(--tn-font);
+      --tn-bg: #0A0C10;
+      --tn-surface: #12161d;
+      --tn-surface-alt: #1a202a;
+      --tn-text: #f4eddc;
+      --tn-muted: #a69e8d;
+      --tn-border: #393326;
+      --tn-brand: #D9A93F;
+      --tn-brand-contrast: #0A0C10;
+      --tn-danger: #ee847b;
+      --tn-danger-soft: #2d1718;
+      --tn-warning: #e4bd62;
+      --tn-warning-soft: #292313;
+      --tn-success: #86c59d;
+      --tn-radius: 14px;
+      --tn-shadow: 0 16px 38px rgba(0, 0, 0, .28);
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--tn-bg); color: var(--tn-text); font: 15px/1.55 var(--tn-font); }
+    button, input, select, textarea { font: inherit; }
+    button { cursor: pointer; }
+    button:disabled { cursor: not-allowed; opacity: .55; }
+    a { color: var(--tn-brand); }
+    .shell { width: min(100%, 1480px); margin: 0 auto; padding: 20px clamp(16px, 2.2vw, 32px) 32px; }
+    .topbar { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-bottom: 18px; min-height: 82px; }
+    .brand { display: flex; align-items: center; gap: 16px; min-width: 0; }
+    .brand-lockup { width: 112px; height: 72px; object-fit: contain; object-position: left center; flex: 0 0 auto; }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { font: 700 clamp(22px, 2vw, 28px)/1.08 var(--tn-display-font); letter-spacing: .075em; text-transform: uppercase; margin-bottom: 5px; }
+    h2 { font-size: 19px; }
+    h3 { font-size: 15px; margin-bottom: 8px; }
+    .muted { color: var(--tn-muted); }
+    .eyebrow { color: var(--tn-muted); font-size: 12px; font-weight: 750; letter-spacing: .08em; text-transform: uppercase; }
+    .panel { background: var(--tn-surface); border: 1px solid var(--tn-border); border-radius: var(--tn-radius); box-shadow: var(--tn-shadow); }
+    .filters { padding: 16px 18px 18px; margin-bottom: 16px; }
+    .filter-grid { display: grid; grid-template-columns: minmax(260px, 1.4fr) minmax(190px, .85fr) repeat(2, minmax(170px, .72fr)); gap: 14px; align-items: end; }
+    label { display: grid; gap: 6px; font-weight: 650; }
+    input, select, textarea { width: 100%; padding: 10px 11px; color: var(--tn-text); color-scheme: dark; background: var(--tn-surface); border: 1px solid var(--tn-border); border-radius: 9px; }
+    textarea { min-height: 90px; resize: vertical; }
+    .layout { display: grid; grid-template-columns: minmax(340px, 390px) minmax(0, 1fr); gap: 16px; align-items: stretch; }
+    .list-panel { overflow: hidden; }
+    .panel-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 16px 18px; border-bottom: 1px solid var(--tn-border); }
+    .panel-head h2 { margin: 0; }
+    .job-list { display: grid; max-height: min(620px, calc(100vh - 255px)); overflow: auto; }
+    .job-row { display: grid; gap: 7px; width: 100%; padding: 16px 18px; text-align: left; background: transparent; color: inherit; border: 0; border-bottom: 1px solid var(--tn-border); }
+    .job-row:hover, .job-row[aria-current="true"] { background: var(--tn-surface-alt); }
+    .job-title { font-weight: 760; }
+    .job-meta, .chips, .actions, .status-line { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    .chip { display: inline-flex; align-items: center; border: 1px solid var(--tn-border); border-radius: 999px; padding: 3px 8px; font-size: 12px; background: var(--tn-surface); }
+    .chip[data-tone="good"] { color: var(--tn-success); border-color: #315e42; background: #14261b; }
+    .chip[data-tone="warn"] { color: var(--tn-warning); border-color: #6b5723; background: var(--tn-warning-soft); }
+    .chip[data-tone="bad"] { color: var(--tn-danger); border-color: #653133; background: var(--tn-danger-soft); }
+    .detail { min-width: 0; min-height: 520px; }
+    .detail-inner { padding: clamp(18px, 2vw, 26px); }
+    .hero { display: flex; justify-content: space-between; gap: 24px; align-items: flex-start; padding-bottom: 18px; border-bottom: 1px solid var(--tn-border); }
+    .hero h2 { font-size: 25px; margin-bottom: 4px; }
+    .primary, .secondary, .danger { border-radius: 9px; padding: 9px 13px; font-weight: 750; }
+    .primary { border: 1px solid var(--tn-brand); background: var(--tn-brand); color: var(--tn-brand-contrast); }
+    .secondary { border: 1px solid var(--tn-border); background: var(--tn-surface); color: var(--tn-text); }
+    .danger { border: 1px solid var(--tn-danger); background: var(--tn-danger-soft); color: var(--tn-danger); }
+    .tabs { display: flex; gap: 6px; margin: 18px 0; border-bottom: 1px solid var(--tn-border); }
+    .tab { border: 0; border-bottom: 3px solid transparent; padding: 9px 11px; background: transparent; color: var(--tn-muted); font-weight: 750; }
+    .tab[aria-selected="true"] { color: var(--tn-text); border-color: var(--tn-brand); }
+    .tab-panel[hidden] { display: none; }
+    .stack { display: grid; gap: 14px; }
+    .subcard { border: 1px solid var(--tn-border); border-radius: 12px; padding: 15px; }
+    .subcard-head { display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; }
+    .source-text { white-space: pre-wrap; max-height: 360px; overflow: auto; padding: 14px; border-radius: 10px; background: var(--tn-surface-alt); }
+    .listing-render { max-height: 560px; overflow: auto; padding: clamp(16px, 2vw, 24px); border-radius: 10px; background: var(--tn-surface-alt); line-height: 1.65; }
+    .listing-render h1, .listing-render h2, .listing-render h3, .listing-render h4 { margin: 1.35em 0 .45em; font-family: var(--tn-display-font); letter-spacing: .02em; text-transform: none; }
+    .listing-render h1:first-child, .listing-render h2:first-child, .listing-render h3:first-child { margin-top: 0; }
+    .listing-render p { margin: 0 0 1em; }
+    .listing-render ul, .listing-render ol { margin: .4em 0 1.15em; padding-left: 1.5em; }
+    .listing-render li { margin: .35em 0; padding-left: .2em; }
+    .callout { padding: 12px 14px; border-radius: 10px; background: var(--tn-warning-soft); color: var(--tn-warning); }
+    .callout.bad { background: var(--tn-danger-soft); color: var(--tn-danger); }
+    .review-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .artifact { display: grid; gap: 8px; padding: 12px 0; border-top: 1px solid var(--tn-border); }
+    .code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; overflow-wrap: anywhere; }
+    .queue { margin-top: 16px; overflow: hidden; }
+    .queue-scroll { max-height: 430px; overflow: auto; overscroll-behavior: contain; }
+    table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+    th, td { padding: 11px 14px; text-align: left; border-bottom: 1px solid var(--tn-border); vertical-align: top; }
+    th { position: sticky; top: 0; z-index: 1; color: var(--tn-muted); background: var(--tn-surface); font-size: 12px; text-transform: uppercase; letter-spacing: .06em; }
+    th:nth-child(1), td:nth-child(1) { width: 12%; } th:nth-child(2), td:nth-child(2) { width: 17%; } th:nth-child(3), td:nth-child(3) { width: 14%; } th:nth-child(4), td:nth-child(4) { width: 45%; } th:nth-child(5), td:nth-child(5) { width: 12%; }
+    td a { display: block; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .notice { min-height: 22px; margin: 10px 0 0; }
+    .notice[data-tone="bad"] { color: var(--tn-danger); }
+    .notice[data-tone="good"] { color: var(--tn-success); }
+    .empty { padding: 34px 20px; text-align: center; color: var(--tn-muted); }
+    dialog { border: 0; border-radius: 14px; box-shadow: var(--tn-shadow); max-width: 430px; width: calc(100% - 32px); }
+    dialog::backdrop { background: rgba(8, 15, 10, .48); }
+    @media (max-width: 1050px) { .filter-grid { grid-template-columns: 1fr 1fr; } .layout { grid-template-columns: minmax(300px, 36%) minmax(0, 1fr); } }
+    @media (max-width: 760px) { .shell { padding-inline: 12px; } .topbar { align-items: flex-start; flex-direction: column; gap: 10px; } .brand-lockup { width: 94px; height: 62px; } .filter-grid, .layout, .review-grid { grid-template-columns: 1fr; } .job-list { max-height: 330px; } .detail { min-height: 420px; } .hero, .panel-head { align-items: flex-start; flex-direction: column; } .tabs { overflow-x: auto; } .tab { white-space: nowrap; } .queue-scroll { max-height: 360px; } table { min-width: 760px; } }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <div class="brand"><img class="brand-lockup" src="./TrueNorth-Polaris-full_dark.svg" alt="True North — Steer by it"><div><h1>Application Review</h1><div class="muted">Evidence-bound career operations</div></div></div>
+      <div class="status-line"><span class="chip" id="connectionChip">Connecting…</span><span class="chip" data-tone="warn">Submission disabled</span><a class="chip" href="/legacy">Legacy utilities</a></div>
+    </header>
+
+    <section class="panel filters" aria-labelledby="filtersTitle">
+      <div class="filter-grid">
+        <label><span id="filtersTitle">Role or company</span><input id="roleFilter" type="search" placeholder="Enterprise architecture, Cor Partners…"></label>
+        <label>Location<input id="locationFilter" type="search" placeholder="Atlanta, remote…"></label>
+        <label>Application status<select id="pipelineFilter"><option value="">All statuses</option><option value="untracked">Not yet tracked</option><option>target</option><option>considering</option><option>package_draft</option><option>chris_review</option><option>approved_to_send</option><option>applied</option><option>conversation</option><option>interviewing</option><option>offer</option><option>closed</option></select></label>
+        <label>Research status<select id="researchFilter"><option value="">All statuses</option><option>complete</option><option>pending</option><option>login_required</option><option>blocked</option><option>incomplete_retry</option></select></label>
+      </div>
+    </section>
+
+    <main class="layout">
+      <section class="panel list-panel" aria-labelledby="jobsTitle">
+        <div class="panel-head"><h2 id="jobsTitle">Jobs</h2><span id="jobCount" class="muted"></span></div>
+        <div id="jobList" class="job-list"><div class="empty">Loading real job data…</div></div>
+      </section>
+
+      <section class="panel detail" aria-live="polite">
+        <div id="jobDetail" class="detail-inner"><div class="empty">Choose a job to review its listing evidence and application package.</div></div>
+      </section>
+    </main>
+
+    <section class="panel queue" aria-labelledby="queueTitle">
+      <div class="panel-head"><h2 id="queueTitle">Research queue</h2><div class="actions"><label>Status <select id="queueStatus"><option value="">All</option><option>login_required</option><option>blocked</option><option>incomplete_retry</option><option>pending</option><option>complete</option></select></label><label>Provider <select id="researchSource"><option value="jobright">Jobright</option><option value="ladders">Ladders</option><option value="indeed">Indeed</option><option value="backstage">Backstage</option><option value="linkedin">LinkedIn</option></select></label><button id="runResearch" class="secondary" type="button">Research up to 5</button><button id="runAssessments" class="secondary" type="button">Assess up to 25 current listings</button><button id="refreshQueue" class="secondary" type="button">Refresh</button></div></div>
+      <div class="queue-scroll"><table><thead><tr><th>Source</th><th>Task</th><th>Status</th><th>Listing / issue</th><th>Action</th></tr></thead><tbody id="queueBody"></tbody></table></div>
+      <p id="queueNotice" class="notice" role="status"></p>
+    </section>
+  </div>
+
+  <dialog id="loginDialog">
+    <form id="loginForm" method="dialog" class="stack">
+      <div><div class="eyebrow">Private workspace</div><h2>Sign in</h2><p class="muted">Use the configured dashboard password.</p></div>
+      <label>Password<input name="password" type="password" autocomplete="current-password" required></label>
+      <button class="primary">Sign in</button><p id="loginError" class="notice" data-tone="bad" role="alert"></p>
+    </form>
+  </dialog>
+
+  <script>
+    const el = id => document.getElementById(id);
+    const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    const fmtDate = value => value ? new Intl.DateTimeFormat(undefined, {dateStyle:'medium', timeStyle:'short'}).format(new Date(value)) : 'Unavailable';
+    const state = {jobs: [], workflows: new Map(), selected: null, tab: 'listing'};
+
+    async function api(path, options) {
+      const response = await fetch(path, options);
+      if (response.status === 401) { el('loginDialog').showModal(); throw new Error('auth'); }
+      if (!response.ok) {
+        let message = await response.text();
+        try { message = JSON.parse(message).error || message; } catch {}
+        throw new Error(message || `Request failed (${response.status})`);
+      }
+      return response.status === 204 ? null : response.json();
+    }
+    const post = (path, body) => api(path, {method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify(body)});
+    const latest = rows => Array.isArray(rows) && rows.length ? rows[0] : null;
+    const tone = value => /approved|complete|offer|conversation|interviewing/.test(value || '') ? 'good' : /reject|blocked|login_required|closed/.test(value || '') ? 'bad' : 'warn';
+    const chip = (value, label = value) => `<span class="chip" data-tone="${tone(value)}">${esc(label || 'Unavailable')}</span>`;
+
+    async function loadJobs() {
+      el('connectionChip').textContent = 'Loading';
+      const jobs = await api('/api/jobs?limit=250');
+      state.jobs = await Promise.all(jobs.map(async job => {
+        try {
+          const workflow = await api('/api/workflows/' + encodeURIComponent(job.id));
+          state.workflows.set(job.id, workflow);
+          return job;
+        } catch (error) {
+          if (error.message !== 'auth') state.workflows.set(job.id, {load_error:error.message});
+          return job;
+        }
+      }));
+      el('connectionChip').textContent = 'Live API';
+      el('connectionChip').dataset.tone = 'good';
+      renderJobs();
+    }
+
+    function filters() {
+      return {
+        role: el('roleFilter').value.trim().toLowerCase(), location: el('locationFilter').value.trim().toLowerCase(),
+        pipeline: el('pipelineFilter').value, research: el('researchFilter').value
+      };
+    }
+    function jobStage(job) { return latest(state.workflows.get(job.id)?.pipeline_items)?.stage || 'untracked'; }
+    function filteredJobs() {
+      const f = filters();
+      return state.jobs.filter(job => {
+        const roleHaystack = `${job.title || ''} ${job.company || ''}`.toLowerCase();
+        const location = String(job.location || '').toLowerCase();
+        return (!f.role || roleHaystack.includes(f.role)) && (!f.location || location.includes(f.location)) &&
+          (!f.pipeline || jobStage(job) === f.pipeline) && (!f.research || job.research_status === f.research);
+      });
+    }
+    function renderJobs() {
+      const jobs = filteredJobs();
+      el('jobCount').textContent = `${jobs.length} of ${state.jobs.length}`;
+      el('jobList').innerHTML = jobs.length ? jobs.map(job => {
+        const stage = jobStage(job);
+        return `<button class="job-row" type="button" data-job="${esc(job.id)}" aria-current="${state.selected === job.id}">
+          <span class="job-title">${esc(job.title || 'Untitled role')}</span>
+          <span>${esc(job.company || 'Company unavailable')} · ${esc(job.location || 'Location unavailable')}</span>
+          <span class="chips">${chip(stage)}${chip(job.research_status, `research: ${job.research_status || 'unknown'}`)}<span class="chip">${esc(job.source || 'source unknown')}</span></span>
+        </button>`;
+      }).join('') : '<div class="empty">No real API records match these filters.</div>';
+    }
+
+    async function selectJob(id) {
+      const generation = (state.selectionGeneration || 0) + 1;
+      state.selectionGeneration = generation;
+      state.selected = id; state.tab = 'listing'; renderJobs();
+      el('jobDetail').innerHTML = '<div class="empty">Loading job details and workflow…</div>';
+      try {
+        const [detail, workflow] = await Promise.all([
+          api('/api/jobs/' + encodeURIComponent(id)), api('/api/workflows/' + encodeURIComponent(id))
+        ]);
+        if (state.selected !== id || state.selectionGeneration !== generation) return;
+        state.workflows.set(id, workflow); renderDetail(detail, workflow); renderJobs();
+      } catch (error) {
+        if (state.selected !== id || state.selectionGeneration !== generation) return;
+        if (error.message !== 'auth') el('jobDetail').innerHTML = `<div class="callout bad">Could not load this job: ${esc(error.message)}</div>`;
+      }
+    }
+
+    function freshness(detail) {
+      const version = latest(detail.listing_versions);
+      if (!version) return '<div class="callout bad">No listing version is available. Approval readiness cannot be established.</div>';
+      const employerUrl = [detail.canonical_url, ...(detail.evidence || []).map(x => x.source_url)].find(value => { try { return new URL(value).hostname.toLowerCase() === 'corpartners.wd5.myworkdayjobs.com'; } catch { return false; } });
+      return `<div class="subcard"><div class="subcard-head"><div><div class="eyebrow">Latest stored listing version</div><strong>${esc(version.id)}</strong></div>${chip('', 'Freshness check unavailable')}</div>
+        <p class="muted">Fetched ${esc(fmtDate(version.fetched_at))} · Provider ${esc(version.provider || 'unavailable')}</p>
+        <div class="code">Content hash: ${esc(version.content_hash || 'unavailable')}</div>
+        <div class="callout">The current GET contracts do not expose the trusted check record. This timestamp and hash prove the stored version only; they do not prove the listing is still open.</div>
+        ${employerUrl ? `<div class="actions" style="margin-top:12px"><button class="secondary" type="button" data-public-verify data-job="${esc(detail.id)}" data-source-url="${esc(employerUrl)}">Verify employer listing now</button><span class="muted">Uses the backend's allowlisted public server fetch.</span></div><p class="notice" data-freshness-notice role="status"></p>` : '<p class="muted">Public verification is unavailable because no allowlisted Cor Partners Workday URL is present in this job’s real API data.</p>'}</div>`;
+    }
+
+    function safeListingHtml(value) {
+      const allowed = new Set(['p','br','ul','ol','li','h1','h2','h3','h4','strong','b','em','i','blockquote']);
+      const doc = new DOMParser().parseFromString(`<body>${String(value || '')}</body>`, 'text/html');
+      for (const node of [...doc.body.querySelectorAll('*')]) {
+        const tag = node.tagName.toLowerCase();
+        if (!allowed.has(tag)) node.replaceWith(...node.childNodes);
+        else for (const attr of [...node.attributes]) node.removeAttribute(attr.name);
+      }
+      return doc.body.innerHTML;
+    }
+
+    function packageCards(workflow) {
+      const packages = workflow.application_packages || [];
+      if (!packages.length) return '<div class="empty">No application package exists for this job.</div>';
+      const artifacts = workflow.application_artifacts || [], reviews = workflow.package_reviews || [], verifications = workflow.artifact_verifications || [];
+      return packages.map(pkg => {
+        const ownArtifacts = artifacts.filter(a => a.package_id === pkg.id);
+        const ownReviews = reviews.filter(r => r.package_id === pkg.id);
+        const canApprove = pkg.status === 'chris_review';
+        return `<article class="subcard" data-package-card="${esc(pkg.id)}">
+          <div class="subcard-head"><div><div class="eyebrow">Package</div><h3>${esc(pkg.id)}</h3></div>${chip(pkg.status)}</div>
+          <p class="muted">Revision ${esc(pkg.revision ?? 'unavailable')} · Listing version ${esc(pkg.listing_version_id || 'unavailable')} · Arsenal ${esc(pkg.arsenal_version || 'unavailable')}</p>
+          <div class="stack">${ownArtifacts.length ? ownArtifacts.map(a => {
+            const verified = verifications.some(v => v.artifact_id === a.id && v.drive_file_id === a.drive_file_id && String(v.content_hash).toLowerCase() === String(a.content_hash).toLowerCase());
+            return `<div class="artifact"><div class="subcard-head"><strong>${esc(a.artifact_type)}</strong>${chip(verified ? 'complete' : 'pending', verified ? 'Readback verified' : 'Readback not verified')}</div><div class="code">${esc(a.content_hash)}</div><div>Drive file: ${esc(a.drive_file_id || 'Not attached')}</div><details><summary>Evidence map (${(a.evidence_map || []).length})</summary><pre class="source-text">${esc(JSON.stringify(a.evidence_map || [], null, 2))}</pre></details></div>`;
+          }).join('') : '<div class="callout bad">No artifacts are attached to this package.</div>'}</div>
+          <details><summary>Review history (${ownReviews.length})</summary><pre class="source-text">${esc(JSON.stringify(ownReviews, null, 2))}</pre></details>
+          <form class="review-grid review-form" data-package="${esc(pkg.id)}" data-revision="${esc(pkg.revision)}">
+            <label style="grid-column:1/-1">Review note<textarea name="notes" placeholder="Required context for the audit trail"></textarea></label>
+            <label style="grid-column:1/-1">Chris reauthentication<input name="confirmation_password" type="password" autocomplete="current-password" required></label>
+            <button class="primary" name="decision" value="approve" ${canApprove ? '' : 'disabled'}>Approve package</button>
+            <button class="danger" name="decision" value="reject">Reject package</button>
+          </form>
+          ${canApprove ? '' : `<p class="muted">Approval is available only when the real package status is <span class="code">chris_review</span>. Current status: ${esc(pkg.status)}.</p>`}
+          <p class="notice" data-package-notice role="status"></p>
+        </article>`;
+      }).join('');
+    }
+
+    function assessmentCards(detail) {
+      const assessments = detail.assessments || [];
+      if (!assessments.length) return '<div class="callout">No deterministic fit assessment is persisted for this exact listing version. No qualification claim should be inferred.</div>';
+      return assessments.map(row => {
+        const x = row.explanation || {}, hard = x.hard_constraints || {}, matches = x.arsenal_matches || [], gaps = [...(hard.vetoes || []), ...(hard.review_reasons || [])];
+        return `<article class="subcard"><div class="subcard-head"><div><div class="eyebrow">Deterministic fit assessment</div><h3>${esc(row.score)} / 100 · ${esc(row.band)}</h3></div>${chip(row.band)}</div>
+          <p class="muted">Profile ${esc(row.profile_id)} v${esc(row.profile_version)} · Arsenal ${esc(row.arsenal_version)} · Listing ${esc(row.listing_version_id)}</p>
+          <p class="muted">Method ${esc(x.assessment_method_version || 'legacy')}</p>
+          <div class="code">Listing hash: ${esc(row.listing_content_hash || 'unavailable')}</div>
+          <p><strong>Title evidence:</strong> ${esc((x.alias_hits || []).join(', ') || 'No configured title alias matched')}</p>
+          <p><strong>Constraint findings:</strong> compensation ${esc(hard.compensation || 'unknown')} · engagement ${esc(hard.engagement || 'unknown')} · geography ${esc(hard.geography || 'unknown')}</p>
+          <div class="callout ${gaps.length ? 'bad' : ''}"><strong>Gaps and blockers:</strong> ${esc(gaps.join(', ') || 'No explicit veto recorded; unsupported requirements still require human review.')}</div>
+          <details><summary>Supported Arsenal evidence (${matches.length})</summary><div class="stack">${matches.length ? matches.map(m => `<div><strong>${esc(m.source_anchor || 'source anchor unavailable')}</strong><div class="code">${esc(m.claim_id)}</div><span class="muted">Matched tags: ${esc((m.tags || []).join(', ') || 'none')}</span></div>`).join('') : '<p>No Arsenal evidence matched.</p>'}</div></details>
+        </article>`;
+      }).join('');
+    }
+
+    function renderDetail(detail, workflow) {
+      const version = latest(detail.listing_versions), pipeline = latest(workflow.pipeline_items), evidence = detail.evidence || [];
+      const listingUrl = detail.canonical_url ? `<a class="secondary" href="${esc(detail.canonical_url)}" target="_blank" rel="noreferrer">Open source listing</a>` : '<button class="secondary" disabled>Source URL unavailable</button>';
+      el('jobDetail').innerHTML = `<div class="hero"><div><div class="eyebrow">${esc(detail.source || 'Source unavailable')}</div><h2>${esc(detail.title || 'Untitled role')}</h2><p>${esc(detail.company || 'Company unavailable')} · ${esc(detail.location || 'Location unavailable')}</p><div class="chips">${chip(pipeline?.stage || 'untracked')}${chip(detail.research_status, `research: ${detail.research_status || 'unknown'}`)}</div></div><div class="actions">${listingUrl}</div></div>
+        <div class="tabs" role="tablist"><button class="tab" data-tab="listing" role="tab" aria-selected="true">Listing & evidence</button><button class="tab" data-tab="package" role="tab" aria-selected="false">Package & approval</button><button class="tab" data-tab="status" role="tab" aria-selected="false">Application status</button></div>
+        <section class="tab-panel stack" data-panel="listing">${freshness(detail)}${assessmentCards(detail)}<div class="subcard"><div class="subcard-head"><div><h3>Full stored listing</h3><span class="muted">Sanitized semantic rendering · source text and hash preserved</span></div><span class="muted">${esc(version?.id || 'No version')}</span></div>${version?.render_html ? `<article class="listing-render">${safeListingHtml(version.render_html)}</article>` : version?.full_description ? `<div class="source-text">${esc(version.full_description)}</div>` : '<div class="callout bad">Full listing text is unavailable.</div>'}</div><div class="subcard"><h3>Anchored evidence (${evidence.length})</h3>${evidence.length ? evidence.map(e => `<details><summary>${esc(e.evidence_type)} · ${esc(e.source_anchor || 'anchor unavailable')}</summary><p>${esc(e.claim_text)}</p><a href="${esc(e.source_url)}" target="_blank" rel="noreferrer">Source</a></details>`).join('') : '<div class="callout bad">No evidence records are available.</div>'}</div></section>
+        <section class="tab-panel stack" data-panel="package" hidden><div class="callout">Nothing in this screen submits an application. Approve/reject records a package review through the existing backend only.</div>${packageCards(workflow)}</section>
+        <section class="tab-panel stack" data-panel="status" hidden>${pipelineCard(detail.id, pipeline, workflow)}<div id="executionPanel" class="subcard"><div class="empty">Loading submission controls…</div></div></section>`;
+      loadExecution(detail.id);
+    }
+
+    function pipelineCard(jobId, pipeline, workflow) {
+      return `<div class="subcard"><div class="subcard-head"><div><div class="eyebrow">Application status</div><h3>${esc(pipeline?.stage || 'Not yet tracked')}</h3></div>${chip(pipeline?.stage || 'untracked')}</div>
+        <p>Next action: ${esc(pipeline?.next_action || 'Unavailable')}</p><p>Owner: ${esc(pipeline?.owner || 'Unavailable')} · Due: ${esc(fmtDate(pipeline?.due_at))}</p>
+        <form id="pipelineForm" class="stack" data-job="${esc(jobId)}"><label>Stage<select name="stage">${['target','considering','package_draft','chris_review','approved_to_send','conversation','interviewing','offer','closed'].map(x => `<option ${pipeline?.stage === x ? 'selected' : ''}>${x}</option>`).join('')}</select></label><label>Next action<input name="next_action" value="${esc(pipeline?.next_action || '')}"></label><div class="review-grid"><label>Owner<input name="owner" value="${esc(pipeline?.owner || '')}"></label><label>Due at<input name="due_at" type="datetime-local"></label></div><button class="primary">Save status</button></form>
+        <div class="callout">The backend enforces a current approved package and listing freshness before <span class="code">approved_to_send</span>. This UI does not bypass those checks. No endpoint in the inspected worker submits an application.</div><p id="pipelineNotice" class="notice" role="status"></p>
+        <details><summary>Workflow record</summary><pre class="source-text">${esc(JSON.stringify(workflow.pipeline_items || [], null, 2))}</pre></details></div>`;
+    }
+
+    async function loadExecution(jobId) {
+      const panel = el('executionPanel'); if (!panel) return;
+      try {
+        const [destinations, queue] = await Promise.all([api(`/api/applications/${encodeURIComponent(jobId)}/destinations`), api('/api/applications/queue')]);
+        if (state.selected !== jobId || !el('executionPanel')) return;
+        const destination = destinations[0], items = queue.filter(item => item.canonical_job_id === jobId);
+        if (!destination) { panel.innerHTML = '<div class="subcard-head"><h3>Application execution</h3>' + chip('pending') + '</div><div class="callout">No server-verified application destination is registered for this listing. Submission approval remains blocked.</div>'; return; }
+        const exact = await api(`/api/applications/${encodeURIComponent(jobId)}/execution-preview?destination_id=${encodeURIComponent(destination.id)}`);
+        if (state.selected !== jobId || !el('executionPanel')) return;
+        panel.innerHTML = `<div class="subcard-head"><div><div class="eyebrow">Exact bound package</div><h3>Application execution</h3></div>${chip(exact.listing_current ? 'complete' : 'blocked', exact.listing_current ? 'Ready for approval' : 'Listing not current')}</div>
+          <div class="callout bad"><strong>Approval and queue status are not submission.</strong> “Applied” is recorded only after an employer receipt or your password-reauthenticated manual attestation.</div>
+          <p><strong>Destination:</strong> <a href="${esc(exact.destination_url)}" target="_blank" rel="noreferrer">${esc(exact.destination_host)}</a></p><p><strong>Package:</strong> ${esc(exact.package_id)} · revision ${esc(exact.package_revision)}</p><p><strong>Listing check:</strong> ${esc(exact.listing_check_id)}</p><div class="code">Manifest ${esc(exact.artifact_manifest_hash)}</div>
+          ${items.length ? `<div class="stack">${items.map(item => `<div class="artifact"><strong>${esc(item.status_label)}</strong><div>${esc(item.execution_notice || '')}</div>${item.status !== 'submitted' && item.status !== 'rejected' ? `<button class="secondary" type="button" data-manual-attest="${esc(item.id)}">Record external manual submission</button>` : ''}</div>`).join('')}</div>` : `<form id="executionApprove" class="stack"><label><input name="confirm_exact_package" type="checkbox" required> I approve this exact package revision, destination, listing check, and artifact manifest.</label><label>Chris reauthentication<input name="confirmation_password" type="password" autocomplete="current-password" required></label><button class="primary">Approve and queue — does not submit</button></form>`}<div id="executionAction"></div><p id="executionNotice" class="notice" role="status"></p>`;
+        panel.dataset.job = jobId; panel.dataset.destination = destination.id; panel.dataset.preview = JSON.stringify(exact);
+      } catch (error) { if (state.selected === jobId && el('executionPanel')) panel.innerHTML = `<div class="subcard-head"><h3>Application execution</h3>${chip('blocked')}</div><div class="callout">Execution controls are unavailable: ${esc(error.message)}</div>`; }
+    }
+
+    async function loadQueue() {
+      const query = new URLSearchParams({limit:'100', offset:'0'}); if (el('queueStatus').value) query.set('status', el('queueStatus').value);
+      const rows = await api('/api/queue?' + query);
+      el('queueBody').innerHTML = rows.length ? rows.map(row => `<tr><td>${esc(row.source)}</td><td>${esc(row.task_kind)}</td><td>${chip(row.status)}</td><td><a href="${esc(row.url)}" target="_blank" rel="noreferrer">listing</a>${row.error_code ? `<div class="muted">${esc(row.error_code)}</div>` : ''}</td><td>${row.status === 'pending' && row.task_kind === 'fetch_listing' ? `<button class="secondary" data-research="${esc(row.id)}">Research this task</button>` : ['login_required','blocked','incomplete_retry'].includes(row.status) ? `<button class="secondary" data-retry="${esc(row.id)}">Retry</button>` : ''}</td></tr>`).join('') : '<tr><td colspan="5" class="empty">No queue records match this status.</td></tr>';
+    }
+
+    document.addEventListener('input', event => { if (['roleFilter','locationFilter'].includes(event.target.id)) renderJobs(); });
+    document.addEventListener('change', event => { if (['pipelineFilter','researchFilter'].includes(event.target.id)) renderJobs(); });
+    el('jobList').addEventListener('click', event => { const row = event.target.closest('[data-job]'); if (row) selectJob(row.dataset.job); });
+    el('jobDetail').addEventListener('click', event => {
+      const tab = event.target.closest('[data-tab]');
+      if (tab) { state.tab = tab.dataset.tab; document.querySelectorAll('.tab').forEach(x => x.setAttribute('aria-selected', String(x === tab))); document.querySelectorAll('.tab-panel').forEach(x => x.hidden = x.dataset.panel !== state.tab); }
+      const verify = event.target.closest('[data-public-verify]');
+      if (verify) verifyPublicListing(verify);
+      const attest = event.target.closest('[data-manual-attest]');
+      if (attest) el('executionAction').innerHTML = `<form id="manualAttestation" class="stack" data-queue="${esc(attest.dataset.manualAttest)}"><h4>Record an external manual submission</h4><div class="callout bad">This is your attestation, not an employer-verified receipt. Use it only after you personally submitted this exact application.</div><label>Submitted at<input name="submitted_at" type="datetime-local" required></label><label>Employer confirmation reference (optional)<input name="employer_confirmation_ref"></label><label><input name="attestation" type="checkbox" required> I manually submitted this exact approved application</label><label>Chris reauthentication<input name="confirmation_password" type="password" autocomplete="current-password" required></label><button class="primary">Record my manual attestation</button></form>`;
+    });
+    async function verifyPublicListing(button) {
+      const notice = button.parentElement.nextElementSibling; button.disabled = true; notice.textContent = 'Verifying through the allowlisted public employer endpoint…'; notice.dataset.tone = '';
+      try {
+        const result = await post('/api/run/public-listing-verification', {job_id:button.dataset.job, source_url:button.dataset.sourceUrl});
+        const check = await post('/api/workflows/' + encodeURIComponent(button.dataset.job) + '/freshness', {phase:'approval'});
+        notice.textContent = `Verified open for approval. Listing version ${check.listing_version_id}; captured ${fmtDate(check.captured_at)}.`; notice.dataset.tone = 'good';
+        await selectJob(button.dataset.job);
+      } catch (error) { if (error.message !== 'auth') { notice.textContent = `Verification did not establish freshness: ${error.message}`; notice.dataset.tone = 'bad'; } }
+      finally { button.disabled = false; }
+    }
+    el('jobDetail').addEventListener('submit', async event => {
+      event.preventDefault();
+      if (event.target.matches('.review-form')) {
+        const form = event.target, submitter = event.submitter, notice = form.closest('[data-package-card]').querySelector('[data-package-notice]');
+        notice.textContent = ''; notice.dataset.tone = '';
+        if (!submitter?.value) return;
+        submitter.disabled = true;
+        try {
+          const data = new FormData(form), result = await post('/api/packages/' + encodeURIComponent(form.dataset.package) + '/review', {reviewer_role:'chris', decision:submitter.value, expected_revision:Number(form.dataset.revision), notes:data.get('notes'), confirmation_password:data.get('confirmation_password')});
+          notice.textContent = `${submitter.value === 'approve' ? 'Approval' : 'Rejection'} recorded. Backend status: ${result.status}.`; notice.dataset.tone = 'good';
+          await selectJob(state.selected); state.tab = 'package'; const packageTab = document.querySelector('[data-tab="package"]'); packageTab?.click();
+        } catch (error) { if (error.message !== 'auth') { notice.textContent = `Not recorded: ${error.message}`; notice.dataset.tone = 'bad'; } }
+        finally { submitter.disabled = false; }
+      }
+      if (event.target.id === 'pipelineForm') {
+        const form = event.target, data = new FormData(form), notice = el('pipelineNotice'), button = event.submitter;
+        notice.textContent = ''; button.disabled = true;
+        try {
+          const result = await post('/api/workflows/' + encodeURIComponent(form.dataset.job) + '/pipeline', {stage:data.get('stage'), next_action:data.get('next_action'), owner:data.get('owner'), due_at:data.get('due_at') || null});
+          notice.textContent = `Status saved: ${result.stage}.`; notice.dataset.tone = 'good'; await selectJob(state.selected);
+        } catch (error) { if (error.message !== 'auth') { notice.textContent = `Not saved: ${error.message}`; notice.dataset.tone = 'bad'; } }
+        finally { button.disabled = false; }
+      }
+      if (event.target.id === 'executionApprove') {
+        const form = event.target, panel = el('executionPanel'), data = new FormData(form), exact = JSON.parse(panel.dataset.preview), notice = el('executionNotice'), button = event.submitter;
+        notice.textContent = ''; button.disabled = true;
+        try { const result = await post(`/api/applications/${encodeURIComponent(panel.dataset.job)}/approve-execution`, {destination_id:panel.dataset.destination, expected_package_id:exact.package_id, expected_package_revision:exact.package_revision, expected_listing_version_id:exact.listing_version_id, expected_listing_check_id:exact.listing_check_id, expected_artifact_manifest_hash:exact.artifact_manifest_hash, confirm_exact_package:data.get('confirm_exact_package') === 'on', confirmation_password:data.get('confirmation_password')}); notice.textContent = result.execution_notice; notice.dataset.tone = 'good'; await loadExecution(panel.dataset.job); }
+        catch (error) { notice.textContent = `Not queued: ${error.message}`; notice.dataset.tone = 'bad'; }
+        finally { button.disabled = false; }
+      }
+      if (event.target.id === 'manualAttestation') {
+        const form = event.target, data = new FormData(form), notice = el('executionNotice'), button = event.submitter, submitted = new Date(String(data.get('submitted_at')));
+        notice.textContent = ''; button.disabled = true;
+        try { const result = await post(`/api/applications/${encodeURIComponent(form.dataset.queue)}/manual-attestation`, {attestation:data.get('attestation') === 'on' ? 'I manually submitted this exact approved application' : '', submitted_at:submitted.toISOString(), employer_confirmation_ref:data.get('employer_confirmation_ref') || null, confirmation_password:data.get('confirmation_password')}); notice.textContent = `Recorded: ${result.status_label}.`; notice.dataset.tone = 'good'; await loadExecution(state.selected); }
+        catch (error) { notice.textContent = `Not recorded: ${error.message}`; notice.dataset.tone = 'bad'; }
+        finally { button.disabled = false; }
+      }
+    });
+    el('queueBody').addEventListener('click', async event => {
+      const research = event.target.closest('[data-research]');
+      if (research) {
+        research.disabled = true; el('queueNotice').textContent = 'Researching this existing listing task…'; el('queueNotice').dataset.tone = '';
+        try { const result = await post('/api/run/research-task', {task_id:research.dataset.research}); el('queueNotice').textContent = `Research task finished: ${result.result?.status || 'unknown'}.`; el('queueNotice').dataset.tone = 'good'; await Promise.all([loadJobs(), loadQueue()]); }
+        catch (error) { if (error.message !== 'auth') { el('queueNotice').textContent = `Research task stopped: ${error.message}`; el('queueNotice').dataset.tone = 'bad'; } }
+        return;
+      }
+      const button = event.target.closest('[data-retry]'); if (!button) return;
+      button.disabled = true; el('queueNotice').textContent = '';
+      try { await post('/api/queue/retry', {task_id:button.dataset.retry}); el('queueNotice').textContent = 'Retry queued by the backend.'; el('queueNotice').dataset.tone = 'good'; await loadQueue(); }
+      catch (error) { if (error.message !== 'auth') { el('queueNotice').textContent = `Retry not queued: ${error.message}`; el('queueNotice').dataset.tone = 'bad'; } }
+    });
+    el('refreshQueue').onclick = () => loadQueue().catch(error => { if (error.message !== 'auth') el('queueNotice').textContent = error.message; });
+    el('queueStatus').onchange = el('refreshQueue').onclick;
+    el('runAssessments').onclick = async () => {
+      const button = el('runAssessments'); button.disabled = true; el('queueNotice').textContent = 'Assessing up to 25 current full listings against the active profile and verified Arsenal…'; el('queueNotice').dataset.tone = '';
+      try { const result = await api('/api/assess/batch?limit=25', {method:'POST'}); const counts = (result.results || []).reduce((out,row) => { const key = row.band || row.status || 'unknown'; out[key] = (out[key] || 0) + 1; return out; }, {}); el('queueNotice').textContent = `Assessment batch finished: ${result.processed || 0} processed · ${Object.entries(counts).map(([key,value]) => `${key} ${value}`).join(' · ') || 'no current listings missing assessments'}.`; el('queueNotice').dataset.tone = 'good'; await loadJobs(); if (state.selected) await selectJob(state.selected); }
+      catch (error) { if (error.message !== 'auth') { el('queueNotice').textContent = `Assessment batch stopped: ${error.message}`; el('queueNotice').dataset.tone = 'bad'; } }
+      finally { button.disabled = false; }
+    };
+    el('runResearch').onclick = async () => {
+      if (state.researchInFlight) return;
+      const source = el('researchSource').value;
+      state.researchInFlight = true; el('runResearch').disabled = true; el('queueNotice').textContent = `Researching up to 5 existing ${source} public listing tasks…`; el('queueNotice').dataset.tone = '';
+      try {
+        const result = await api(`/api/run/research?limit=5&source=${encodeURIComponent(source)}`, {method:'POST'});
+        const counts = (result.results || []).reduce((out, row) => { const key = row.status || 'unknown'; out[key] = (out[key] || 0) + 1; return out; }, {});
+        el('queueNotice').textContent = `Research batch finished: ${result.processed || 0} processed · ${Object.entries(counts).map(([key,value]) => `${key} ${value}`).join(' · ') || 'no runnable tasks'}.`;
+        el('queueNotice').dataset.tone = 'good'; await Promise.all([loadJobs(), loadQueue()]);
+      } catch (error) { if (error.message !== 'auth') { el('queueNotice').textContent = `Research batch stopped: ${error.message}`; el('queueNotice').dataset.tone = 'bad'; } }
+      finally { state.researchInFlight = false; el('runResearch').disabled = false; }
+    };
+    el('loginForm').onsubmit = async event => {
+      event.preventDefault(); const form = event.target;
+      const response = await fetch('/api/login', {method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify({password:new FormData(form).get('password')})});
+      if (!response.ok) { el('loginError').textContent = 'Sign-in failed.'; return; }
+      el('loginDialog').close(); form.reset(); el('loginError').textContent = ''; await Promise.all([loadJobs(), loadQueue()]);
+    };
+
+    Promise.all([loadJobs(), loadQueue()]).catch(error => { if (error.message !== 'auth') { el('connectionChip').textContent = 'API unavailable'; el('connectionChip').dataset.tone = 'bad'; } });
+  </script>
+</body>
+</html>
