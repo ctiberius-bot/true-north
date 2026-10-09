@@ -1,0 +1,6 @@
+const enc=new TextEncoder();
+async function hash(value){const bytes=await crypto.subtle.digest("SHA-256",enc.encode(value));return[...new Uint8Array(bytes)].map(x=>x.toString(16).padStart(2,"0")).join("")}
+function clean(value){return String(value??"").trim().replace(/\s+/g," ")}
+export async function observeFinalForm(page){
+  const url=new URL(page.url);if(url.protocol!=="https:")throw new Error("form_observation_https_required");const fields=[...(page.fields||[])].map(x=>({name:clean(x.name),type:clean(x.type).toLowerCase(),value_hash:x.value_hash?clean(x.value_hash).toLowerCase():null,checked:Boolean(x.checked),disabled:Boolean(x.disabled)})).sort((a,b)=>`${a.name}\0${a.type}`.localeCompare(`${b.name}\0${b.type}`)),buttons=[...(page.submit_controls||[])].filter(x=>!x.disabled&&x.visible).map(x=>({id:clean(x.id),name:clean(x.name),text:clean(x.text),type:clean(x.type).toLowerCase()}));if(buttons.length!==1)throw new Error("exact_submit_control_required");const canonical={version:1,url:url.toString(),fields,submit_control:buttons[0]};return{destination_url:url.toString(),destination_host:url.hostname.toLowerCase(),form_state_hash:await hash(JSON.stringify(canonical)),canonical,submit_control:buttons[0]};
+}

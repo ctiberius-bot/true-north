@@ -5,6 +5,7 @@
   "description": "Executes only an exact, server-consumed True North final-submit capability.",
   "permissions": ["nativeMessaging", "scripting", "activeTab"],
   "host_permissions": ["https://truenorth.justsignal.company/*"],
+  "optional_host_permissions": ["https://*/*"],
   "background": {"service_worker": "service-worker.js", "type": "module"},
   "action": {"default_title": "True North executor (not paired)"}
 }

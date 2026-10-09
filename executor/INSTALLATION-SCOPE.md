@@ -7,7 +7,7 @@ This is a proposal only. It does not grant or perform any listed action.
 - Copy the reviewed native host into one user-owned application-support directory.
 - Materialize `company.justsignal.truenorth_executor.template.json` with that one absolute host path and the reviewed extension ID.
 - Register that manifest only in the current user's Chrome `NativeMessagingHosts` directory.
-- Load/install the reviewed extension with permissions limited to `nativeMessaging`, `scripting`, `activeTab`, and `https://truenorth.justsignal.company/*`.
+- Load/install the reviewed extension with required permissions limited to `nativeMessaging`, `scripting`, `activeTab`, and `https://truenorth.justsignal.company/*`. The manifest declares `https://*/*` only as an optional host pattern so Chrome can grant one exact employer origin at runtime; it is not granted at installation.
 - Create one per-user LaunchAgent only if background queue polling is separately approved. The initial click-to-run prototype does not need it.
 - Create one device key in macOS Keychain and pair only its public identity if pairing is separately approved. Never read or export browser passwords, cookies, employer credentials, or the dashboard password.
 
@@ -15,7 +15,8 @@ This is a proposal only. It does not grant or perform any listed action.
 
 - Dashboard origin: exactly `https://truenorth.justsignal.company`.
 - Queue scope: one claimed queue ID and its exact five-minute capability.
-- Employer scope: only the active tab whose HTTPS host equals the server-bound destination host; `activeTab` access begins from an explicit extension action.
+- Employer scope, local mode: only the active tab whose HTTPS host equals the server-bound destination host; `activeTab` access begins from an explicit local Chrome extension gesture. This mode cannot provide unattended iPhone-to-Mac execution.
+- Employer scope, optional remote mode: unattended phone-triggered execution requires a separately approved runtime host grant for the exact employer origin and a separately approved active background native host. It must not request or retain unrelated employer origins.
 - Final action: one capability consumption followed by at most one submit activation. Any ambiguous result stops as uncertain.
 - Storage: capability secrets remain memory-only; server stores only their hash. Device private key would remain non-exportable in Keychain.
 
@@ -29,6 +30,6 @@ This is a proposal only. It does not grant or perform any listed action.
 
 ## Drive artifact verification access
 
-The repository currently has no Drive runtime binding; the interactive ChatGPT Drive connection cannot be reused by the Worker. The least-privilege supported design is a private `DRIVE_ARTIFACT_VERIFIER` service using Google OAuth `drive.file`, limited to artifact files that True North creates or that Chris explicitly opens/selects for True North. It needs only file metadata plus read access to hash the exact selected bytes. It does not need Drive listing, search across the account, write, delete, sharing, or access to unrelated canonical/private documents. Creating that OAuth grant, configuring the private binding, and selecting any existing artifact files require separate approval.
+The repository currently has no Drive runtime binding; the interactive ChatGPT Drive connection cannot be reused by the Worker. The least-privilege supported design is a private connector using Google OAuth `drive.file`, limited to artifact files that True North creates or that Chris explicitly opens/selects for True North. That OAuth scope is not read-only: it permits creating and editing those app-created/selected files. The implemented application behavior creates a new artifact file, downloads that exact file for byte-for-byte hash verification, records its immutable receipt, and performs no later edit. It does not list or search the account, delete, share, or access unrelated canonical/private documents. Creating that OAuth grant, configuring the private binding, and selecting any existing artifact files require separate approval.
 
 The private `TRUSTED_EMPLOYER_RECEIPT_VERIFIER` and `EXECUTOR_DEVICE_VERIFIER` bindings likewise remain unconfigured until device pairing/runtime access is separately approved.

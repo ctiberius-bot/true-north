@@ -21,4 +21,6 @@ The extension and `shared/executor-core.js` are portable. Launchers implement th
 - macOS: per-user LaunchAgent and Keychain are the planned first implementation.
 - Windows: interface only; a Credential Manager-backed runtime is not implemented or tested.
 
+Local Chrome execution uses `activeTab` and therefore requires a local extension gesture. A phone-triggered unattended Mac run cannot use `activeTab` alone; it would require separate approval for a runtime grant to the exact employer origin plus background-host activation.
+
 Installation, native-host registration, device pairing, browser access grants, background startup, Keychain/Credential Manager entries, and live submissions require separate approval.
