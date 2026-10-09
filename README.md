@@ -1,8 +1,10 @@
 # True North Citadel
 
+Current release: `2.3.37-2026-10-09`. Each explicit authenticated GUI Generate action creates one exact authorization bound to the selected job, listing version, and Career Arsenal. The model selects exact evidence pairs; server rendering preserves each source's factual actor/action/outcome statement and adds a separate role-relevance sentence. Resume facts are placed beneath their actual employers. Compact prompt evidence is never used for final rendering; full verified source text controls the stored artifact. Raw or truncated excerpts, citation identifiers, placeholders, duplicate evidence, unsupported ownership claims, and attribution inflation are rejected. The fixed package ceiling and monthly runaway cap remain enforced; drafts remain private and unreviewed, with no automatic submission.
+
 ## Canonical production source
 
-This folder and its in-place source ZIP are the authoritative source for live `truenorth.justsignal.company`. The exact current release is `2.3.4-2026-10-08-paced-tri-state-intake`, Cloudflare Worker version `a934844a-9dce-4633-9031-04790aad7a77`. Google Drive is canonical: every tested production change must be synchronized back to the existing Drive file IDs before the release is considered complete.
+This folder and its in-place source ZIP are the authoritative source for live `truenorth.justsignal.company`. The exact current release is `2.3.37-2026-10-09`; the deployed Worker version is `140b0682-a3ca-4b13-b499-58c8838b4be1`. Google Drive is canonical: every tested production change must be synchronized back to the existing Drive file IDs before the release is considered complete.
 
 Production remains fail-closed: AI generation is disabled, scheduled execution is disabled, cleanup is preview-only, Gmail is read-only, and the application execution service does not submit applications. Migration `0004` installs the reviewed atomic operator-receipt transition, but production contains zero submission receipts and zero execution queue items. Operator-observed confirmation is explicitly not cryptographic employer proof.
 
@@ -40,7 +42,7 @@ The project retains every supported job-alert card, discovery link, and unclassi
 
 With package.json, worker.js, schema.sql, and test/ in one directory: run npm test, then npm run test:sqlite.
 
-The Node suite contains 146 tests. The Python SQLite integrations cover the full schema, application execution, and the deployed `0003` → additive `0004` upgrade path.
+The Node suite contains 158 tests. The Python SQLite integrations cover the full schema, application execution, and the deployed additive migrations through `0006`.
 
 The v2.3 source candidate normalizes provider URLs before creating deterministic research-task IDs,
 keeps every actionable observation through `research_task_observations`, records navigation links in
@@ -59,7 +61,7 @@ The canonical Drive folder contains the complete reproducible source, configurat
 
 ## Activation decisions still required
 
-1. Release `2.3.3-2026-10-08` is deployed and verified with production AI generation disabled. Any later deployment must preserve the current Worker identity, secrets, D1 binding, private service binding/core, disabled observability, and disabled scheduling; deployment alone must not activate inference.
+1. Release `2.3.37-2026-10-09` preserves general production AI generation disabled and only the explicit user-triggered application-document flow enabled. Any later deployment must preserve the current Worker identity, secrets, D1 binding, private service binding/core, disabled observability, disabled scheduling, and exact selection-bound package authorization controls.
 2. No OAuth expansion is required. The existing exact gmail.readonly grant must remain unchanged; any future Gmail mutation grant requires separate consent.
 3. Live read-only validation against real alert email and each source, plus an approved authenticated-browser strategy where no official/public path works. Coordinate browser ownership before use.
 4. Separate approval for any future Gmail cleanup mutation. The first allowed action should remain message-level, idempotent, dry-run-first, and never purge Trash.
@@ -74,7 +76,7 @@ Authorization is limited to exactly `gmail.readonly`. The flow uses state, PKCE 
 
 The authenticated dashboard status reads the encrypted server-side grant record through the private service binding and reports only whether the connection is usable, the verified account email, the exact scope, and a safe state. It does not infer readiness merely from Google consent and never returns token material.
 
-The five-message intake test remains deliberately bounded to the previous 24 hours. The separate manual catch-up uses the independently audited 14-sender, no-date-cutoff INBOX query, enumerates Gmail message IDs, verifies DKIM and alert-like subjects from metadata before fetching bodies, preserves protected correspondence, and persists a durable page cursor. Historical verified alerts retain extracted links but their research tasks are explicitly blocked as `historical_alert_stale`. Repeated runs remain idempotent, and neither intake nor OAuth contains a Gmail mutation path. Catch-up data is incomplete as of this source release because Gmail read throttling returned `gmail_read_403`; the durable `gmail_intake_source_candidates_v4` cursor must be resumed after quota cooldown until all 772 audited candidate IDs are dispositioned.
+The five-message intake test remains deliberately bounded to the previous 24 hours. The separate manual catch-up uses the independently audited 14-sender, no-date-cutoff INBOX query, enumerates Gmail message IDs, verifies DKIM and alert-like subjects from metadata before fetching bodies, preserves protected correspondence, and persists a durable page cursor. Historical verified alerts retain extracted links but their research tasks are explicitly blocked as `historical_alert_stale`. Repeated runs remain idempotent, and neither intake nor OAuth contains a Gmail mutation path. The authoritative completed catch-up enumerated 778 candidate message IDs, committed 771 verified alerts, and exhausted the durable `gmail_intake_source_candidates_v4` cursor.
 
 The first repaired live retry (`run_8a368e0e-9eb6-4cc0-ba51-cb5f87947815`) inspected five and skipped five with zero persisted messages or candidates, one page, truncation, and a saved resume cursor. Existing state proved the messages were rejected at sender verification before parsing or persistence, but that deployed version recorded only the aggregate skip count. The candidate adds reason-coded diagnostics and Gmail `header.i` support; no additional intake has been authorized or run.
 

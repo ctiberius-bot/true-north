@@ -1,0 +1,14 @@
+DROP TRIGGER IF EXISTS reserve_ai_package_budget;
+DROP TRIGGER IF EXISTS settle_ai_package_budget;
+CREATE TABLE package_authorization_migration_guard(ok INTEGER NOT NULL CHECK(ok=1));
+INSERT INTO package_authorization_migration_guard(ok) SELECT 0 WHERE EXISTS(SELECT 1 FROM ai_requests WHERE purpose IN('tailored_resume','cover_letter') AND status='reserved');
+DROP TABLE package_authorization_migration_guard;
+ALTER TABLE selected_jobs ADD COLUMN selection_id TEXT;
+CREATE UNIQUE INDEX idx_selected_jobs_selection_id ON selected_jobs(selection_id) WHERE selection_id IS NOT NULL;
+CREATE TRIGGER selected_jobs_selection_id_required_insert BEFORE INSERT ON selected_jobs WHEN NEW.selection_id IS NULL OR TRIM(NEW.selection_id)='' BEGIN SELECT RAISE(ABORT,'selection_id_required'); END;
+CREATE TRIGGER selected_jobs_selection_id_required_update BEFORE UPDATE OF selection_id ON selected_jobs WHEN NEW.selection_id IS NULL OR TRIM(NEW.selection_id)='' BEGIN SELECT RAISE(ABORT,'selection_id_required'); END;
+ALTER TABLE ai_package_authorizations RENAME TO ai_package_authorizations_legacy;
+CREATE TABLE ai_package_authorizations (id TEXT PRIMARY KEY, canonical_job_id TEXT NOT NULL REFERENCES canonical_jobs(id), selection_id TEXT NOT NULL, listing_version_id TEXT NOT NULL REFERENCES listing_versions(id), arsenal_version TEXT NOT NULL REFERENCES arsenal_versions(version), authorized_microusd INTEGER NOT NULL CHECK(authorized_microusd=29000), reserved_microusd INTEGER NOT NULL DEFAULT 0 CHECK(reserved_microusd>=0), spent_microusd INTEGER NOT NULL DEFAULT 0 CHECK(spent_microusd>=0), authorized_at TEXT NOT NULL, CHECK(reserved_microusd+spent_microusd<=authorized_microusd));
+CREATE INDEX idx_ai_package_authorizations_selection ON ai_package_authorizations(canonical_job_id,selection_id,authorized_at);
+CREATE TRIGGER reserve_ai_package_budget AFTER INSERT ON ai_requests WHEN NEW.purpose IN('tailored_resume','cover_letter') BEGIN UPDATE ai_package_authorizations SET reserved_microusd=reserved_microusd+NEW.reserved_microusd WHERE id=NEW.package_authorization_id AND canonical_job_id=NEW.canonical_job_id AND spent_microusd+reserved_microusd+NEW.reserved_microusd<=authorized_microusd; SELECT CASE WHEN changes()!=1 THEN RAISE(ABORT,'ai_package_authorization_required') END; END;
+CREATE TRIGGER settle_ai_package_budget AFTER UPDATE OF status ON ai_requests WHEN OLD.status='reserved' AND NEW.status<>'reserved' AND OLD.purpose IN('tailored_resume','cover_letter') BEGIN UPDATE ai_package_authorizations SET reserved_microusd=reserved_microusd-OLD.reserved_microusd,spent_microusd=spent_microusd+NEW.charged_microusd WHERE id=OLD.package_authorization_id AND reserved_microusd>=OLD.reserved_microusd AND spent_microusd+reserved_microusd<=authorized_microusd; SELECT CASE WHEN changes()!=1 THEN RAISE(ABORT,'ai_package_budget_settlement_invariant') END; END;

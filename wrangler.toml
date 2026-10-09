@@ -13,6 +13,7 @@ fallthrough = true
 
 [vars]
 AI_GENERATION_ENABLED = "false"
+AI_APPLICATION_DOCUMENT_GENERATION_ENABLED = "true"
 
 [observability]
 enabled = false

@@ -1,5 +1,149 @@
 # Change log
 
+## 2026-10-09 — v2.3.37 source-bound role-associated application documents
+
+- Preserves factual actor/action/outcome boundaries by rendering exact selected Career Arsenal statements separately from role-relevance sentences. Discover now remains “enabled tracking of 50 initiatives delivering $500M,” never personal delivery attribution.
+- Associates selected achievements beneath their actual employers in the resume instead of a detached impact list.
+- Separates compact inference evidence from full rendering evidence so stored documents cannot end in truncated prompt excerpts.
+- Tightened `Board` word-boundary relevance matching so `dashboards` maps to KPI and performance-management relevance.
+- Propagates explicit channel, partner-marketing, and alliances-marketing gaps to both resume and cover metadata, with normalized paragraph spacing.
+- Passed 177 JavaScript tests and all five SQLite suites. Production Worker version is `140b0682-a3ca-4b13-b499-58c8838b4be1`.
+- Verified private, unreviewed PSI resume revision 11 (`document_revision_a02fda0c-6bea-4e36-bc77-43776bbbb976`) and cover revision 8 (`document_revision_755035b0-7c2c-4887-b4d5-cb4c5bcf6204`).
+
+## 2026-10-09 — v2.3.35 verified grounded PSI package
+
+- Added privacy-safe predicate diagnostics for application completeness failures, identifying the original production defect as an empty resume capability array (`cb_0`) rather than missing evidence.
+- Added artifact-scoped resume and cover cardinality contracts, plus a server-side unsupported-ownership guard for go-to-market, channel, alliances, partner-marketing, growth-bet, commercial-planning, and market-expansion claims.
+- Cover narrative paragraphs are now rendered deterministically around the exact selected role/company and validated one-to-one achievement bullets; unsupported model-authored ownership prose cannot enter the stored document.
+- Passed 176 JavaScript tests and all five SQLite suites.
+- Production Worker version is `335b9a06-8713-431c-beba-77008db2f986`.
+- Authenticated production verification persisted private unreviewed PSI resume revision 9 (`document_revision_b07a06d4-aaba-47e9-9337-cb1aaa45ff0e`, 2,035 characters) and cover revision 6 (`document_revision_14ecf4d9-5c37-483b-8fcc-a360d3ee8263`, 1,180 characters). Nothing was approved, uploaded, sent, or submitted.
+
+## 2026-10-09 — v2.3.30 explicit JSON object contract
+
+- Added the exact required application-document key and value shapes directly to the JSON-mode system prompt. Version 2.3.29 correctly produced a JSON object but rejected its unconstrained shape as `ai_output_invalid_document`; no draft was saved.
+- Kept every server-side evidence-pair, source-class, uniqueness, prose, and completeness check fail-closed.
+- Passed all 174 JavaScript tests before deployment.
+- Production Worker version is `3d74f920-1383-4003-878c-1fd57a4e1ddd`.
+- The single bounded authenticated PSI verification call reached JSON parsing and exact evidence validation but failed closed at `ai_output_protocol_incomplete`; no resume or cover revision was saved. Further paid attempts were stopped.
+
+## 2026-10-09 — v2.3.29 documented JSON object mode
+
+- Moved application-document inference from the complex schema-constrained provider mode to Cloudflare's documented non-streaming `json_object` mode while retaining the full exact-pair, source-class, uniqueness, visible-prose, shape, and completeness contract server-side.
+- Added privacy-preserving failure diagnostics containing only output type, byte length, fence/start classification, finish reason, and a short hash—never model prose or private source text.
+- Added regressions proving the official structured object envelope succeeds while prefixed and truncated JSON strings fail closed and save no drafts.
+- Passed 174 JavaScript tests and all five SQLite integration checks before deployment.
+- Production Worker version is `66b540bd-df38-417c-b613-017c147d0473`.
+
+## 2026-10-09 — v2.3.28 career-only achievement grounding
+
+- Strengthened the writer contract so mapped Career Arsenal achievement bullets cannot absorb unsupported job-listing duties, results, clients, or metrics.
+- Cover letters now visibly incorporate their mapped quantified achievements, employer-facing titles omit the alert-only `[Remote]` prefix, and deterministic gaps plus clarification questions are retained as review warnings rather than document copy.
+- Passed 173 JavaScript tests and all five SQLite integration checks; production Worker version is `06c7a3ad-4307-4a04-a09b-ca94f5d57e5c`.
+
+## 2026-10-09 — v2.3.27 provider-compatible uniqueness enforcement
+
+- Removed unsupported JSON-Schema `uniqueItems` keywords after Cloudflare xgrammar rejected the schema before inference. Exact evidence-pair uniqueness remains enforced server-side before any draft can be saved, including a regression that rejects four repeated accomplishment references.
+- Preserves the grounded employer-facing prose contract from 2.3.26 without relaxing content or evidence validation.
+- Passed 173 JavaScript tests and all five SQLite integration checks; production Worker version is `90450f9c-c5cd-4ab3-8827-2a41deec21f1`.
+
+## 2026-10-09 — v2.3.26 grounded employer-facing prose
+
+- Replaced raw evidence-excerpt rendering with structured, evidence-grounded employer-facing summaries, capability labels, achievement bullets, and cover paragraphs while preserving canonical chronology and education server-side.
+- Added JSON-Schema `uniqueItems` constraints and explicit server-side duplicate-pair rejection for listing and achievement evidence. Achievement prose and its unique Career Arsenal references are position-bound and count-matched.
+- Rejects truncated ellipsis, source identifiers, anchors, placeholders, raw HTML, and drafting commentary from visible prose. Gaps, omissions, warnings, evidence maps, and clarification questions remain review metadata rather than employer-facing copy.
+- Passed 173 JavaScript tests and all five SQLite integration checks before deployment; production Worker version is `ae6c97cb-b0c7-49e5-b79e-4912c8233d37`.
+
+## 2026-10-09 — v2.3.25 deterministic evidence-selected documents
+
+- Replaced free-form model-authored document content with structured selection of exact listing, chronology, education, and accomplishment source pairs.
+- Added deterministic employer-facing resume and cover-letter rendering from the selected stored source texts; no unsupported model prose is accepted or substituted.
+- Reserved prompt slots by source class so ranked Career Arsenal accomplishments cannot be displaced by the base-context cap.
+- Added dynamic job/company rendering and removed PSI-specific cover-letter validation.
+- Passed 172 JavaScript tests and all five SQLite integration checks before deployment; production Worker version is `0b7db251-9d82-4c47-aee3-fb4b679041db`.
+- Verified the release through the authenticated production GUI for PSI Services LLC's `[Remote] Sr. Director, Strategy & Execution` listing `lv_ee95330afbf804602dbf13aa`. The exact-bound requests completed and persisted private, unreviewed tailored-resume revision 4 (`document_revision_cf6ea407-31c0-412b-9440-c78ca7256d0e`, 3,704 characters) and cover-letter revision 3 (`document_revision_320b8d76-fdea-4ff5-b241-c3efd5d47236`, 4,419 characters). Neither revision was approved, uploaded, sent, or submitted.
+
+## 2026-10-09 — v2.3.24 canonical Career Arsenal prompt context
+
+- Added source-grounded canonical Career Arsenal chronology and education references so every application-document prompt receives exact role/date history and education rather than relying only on accomplishment bullets from the v1 index extractor.
+- Pinned those references ahead of ranked evidence, retained relevant quantified accomplishments, and compacted source excerpts to remain within the 24K model context.
+- Extended D1 and in-memory evidence verification to accept only the exact canonical profile reference pairs.
+- Added a regression test proving the application model receives the complete chronology through Ahold and the Boston University education anchor.
+- Passed 172 JavaScript tests and all five SQLite integration checks before production deployment.
+- Deployed Worker version `a895867c-ca9b-450a-9673-99b1bf5113c0`. A real PSI GUI generation produced resume revision 3 but the cover letter failed closed with `ai_output_protocol_incomplete`; the partial package remains private and unreviewed.
+
+## 2026-10-09 — v2.3.23 protocol adequacy validation
+
+- Replaced artifact-specific character-count acceptance with State Street protocol adequacy checks.
+- Rejects raw HTML, brace-wrapped content, incomplete executive sections, chronology-free or unquantified resumes, and one-line untailored cover letters.
+- Requires plain-text employer-facing output and preserves the exact evidence, selection, review, budget, and no-submit gates.
+
+## 2026-10-09 — v2.3.22 mandatory evidence classes
+
+- Split application-document structured output into required `listing_evidence` and `arsenal_evidence` arrays, each constrained to exact trusted ID-anchor pairs from its own source class.
+- Merge and revalidate both evidence classes server-side before any draft can be saved, closing the one-sided grounding failure observed in the live PSI generation.
+- Retained complete-document length, quality, selection, budget, review, and no-submit gates; full suite passes with 172 tests.
+
+## 2026-10-09 — v2.3.21 complete-document schema
+
+- Raises structured-output minimum content length to 800 characters for tailored resumes and 400 characters for cover letters, preventing preambles from satisfying the provider contract.
+
+## 2026-10-09 — v2.3.20 employer-facing document quality
+
+- Requires complete employer-facing resume and cover-letter content for Chris Lockhart and rejects drafting preambles, raw citation identifiers, source anchors, and unresolved `[Your Name]` placeholders before persistence.
+
+## 2026-10-09 — v2.3.19 complete grounding instruction
+
+- Explicitly requires every generated application document to cite at least one exact listing or listing-evidence source and at least one exact Career Arsenal source, matching the existing fail-closed validator.
+
+## 2026-10-09 — v2.3.18 bounded application context
+
+- Compacts the evidence-selected State Street protocol dossier before application-document reservation, keeping large real listings and Arsenal inventories inside the 24K context while retaining exact citation pairs, coverage classifications, gaps, and human-review gates.
+- Added a large-source regression proving the complete resume-generation request remains bounded before any provider call.
+
+## 2026-10-09 — v2.3.17 user-triggered package generation
+
+- Removed the one-time-only package authorization obstruction. Each explicit authenticated Generate action may create one idempotent authorization bound to the exact selected job, listing version, and Career Arsenal.
+- Retained the fixed package ceiling, monthly runaway cap, exact source/protocol validation, private unreviewed drafts, duplicate-click protection, and all human approval and submission gates.
+
+## 2026-10-09 — v2.3.16 assistant-prepared document import
+
+- Added an authenticated, same-origin import path for assistant-prepared resume and cover-letter revisions bound to the existing selected job, exact listing version, Career Arsenal version, and State Street protocol.
+- Every supplied evidence reference is verified against the exact listing or non-internal Arsenal before persistence. Imported revisions are explicitly labeled `assistant_prepared`, retain no AI-draft identity, and require human claim revalidation before approval.
+- Added a private dashboard import form plus preview, provenance, and DOCX download through the existing document workflow. Import performs no inference, approval, package build, upload, sending, or submission.
+
+## 2026-10-09 — v2.3.15 exact application-document citations
+
+- Bound application-document JSON Schema evidence entries to exact trusted claim-ID and source-anchor pairs selected for the request. The prompt now exposes the allowed pairs separately and instructs the provider to copy them verbatim; the local validator independently rejects extra evidence fields, out-of-range evidence arrays, pair mismatches, and untrusted references.
+- Added mocked contract tests proving that malformed or recombined citations cannot satisfy the response schema. No inference retry was performed.
+- Prepared a private unreviewed CVS Health resume draft and an explicit claim-source map from the exact stored listing and non-internal Career Arsenal evidence. No package was approved or submitted.
+
+## 2026-10-09 — v2.3.13 exact displayed-job generation binding
+
+- Bound Generate to the exact visible job, title, company, listing version, selection, authorization, and render token; stale and out-of-order responses fail closed.
+- Made Generate visible in job detail and loaded the verified Career Arsenal version automatically as read-only provenance.
+- Removed the redundant Generate password prompt while retaining authenticated-session, same-origin, one-package, and exact $0.029-cap controls.
+- Added regressions for stale forms, out-of-order responses, unauthenticated/cross-origin requests, stale server context, and duplicate authorization.
+
+## 2026-10-09 — v2.3.12 bounded first-package generation
+
+- Split application-document generation from the global AI switch so outreach and all other AI remain disabled while the explicitly approved resume/optional-cover flow can be enabled independently.
+- Added a password-confirmed, selection-scoped authorization request capped at exactly 29,000 micro-USD for the first user-selected package; no retry or second grant is implied.
+- Added an append-only history guard across current and migrated authorization ledgers, including clean-install schema coverage and a regression test that rejects a second first-package authorization.
+- Corrected the catch-up release note to the authoritative exhausted reconciliation: 778 candidates and 771 committed verified alerts.
+
+## 2026-10-09 — v2.3.11 explicit browser-executor boundary
+
+- Replaced the misleading GUI claim-and-open action with a durable exact-bound browser-executor handoff download.
+- The GUI no longer claims a lease or opens an employer destination; a separately authorized executor must claim through the guarded API, stop for user interaction, and record an employer receipt before “applied.”
+- Added a synthetic workspace regression proving the handoff contract and absence of the former open/claim click path.
+
+## 2026-10-09 — v2.3.10 controlled document workflow
+
+- Added exact-listing State Street targeting controls, real DOCX revisions, edit revalidation, exact approval, and source-revision package linkage.
+- Added a human-reauthenticated, atomic $0.029 package authorization cap: $0.017 resume plus $0.012 cover letter, with no provider call after exhaustion.
+- Added fail-closed migration coverage for legacy approvals and selections plus an end-to-end selected-document test.
+
 ## 2026-10-08 — v2.3.4 subject classifier repair
 
 - Replaced broad catch-up subject exclusions with anchored known protected-message templates and added the verified LinkedIn `Company is hiring a/an Role` positive template, which does not carry generic alert keywords. Exact regression subjects cover the two verified false negatives plus Account Executive, Application Architect, Application Development Director, Resume Writer, and interview-role titles; application confirmations, human-message, authentication, welcome, setup, extension, resume-service, and motivation notices remain protected.
@@ -62,4 +206,10 @@
 - Added explicit failed-run accounting and query-scoped cursors. Catch-up data remains incomplete due Gmail `gmail_read_403` throttling and must resume from `gmail_intake_source_candidates_v4` after cooldown.
 - The authorized Llama 3.3 pilot produced one private unreviewed outreach draft and charged exactly 10,000 microUSD; AI was disabled immediately afterward and remains off.
 - JavaScript: 135 passed. Python SQLite integration passed. No Gmail mutation, schedule, sending, application, or additional AI call was performed.
+
+## 2.3.14-2026-10-09
+
+- Migrated the deployed `ai_requests` ledger from its legacy 900-token CHECK to the bounded 3,500-token application-document ceiling.
+- Preserved existing request/draft history, foreign-key integrity, and monthly plus package budget reserve/settle triggers.
+- Added a legacy-schema migration regression covering a 3,500-token resume, 1,500-token cover letter, existing referenced history, ledger settlement, and rejection above 3,500 tokens.
 

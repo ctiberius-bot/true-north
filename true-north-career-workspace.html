@@ -369,6 +369,24 @@
     .mobile-meta { display: none; gap: 14px; padding: 10px 16px; border-bottom: 1px solid var(--line); font-size: 12.5px; color: var(--text-3); }
     @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
   
+
+    /* Codex 2.3.37 panels (generation, protocol dossier, document revisions, browser handoff) styled to match. */
+    .stack { display: grid; gap: 12px; }
+    .actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    .subcard { border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); padding: 18px; display: grid; gap: 12px; }
+    .subcard-head { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; flex-wrap: wrap; }
+    .subcard-head h3 { font-size: 16px; font-weight: 600; }
+    .chip { display: inline-flex; align-items: center; border: 1px solid var(--line-strong); border-radius: 999px; padding: 2px 9px; font-size: 12px; font-weight: 600; color: var(--text-2); background: var(--surface-2); white-space: nowrap; }
+    .chip[data-tone="good"] { color: var(--green); border-color: rgba(46, 125, 79, .35); background: var(--green-wash); }
+    .chip[data-tone="bad"] { color: var(--red); border-color: rgba(184, 50, 39, .35); background: var(--red-wash); }
+    .artifact { display: grid; gap: 8px; padding: 14px 0; border-top: 1px solid var(--line); }
+    .artifact textarea { min-height: 220px; font-size: 13.5px; }
+    .code { font-family: var(--font-mono); font-size: 12px; overflow-wrap: anywhere; color: var(--text-2); }
+    .primary, .secondary { display: inline-flex; align-items: center; justify-content: center; min-height: 34px; padding: 6px 12px; border-radius: var(--radius-sm); font-size: 13.5px; font-weight: 600; text-decoration: none; border: 1px solid var(--line-strong); background: transparent; color: var(--text); }
+    .primary { background: var(--gold); border-color: var(--gold); color: var(--ink-on-gold); }
+    .secondary:hover:not(:disabled) { background: var(--hover); }
+    .primary:hover:not(:disabled) { background: var(--gold-bright); border-color: var(--gold-bright); }
+    .subcard { min-width: 0; } .subcard .btn, .subcard .primary, .subcard .secondary { white-space: normal; text-align: center; } .subcard dd, .subcard .mono { overflow-wrap: anywhere; min-width: 0; }
     /* Navy app bar (night sky behind the Polaris lockup); the rest of the page is cream for readability. */
     .appbar,.mobile-meta{--obsidian:#0B1426;--bg:#0B1426;--bg-raised:#0F1A30;--surface:#13203A;--surface-2:#182746;--hover:#152340;--line:#233355;--line-strong:#2F4168;--text:#E8EEF7;--text-2:#A9B7CC;--text-3:#8496AF;--gold:#A8D8FF;--gold-bright:#D6EEFF;--gold-dim:#2E5A80;--gold-wash:rgba(168,216,255,.08);--ink-on-gold:#0B1426;--green:#7FD1A8;--red:#F08C8C;color-scheme:dark;background:#0B1426!important;color:var(--text)}
   </style>
@@ -470,7 +488,7 @@
       if (!Number.isFinite(m)) return ''; if (m < 60) return `${Math.max(m, 1)}m`; if (m < 1440) return `${Math.round(m / 60)}h`; if (m < 43200) return `${Math.round(m / 1440)}d`;
       return new Intl.DateTimeFormat(undefined, {month:'short', day:'numeric'}).format(new Date(value));
     };
-    const state = {jobs: [], workflows: new Map(), appQueue: [], selected: null, tab: 'listing', stateFilter: '', details: new Map()};
+    const state = {jobs: [], workflows: new Map(), appQueue: [], selected: null, rendered: null, detailsLoading: false, selectionGeneration: 0, detailAbort: null, generationLock: null, arsenalVersion: null, tab: 'listing', stateFilter: '', details: new Map(), executionItems: new Map(), executorLeases: new Map()};
 
     async function api(path, options) {
       const response = await fetch(path, options);
@@ -485,6 +503,8 @@
     const post = (path, body) => api(path, {method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify(body)});
     const latest = rows => Array.isArray(rows) && rows.length ? rows[0] : null;
     const humanize = value => String(value || '').replaceAll('_', ' ');
+    const tone = value => /approved|complete|offer|conversation|interviewing/.test(value || '') ? 'good' : /reject|blocked|login_required|closed/.test(value || '') ? 'bad' : 'warn';
+    const chip = (value, label = value) => `<span class="chip" data-tone="${tone(value)}">${esc(label || 'Unavailable')}</span>`;
 
     /* ---------- Vocabulary ---------- */
     const STAGE_LABEL = {untracked:'Not yet tracked', target:'Target', considering:'Considering', package_draft:'Package in draft', chris_review:'Awaiting your review', approved_to_send:'Approved to send', applied:'Applied', conversation:'In conversation', interviewing:'Interviewing', offer:'Offer', closed:'Closed'};
@@ -527,7 +547,8 @@
 
     async function loadJobs() {
       setConnection('Loading');
-      const [jobs] = await Promise.all([api('/api/jobs?limit=250'), loadAppQueue()]);
+      const [jobs, coverage] = await Promise.all([api('/api/jobs?limit=250'), api('/api/coverage'), loadAppQueue()]);
+      state.arsenalVersion = coverage.arsenal_version || null;
       state.jobs = await Promise.all(jobs.map(async job => {
         try {
           const workflow = await api('/api/workflows/' + encodeURIComponent(job.id));
@@ -540,8 +561,6 @@
       }));
       setConnection('Live', 'good');
       renderJobs();
-      const fromHash = new URLSearchParams(location.hash.slice(1)).get('job');
-      if (fromHash && !state.selected && state.jobs.some(job => job.id === fromHash)) selectJob(fromHash, {fromHash:true});
     }
 
     /* ---------- Filtering & list ---------- */
@@ -572,7 +591,7 @@
       el('clearFilters').hidden = !active;
       el('jobList').innerHTML = jobs.length ? jobs.map(job => {
         const app = appState(job.id), research = job.research_status;
-        return `<button class="job" type="button" data-job="${esc(job.id)}" aria-current="${state.selected === job.id}">
+        return `<button class="job" type="button" data-job="${esc(job.id)}" aria-current="${state.selected === job.id}" ${state.generationLock&&state.generationLock.jobId!==job.id?'disabled':''}>
           ${mark(app.key, app.label)}
           <span class="job-main">
             <span class="job-top"><span class="job-title">${esc(job.title || 'Untitled role')}</span>${job.last_seen_at ? `<span class="job-time" title="Last seen in intake ${esc(fmtDate(job.last_seen_at))}">${esc(shortAge(job.last_seen_at))}</span>` : ''}</span>
@@ -584,22 +603,37 @@
     }
 
     /* ---------- Detail ---------- */
-    async function selectJob(id, {fromHash = false} = {}) {
-      const generation = (state.selectionGeneration || 0) + 1;
+    function currentDetailContext(node) {
+      const root = el('jobDetail'), form = node?.closest?.('[data-generate-package]') || root.querySelector('[data-generate-package]');
+      if (state.detailsLoading || !state.rendered || !form || root.dataset.job !== state.rendered.jobId || root.dataset.listingVersion !== state.rendered.listingVersion || root.dataset.detailToken !== String(state.rendered.token) || form.dataset.job !== state.rendered.jobId || form.dataset.listingVersion !== state.rendered.listingVersion || form.dataset.detailToken !== String(state.rendered.token)) throw new Error('displayed_job_context_stale_reload_required');
+      return {...state.rendered, arsenalVersion:form.dataset.arsenalVersion};
+    }
+
+    async function selectJob(id, {historyMode='push'}={}) {
+      if(state.generationLock&&state.generationLock.jobId!==id){const notice=el('jobDetail').querySelector('[data-generate-notice]');if(notice){notice.textContent=`Generation is already in progress for ${state.generationLock.title} at ${state.generationLock.company}. Job switching will unlock when that exact request finishes.`;notice.dataset.tone='warn'}return false}
+      const generation = state.selectionGeneration + 1;
       state.selectionGeneration = generation;
-      state.selected = id; state.tab = state.keepTab || 'listing'; state.keepTab = null; renderJobs();
+      state.detailAbort?.abort(); state.detailAbort = new AbortController();
+      state.selected = id; state.rendered = null; state.detailsLoading = true; state.tab = state.keepTab || 'listing'; state.keepTab = null; renderJobs();
       document.body.dataset.pane = 'detail';
-      if (!fromHash) history.replaceState(null, '', '#job=' + encodeURIComponent(id));
-      el('jobDetail').innerHTML = '<div class="empty" style="padding-top:18vh">Loading listing and workflow…</div>';
+      const root=el('jobDetail'); delete root.dataset.job; delete root.dataset.listingVersion; delete root.dataset.detailToken;
+      root.innerHTML = `${backButton()}<div class="empty" style="padding-top:18vh">Loading listing and workflow… Generation is disabled until this exact listing finishes loading.</div>`;
+      if(historyMode!=='none'){const url=new URL(location.href);url.searchParams.set('job',id);history[historyMode==='replace'?'replaceState':'pushState']({job:id},'',url)}
       try {
         const [detail, workflow] = await Promise.all([
-          api('/api/jobs/' + encodeURIComponent(id)), api('/api/workflows/' + encodeURIComponent(id))
+          api('/api/jobs/' + encodeURIComponent(id),{signal:state.detailAbort.signal}), api('/api/workflows/' + encodeURIComponent(id),{signal:state.detailAbort.signal})
         ]);
-        if (state.selected !== id || state.selectionGeneration !== generation) return;
-        state.workflows.set(id, workflow); state.details.set(id, detail); renderDetail(detail, workflow); renderJobs();
+        const version=latest(detail.listing_versions);
+        if (state.selected !== id || state.selectionGeneration !== generation || detail.id !== id) return;
+        if(!version?.id) throw new Error('current_listing_version_required');
+        state.workflows.set(id, workflow); state.details.set(id, detail); state.rendered={jobId:id,listingVersion:version.id,token:generation,title:detail.title||'Untitled role',company:detail.company||'Company unavailable'}; state.detailsLoading=false;
+        renderDetail(detail, workflow, state.rendered); renderJobs();
         el('reader').scrollTop = 0; if (matchMedia('(max-width: 860px)').matches) window.scrollTo(0, 0);
+        await loadApplicationDocuments(id,generation);
       } catch (error) {
         if (state.selected !== id || state.selectionGeneration !== generation) return;
+        state.detailsLoading=false; state.rendered=null;
+        if(error.name==='AbortError')return;
         if (error.message !== 'auth') el('jobDetail').innerHTML = `${backButton()}<div class="callout bad">Could not load this job: ${esc(error.message)}</div>`;
       }
     }
@@ -616,6 +650,22 @@
       }
       if (check && check.availability && check.availability !== 'open') return {status:'blocked', title:`Listing ${humanize(check.availability)}`, note:`Checked ${rel(check.captured_at)}`, mark:'attention'};
       return {status:'current', title:'Stored copy only', note:`Captured ${rel(version.fetched_at)}; not verified open`, mark:'draft'};
+    }
+
+    function applicationDocumentCard(row) {
+      const assistantPrepared=(row.warnings||[]).some(x=>String(x).startsWith('Preparation origin: assistant_prepared')),provenance = {preparation_origin:assistantPrepared?'assistant_prepared':'model_generated',protocol_file_id:row.protocol_file_id, arsenal_version:row.arsenal_version, listing_version_id:row.listing_version_id, evidence_map:row.evidence_map || [],warnings:row.warnings||[]};
+      return `<article class="artifact" data-document-id="${esc(row.id)}" data-revision="${esc(row.revision)}" data-content-hash="${esc(row.content_hash)}"><div class="subcard-head"><strong>${esc(row.artifact_type)} · revision ${esc(row.revision)}</strong>${chip(row.approved ? 'complete' : 'pending', row.approved ? 'Exact revision approved' : assistantPrepared ? 'Assistant-prepared · unreviewed' : row.evidence_status === 'requires_human_revalidation' ? 'Edited · claims require revalidation' : 'Unreviewed')}</div><textarea data-generated-content ${row.approved ? 'readonly' : ''}>${esc(row.content)}</textarea><div class="code">Employer-facing DOCX SHA-256 ${esc(row.content_hash)}</div><details><summary>Evidence and provenance</summary><pre class="source-text">${esc(JSON.stringify({...provenance,protocol_version:row.protocol_version,evidence_status:row.evidence_status},null,2))}</pre></details>${row.evidence_status === 'requires_human_revalidation' ? '<label>Human-reviewed evidence assertions JSON<textarea data-reviewed-evidence placeholder=\'[{"claim_id":"…","source_anchor":"…"}]\'></textarea></label>' : ''}<div class="actions"><a class="secondary" href="/api/application-documents/${encodeURIComponent(row.id)}/download?job_id=${encodeURIComponent(row.canonical_job_id || row.job_id)}">Download DOCX</a>${row.approved ? '' : `<button class="secondary" type="button" data-save-revision data-job="${esc(row.canonical_job_id || row.job_id)}">Save edited revision</button><button class="primary" type="button" data-approve-revision>Approve exact revision</button>`}</div><p class="notice" role="status"></p></article>`;
+    }
+
+    async function loadApplicationDocuments(jobId,token=state.rendered?.token) {
+      const root=el('jobDetail'),out = root.querySelector('[data-generated-documents]');
+      if (!out || state.selected !== jobId || state.rendered?.token!==token) return;
+      try {
+        const rows = await api(`/api/jobs/${encodeURIComponent(jobId)}/application-documents`);
+        if (state.selected === jobId && state.rendered?.token===token && root.dataset.detailToken===String(token)) out.innerHTML = rows.length ? rows.map(applicationDocumentCard).join('') : '<div class="empty">No generated revisions for this selected job.</div>';
+      } catch (error) {
+        if (error.message !== 'auth' && state.rendered?.token===token) out.innerHTML = `<div class="callout bad">Could not load document revisions: ${esc(error.message)}</div>`;
+      }
     }
 
     function freshness(detail) {
@@ -673,13 +723,15 @@
       return `<ol class="track" aria-label="Application progress">${steps.map(([name, s]) => `<li class="step" data-status="${s.status}"><span class="step-name">${mark(s.mark)}${esc(name)}</span><span class="step-note">${esc(s.note)}</span></li>`).join('')}</ol>`;
     }
 
-    function renderDetail(detail, workflow) {
+    function renderDetail(detail, workflow, context) {
       const version = latest(detail.listing_versions), evidence = detail.evidence || [], pkgs = workflow.application_packages || [];
       const listingUrl = detail.canonical_url ? `<a class="btn" href="${esc(detail.canonical_url)}" target="_blank" rel="noreferrer">Original listing <span class="ext">↗</span></a>` : '<button class="btn" disabled>Source URL unavailable</button>';
       const meta = [detail.source || 'Source unavailable', detail.engagement_type, detail.first_seen_at ? `first seen ${fmtDay(detail.first_seen_at)}` : ''].filter(Boolean).join(' · ');
-      el('jobDetail').innerHTML = `${backButton()}
+      const root=el('jobDetail'); root.dataset.job=context.jobId;root.dataset.listingVersion=context.listingVersion;root.dataset.detailToken=String(context.token);
+      root.innerHTML = `${backButton()}
         <header class="reader-head"><div style="min-width:0"><div class="eyebrow">${esc(meta)}</div><h1>${esc(detail.title || 'Untitled role')}</h1><p class="org"><strong>${esc(detail.company || 'Company unavailable')}</strong> · ${esc(detail.location || 'Location unavailable')}</p></div><div class="head-actions">${listingUrl}</div></header>
         ${track(detail, workflow)}
+        <div class="section"><div class="subcard"><div class="subcard-head"><div><div class="eyebrow">Generate private drafts</div><h3>${esc(context.title)} at ${esc(context.company)}</h3></div>${chip('pending','Human review required')}</div><dl class="kv" style="margin:0"><dt>Exact listing</dt><dd class="mono">${esc(context.listingVersion)}</dd><dt>Verified Career Arsenal</dt><dd><span class="mono">${esc(state.arsenalVersion || 'Unavailable')}</span> <span class="faint">· loaded automatically, read-only</span></dd></dl><form class="stack" data-generate-package data-job="${esc(context.jobId)}" data-listing-version="${esc(context.listingVersion)}" data-detail-token="${esc(context.token)}" data-arsenal-version="${esc(state.arsenalVersion || '')}"><label class="check"><input name="include_cover" type="checkbox" checked> <span>Include a tailored cover letter</span></label><div class="form-actions"><button class="btn btn-primary" ${state.arsenalVersion?'':'disabled'}>Generate private drafts for ${esc(context.title)} at ${esc(context.company)}</button></div></form><p class="note">Creates private unreviewed drafts for this exact displayed job and listing; nothing is submitted.</p><details class="disclose"><summary>Import an assistant-prepared unreviewed revision</summary><form class="stack" data-import-prepared data-job="${esc(context.jobId)}" data-listing-version="${esc(context.listingVersion)}" data-detail-token="${esc(context.token)}" data-arsenal-version="${esc(state.arsenalVersion || '')}"><label class="field"><span>Document type</span><select name="artifact_type"><option value="tailored_resume">Tailored resume</option><option value="cover_letter">Cover letter</option></select></label><label class="field"><span>Prepared content</span><textarea name="content" required></textarea></label><label class="field"><span>Exact evidence assertions JSON</span><textarea name="evidence_map" required placeholder='[{"claim_id":"…","source_anchor":"…"}]'></textarea></label><div class="form-actions"><button class="btn">Import assistant-prepared revision</button></div><p class="notice" role="status"></p></form></details><p class="notice" data-generate-notice role="status"></p><div class="stack" data-generated-documents></div><div class="actions"><button class="btn" type="button" data-build-approved-package="${esc(context.jobId)}">Build review package from current approved revisions</button></div><p class="notice" role="status"></p></div></div>
         <div class="tabs" role="tablist"><button class="tab" data-tab="listing" role="tab" aria-selected="true">Listing</button><button class="tab" data-tab="package" role="tab" aria-selected="false">Documents &amp; approval<span class="count">${pkgs.length}</span></button><button class="tab" data-tab="status" role="tab" aria-selected="false">Submission</button></div>
         <section class="tab-panel" data-panel="listing" role="tabpanel">
           <div class="section">${freshness(detail)}</div>
@@ -689,8 +741,9 @@
           <div class="section"><div class="section-head"><h2>Anchored evidence</h2><span class="faint">${evidence.length}</span></div>
             ${evidence.length ? `<div class="evidence">${evidence.map(e => `<div class="evidence-item"><div class="kind">${esc(humanize(e.evidence_type))}</div><div><div class="claim">${esc(e.claim_text)}</div><div class="src">${esc(e.source_anchor || 'anchor unavailable')}${e.source_url ? ` · <a href="${esc(e.source_url)}" target="_blank" rel="noreferrer">source</a>` : ''}</div></div></div>`).join('')}</div>` : '<div class="callout bad">No evidence records are available.</div>'}</div>
         </section>
-        <section class="tab-panel" data-panel="package" role="tabpanel" hidden>
-          <div class="callout plain" style="margin-bottom:20px">Approving a package records your review. It never submits an application.</div>
+        <section class="tab-panel" data-panel="package" hidden role="tabpanel">
+          <div class="callout plain" style="margin-bottom:20px">Approving a package records your review. It never submits an application. Generate creates private unreviewed drafts only; Apply remains separately approval-gated.</div>
+          <div class="section"><div class="subcard"><div class="subcard-head"><div><div class="eyebrow">State Street protocol</div><h3>Inspect evidence coverage</h3></div>${chip('pending','Human-gated')}</div><p class="note">Maps this exact stored listing to the canonical Career Arsenal and identifies claims that must be omitted, flagged, or clarified. Missing qualifications do not block a supported draft.</p><p>Verified Career Arsenal: <span class="mono" data-arsenal-version="${esc(state.arsenalVersion || '')}">${esc(state.arsenalVersion || 'Unavailable')}</span></p><div class="actions"><button class="btn" type="button" data-targeting-protocol data-job="${esc(detail.id)}" ${state.arsenalVersion?'':'disabled'}>Prepare protocol dossier</button></div><p class="notice" data-targeting-notice role="status"></p><div data-targeting-result></div></div></div>
           ${packageCards(workflow)}
         </section>
         <section class="tab-panel" data-panel="status" role="tabpanel" hidden>
@@ -786,6 +839,7 @@
         const trackNode = document.querySelector('#jobDetail .track'), detail = state.details.get(jobId);
         if (trackNode && detail) trackNode.outerHTML = track(detail, state.workflows.get(jobId) || {});
         const destination = destinations[0], items = queue.filter(item => item.canonical_job_id === jobId);
+        items.forEach(item => state.executionItems.set(item.id, item));
         const on = items.some(i => i.status === 'submitted') ? 'submitted' : items.length ? 'approved' : 'draft';
         if (!destination) { panel.innerHTML = `<div class="panel-title"><div><div class="eyebrow">Submission</div><h3>No verified destination</h3></div>${statusPair('none', 'Blocked')}</div>${ledger(on)}<div class="callout">No server-verified application destination is registered for this listing, so approval to send stays blocked.</div>`; return; }
         const exact = await api(`/api/applications/${encodeURIComponent(jobId)}/execution-preview?destination_id=${encodeURIComponent(destination.id)}`);
@@ -793,7 +847,7 @@
         panel.innerHTML = `<div class="panel-title"><div><div class="eyebrow">Submission</div><h3>Exact package bound for sending</h3></div>${exact.listing_current ? statusPair('submitted', 'Listing current') : statusPair('attention', 'Listing not current')}</div>
           ${ledger(on)}
           <dl class="kv" style="margin:0"><dt>Destination</dt><dd><a href="${esc(exact.destination_url)}" target="_blank" rel="noreferrer">${esc(exact.destination_host)}</a></dd><dt>Package</dt><dd><span class="mono">${esc(exact.package_id)}</span> · revision ${esc(exact.package_revision)}</dd><dt>Listing check</dt><dd class="mono">${esc(exact.listing_check_id)}</dd><dt>Manifest</dt><dd class="mono">${esc(exact.artifact_manifest_hash)}</dd></dl>
-          ${items.length ? `<div>${items.map(item => `<div class="queue-item"><div class="panel-title">${statusPair(item.status === 'submitted' ? 'submitted' : ATTENTION.includes(item.status) ? 'attention' : item.status === 'rejected' ? 'closed' : 'approved', item.status_label)}<span class="faint" style="font-size:12.5px">Updated ${esc(fmtDate(item.updated_at))}</span></div>${item.execution_notice ? `<div class="muted">${esc(item.execution_notice)}</div>` : ''}${item.blocker_detail ? `<div class="callout bad">${esc(item.blocker_detail)}</div>` : ''}${item.status !== 'submitted' && item.status !== 'rejected' ? `<div><button class="btn btn-sm" type="button" data-manual-attest="${esc(item.id)}">Record a manual submission</button></div>` : ''}</div>`).join('')}</div>` : `<form id="executionApprove" class="decision" style="margin:0 -18px -18px"><h4>Approve to send</h4><label class="check"><input name="confirm_exact_package" type="checkbox" required> <span>I approve this exact package revision, destination, listing check and document manifest.</span></label><div class="decision-grid"><label class="field"><span>Confirm with your password</span><input name="confirmation_password" type="password" autocomplete="current-password" required></label><div></div></div><div class="form-actions"><button class="btn btn-primary">Approve and queue — does not submit</button></div></form>`}
+          ${items.length ? `<div>${items.map(item => `<div class="queue-item"><div class="panel-title">${statusPair(item.status === 'submitted' ? 'submitted' : ATTENTION.includes(item.status) ? 'attention' : item.status === 'rejected' ? 'closed' : 'approved', item.status_label)}<span class="faint" style="font-size:12.5px">Updated ${esc(fmtDate(item.updated_at))}</span></div>${item.execution_notice ? `<div class="muted">${esc(item.execution_notice)}</div>` : ''}${item.blocker_detail ? `<div class="callout bad">${esc(item.blocker_detail)}</div>` : ''}<div class="form-actions">${['approved','login_required','user_input_required'].includes(item.status) ? `<button class="btn btn-sm btn-primary" type="button" data-operator-handoff="${esc(item.id)}">Download browser-executor handoff — does not claim or submit</button>` : ''}${item.status !== 'submitted' && item.status !== 'rejected' ? `<button class="btn btn-sm" type="button" data-manual-attest="${esc(item.id)}">Record a manual submission</button>` : ''}</div><div data-operator-action="${esc(item.id)}"></div></div>`).join('')}</div>` : `<form id="executionApprove" class="decision" style="margin:0 -18px -18px"><h4>Approve to send</h4><label class="check"><input name="confirm_exact_package" type="checkbox" required> <span>I approve this exact package revision, destination, listing check and document manifest.</span></label><div class="decision-grid"><label class="field"><span>Confirm with your password</span><input name="confirmation_password" type="password" autocomplete="current-password" required></label><div></div></div><div class="form-actions"><button class="btn btn-primary">Approve and queue — does not submit</button></div></form>`}
           <div id="executionAction"></div><p id="executionNotice" class="notice" role="status"></p>`;
         panel.dataset.job = jobId; panel.dataset.destination = destination.id; panel.dataset.preview = JSON.stringify(exact);
       } catch (error) { if (state.selected === jobId && el('executionPanel')) panel.innerHTML = `<div class="panel-title"><div><div class="eyebrow">Submission</div><h3>Not ready to send</h3></div>${statusPair('none', 'Blocked')}</div>${ledger('draft')}<div class="callout plain">Submission controls are unavailable: ${esc(humanize(error.message))}</div>`; }
@@ -827,6 +881,7 @@
       renderJobs();
     };
     document.querySelector('.viewnav').addEventListener('click', event => { const b = event.target.closest('[data-view]'); if (b) setView(b.dataset.view); });
+    document.addEventListener('change', event => { if (event.target.matches('[data-local-artifact]')) inspectLocalArtifact(event.target); });
     el('jobList').addEventListener('click', event => { const row = event.target.closest('[data-job]'); if (row) selectJob(row.dataset.job); });
     el('jobList').addEventListener('keydown', event => {
       if (!['ArrowDown','ArrowUp'].includes(event.key)) return;
@@ -843,9 +898,25 @@
       if (close) { const v = close.closest('[data-viewer]'); v.hidden = true; v.closest('[data-package-card]').querySelectorAll('.doc').forEach(d => d.setAttribute('aria-current', 'false')); }
       const verify = event.target.closest('[data-public-verify]');
       if (verify) verifyPublicListing(verify);
+      const targeting = event.target.closest('[data-targeting-protocol]');
+      if (targeting) prepareTargetingProtocol(targeting);
+      const localReview = event.target.closest('[data-local-review]');
+      if(localReview){localReview.textContent='Reviewed locally';localReview.disabled=true;localReview.closest('.artifact').querySelector('.chip').textContent='Locally reviewed · not approved to apply'}
       const attest = event.target.closest('[data-manual-attest]');
       if (attest) el('executionAction').innerHTML = `<form id="manualAttestation" class="decision" style="margin:12px -18px -18px" data-queue="${esc(attest.dataset.manualAttest)}"><h4>Record a manual submission</h4><div class="callout bad">This is your attestation, not an employer receipt. Use it only after you personally submitted this exact approved application.</div><div class="form-grid"><label class="field"><span>Submitted at</span><input name="submitted_at" type="datetime-local" required></label><label class="field"><span>Employer confirmation reference (optional)</span><input name="employer_confirmation_ref"></label></div><label class="check"><input name="attestation" type="checkbox" required> <span>I manually submitted this exact approved application</span></label><div class="decision-grid"><label class="field"><span>Confirm with your password</span><input name="confirmation_password" type="password" autocomplete="current-password" required></label><div></div></div><div class="form-actions"><button class="btn btn-primary">Record my attestation</button></div></form>`;
+      const handoff = event.target.closest('[data-operator-handoff]');
+      if(handoff) downloadOperatorHandoff(handoff);
+      const saveRevision = event.target.closest('[data-save-revision]');
+      if(saveRevision) saveEditedRevision(saveRevision);
+      const approveRevision = event.target.closest('[data-approve-revision]');
+      if(approveRevision) approveExactRevision(approveRevision);
+      const buildPackage = event.target.closest('[data-build-approved-package]');
+      if(buildPackage) buildApprovedPackage(buildPackage);
     });
+    async function saveEditedRevision(button){const card=button.closest('[data-document-id]'),notice=card.querySelector('.notice'),content=card.querySelector('[data-generated-content]').value;button.disabled=true;notice.textContent='Saving a new immutable revision…';try{await post(`/api/application-documents/${encodeURIComponent(card.dataset.documentId)}/revise`,{job_id:button.dataset.job,content});await loadApplicationDocuments(button.dataset.job)}catch(error){notice.textContent=`Not saved: ${error.message}`;notice.dataset.tone='bad';button.disabled=false}}
+    async function approveExactRevision(button){const card=button.closest('[data-document-id]'),notice=card.querySelector('.notice'),reviewField=card.querySelector('[data-reviewed-evidence]');let reviewedEvidence;try{reviewedEvidence=reviewField?JSON.parse(reviewField.value):undefined}catch{notice.textContent='Evidence assertions must be valid JSON.';notice.dataset.tone='bad';return}const password=window.prompt('Enter your True North password to approve this exact revision. Edited claims require the reviewed evidence assertions shown in this card.');if(password===null)return;button.disabled=true;notice.textContent='Recording exact revision approval…';try{await post(`/api/application-documents/${encodeURIComponent(card.dataset.documentId)}/approve`,{expected_revision:Number(card.dataset.revision),expected_content_hash:card.dataset.contentHash,confirm_claims_revalidated:!!reviewField,reviewed_evidence_map:reviewedEvidence,confirmation_password:password});await loadApplicationDocuments(state.selected)}catch(error){notice.textContent=`Not approved: ${error.message}`;notice.dataset.tone='bad';button.disabled=false}}
+    async function buildApprovedPackage(button){const notice=button.parentElement.querySelector('.notice');button.disabled=true;notice.textContent='Binding current approved revisions into a review package…';try{const result=await post(`/api/jobs/${encodeURIComponent(button.dataset.buildApprovedPackage)}/package-approved-documents`,{});notice.textContent=`Review package ${result.id} created. Drive upload and independent package review are still required before application approval.`;notice.dataset.tone='good';await selectJob(button.dataset.buildApprovedPackage);document.querySelector('[data-tab="package"]')?.click()}catch(error){notice.textContent=`Package not created: ${error.message}`;notice.dataset.tone='bad';button.disabled=false}}
+    function downloadOperatorHandoff(button){const item=state.executionItems.get(button.dataset.operatorHandoff),target=document.querySelector(`[data-operator-action="${CSS.escape(button.dataset.operatorHandoff)}"]`);if(!item){target.textContent='Handoff unavailable: reload the execution queue.';return}const handoff={version:1,kind:'true_north_browser_execution_handoff',created_at:new Date().toISOString(),queue_id:item.id,job_id:item.canonical_job_id,package_id:item.package_id,package_revision:item.package_revision,listing_version_id:item.listing_version_id,listing_check_id:item.listing_check_id,artifact_manifest_hash:item.artifact_manifest_hash,destination_url:item.destination_url,destination_host:item.destination_host,approval_origin:item.approval_origin,approved_at:item.approved_at,artifacts:item.artifacts,operator_contract:{claim_endpoint:`/api/applications/${encodeURIComponent(item.id)}/claim`,lease_seconds:900,claim_required_before_browser_actions:true,final_submit_requires_user_approval:true,receipt_required_before_applied:true,stop_states:['login_required','user_input_required','submission_uncertain']},notice:'This file does not claim, open, fill, or submit anything. Give it to the separately authorized browser executor only after the user approves Apply.'},blob=new Blob([JSON.stringify(handoff,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`true-north-browser-handoff-${item.id}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);target.innerHTML='<div class="callout"><strong>Handoff downloaded — still not claimed or submitted.</strong> A separately authorized browser executor must claim the queue item, preserve the exact bindings, stop for login/MFA/questions, and obtain user approval before final submit.</div>'}
     async function verifyPublicListing(button) {
       const notice = button.closest('.fresh').querySelector('[data-freshness-notice]'); button.disabled = true; notice.textContent = 'Checking the allowlisted employer listing…'; notice.dataset.tone = '';
       try {
@@ -856,8 +927,17 @@
       } catch (error) { if (error.message !== 'auth') { notice.textContent = `Verification did not establish freshness: ${error.message}`; notice.dataset.tone = 'bad'; } }
       finally { button.disabled = false; }
     }
+    async function prepareTargetingProtocol(button) {
+      const card=button.closest('.subcard'),notice=card.querySelector('[data-targeting-notice]'),result=card.querySelector('[data-targeting-result]'),arsenal=card.querySelector('[data-arsenal-version]').dataset.arsenalVersion;
+      if(!arsenal){notice.textContent='Verified Career Arsenal provenance is unavailable. Reload before continuing.';notice.dataset.tone='bad';return}
+      button.disabled=true;notice.textContent='Building the source-traceable protocol dossier…';notice.dataset.tone='';
+      try{const dossier=await post('/api/ai/targeting-protocol',{job_id:button.dataset.job,arsenal_version:arsenal}),blob=new Blob([JSON.stringify(dossier,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob);result.innerHTML=`<div class="callout ${dossier.scores.flag_below_60_percent?'bad':''}"><strong>Exact-language overlap:</strong> ${esc(dossier.scores.exact_language_overlap_percent)}% · <strong>Evidence coverage:</strong> ${esc(dossier.scores.evidence_coverage_percent)}% · ${esc(dossier.gaps.length)} claims to omit, flag, or clarify</div><div class="actions" style="margin-top:12px"><a class="secondary" download="true-north-targeting-protocol-${esc(button.dataset.job)}.json" href="${esc(url)}">Download traceable dossier</a></div><details><summary>Targeted clarification questions (${dossier.clarification_questions.length})</summary><ol>${dossier.clarification_questions.map(x=>`<li>${esc(x)}</li>`).join('')}</ol></details>`;notice.textContent='Supported drafting may proceed now. Unsupported claims must be omitted or flagged; stronger wording requires factual answers and every final artifact requires human review.';notice.dataset.tone='good'}catch(error){if(error.message!=='auth'){notice.textContent=`Protocol preparation failed: ${error.message}`;notice.dataset.tone='bad'}}finally{button.disabled=false}
+    }
+    async function inspectLocalArtifact(input){const file=input.files?.[0],box=input.closest('.subcard').querySelector('[data-local-artifact-results]');if(!file)return;const digest=[...new Uint8Array(await crypto.subtle.digest('SHA-256',await file.arrayBuffer()))].map(x=>x.toString(16).padStart(2,'0')).join(''),url=URL.createObjectURL(file),kind=input.dataset.localArtifact;box.querySelector(`[data-local-kind="${kind}"]`)?.remove();box.insertAdjacentHTML('beforeend',`<div class="artifact" data-local-kind="${esc(kind)}"><div class="subcard-head"><strong>${esc(kind)}</strong>${chip('complete','Local only')}</div><div>${esc(file.name)} · ${esc(file.size)} bytes</div><div class="code">SHA-256 ${esc(digest)}</div><div class="actions"><a class="secondary" href="${esc(url)}" download="${esc(file.name)}">Download exact local file</a></div><p class="muted">Not uploaded. Select the file again after a page refresh.</p></div>`)}
     el('jobDetail').addEventListener('submit', async event => {
       event.preventDefault();
+      if(event.target.matches('[data-import-prepared]')){const form=event.target,notice=form.querySelector('.notice'),button=event.submitter;let context,evidenceMap;try{context=currentDetailContext(form);evidenceMap=JSON.parse(form.elements.evidence_map.value);if(!Array.isArray(evidenceMap)||!evidenceMap.length)throw new Error('Evidence assertions must be a nonempty JSON array.')}catch(error){notice.textContent=`Import unavailable: ${error.message}`;notice.dataset.tone='bad';return}button.disabled=true;notice.textContent='Validating exact listing, Arsenal, protocol, and evidence references…';try{const selection=await post(`/api/jobs/${encodeURIComponent(context.jobId)}/select-for-generation`,{expected_job_id:context.jobId,expected_listing_version_id:context.listingVersion,expected_title:context.title,expected_company:context.company,arsenal_version:context.arsenalVersion,include_cover_letter:true});currentDetailContext(form);await post(`/api/jobs/${encodeURIComponent(context.jobId)}/import-prepared-document`,{artifact_type:form.elements.artifact_type.value,arsenal_version:context.arsenalVersion,content:form.elements.content.value,evidence_map:evidenceMap,expected_company:context.company,expected_job_id:context.jobId,expected_listing_version_id:context.listingVersion,expected_selection_id:selection.selection_id,expected_title:context.title,preparation_origin:'assistant_prepared',protocol_file_id:'1Vm8vK9wh5a_Waq6T870QtLhE26aluzMi',protocol_version:'2026-10-04',warnings:['Prepared without a new inference call; not approved or submitted.']});await loadApplicationDocuments(context.jobId,context.token);notice.textContent='Assistant-prepared revision imported as private and unreviewed. Human claim revalidation remains required.';notice.dataset.tone='good';form.reset()}catch(error){notice.textContent=`Import unavailable: ${error.message}`;notice.dataset.tone='bad'}finally{button.disabled=false}return}
+      if(event.target.matches('[data-generate-package]')){const form=event.target,data=new FormData(form),notice=form.parentElement.querySelector('[data-generate-notice]'),out=form.parentElement.querySelector('[data-generated-documents]'),button=event.submitter;let context;try{context=currentDetailContext(form)}catch(error){notice.textContent=`Generation unavailable: ${error.message}`;notice.dataset.tone='bad';return}const arsenal=context.arsenalVersion,includeCover=data.get('include_cover')==='on',types=['tailored_resume',...(includeCover?['cover_letter']:[])];if(!arsenal){notice.textContent='Generation unavailable: verified Career Arsenal provenance is missing.';notice.dataset.tone='bad';return}state.generationLock=context;renderJobs();button.disabled=true;notice.textContent=`Generating private drafts for ${context.title} at ${context.company} using listing ${context.listingVersion}. Job switching is locked until this exact request finishes…`;out.innerHTML='';try{const selection=await post(`/api/jobs/${encodeURIComponent(context.jobId)}/select-for-generation`,{expected_job_id:context.jobId,expected_listing_version_id:context.listingVersion,expected_title:context.title,expected_company:context.company,arsenal_version:arsenal,include_cover_letter:includeCover});currentDetailContext(form);const authorization=await post(`/api/jobs/${encodeURIComponent(context.jobId)}/authorize-document-generation`,{expected_selection_id:selection.selection_id,expected_listing_version_id:context.listingVersion,authorized_microusd:29000,authorization_scope:'user_triggered_selection_package'});for(const type of types){currentDetailContext(form);await post('/api/ai/generate-application-document',{job_id:context.jobId,arsenal_version:arsenal,artifact_type:type,expected_selection_id:selection.selection_id,expected_listing_version_id:context.listingVersion,package_authorization_id:authorization.id})}await loadApplicationDocuments(context.jobId,context.token);notice.textContent=`Draft revisions for ${context.title} at ${context.company} persisted for review. Nothing was uploaded, sent, or submitted.`;notice.dataset.tone='good'}catch(error){if(state.rendered?.token===context.token){notice.textContent=`Generation unavailable for ${context.title} at ${context.company}: ${error.message}`;notice.dataset.tone='bad'}}finally{state.generationLock=null;renderJobs();if(state.rendered?.token===context.token)button.disabled=false}return}
       if (event.target.matches('.review-form')) {
         const form = event.target, submitter = event.submitter, notice = form.querySelector('[data-package-notice]');
         notice.textContent = ''; notice.dataset.tone = '';
@@ -909,6 +989,7 @@
     });
     el('refreshQueue').onclick = () => loadQueue().catch(error => { if (error.message !== 'auth') el('queueNotice').textContent = error.message; });
     el('queueStatus').onchange = el('refreshQueue').onclick;
+    addEventListener('pagehide',()=>state.executorLeases.clear());
     el('runResearch').onclick = async () => {
       if (state.researchInFlight) return;
       const source = el('researchSource').value;
@@ -934,7 +1015,8 @@
       el('loginDialog').close(); form.reset(); el('loginError').textContent = ''; await Promise.all([loadJobs(), loadQueue()]);
     };
 
-    Promise.all([loadJobs(), loadQueue()]).catch(error => { if (error.message !== 'auth') setConnection('API unavailable', 'bad'); });
+    addEventListener('popstate',()=>{const id=new URL(location.href).searchParams.get('job');if(state.generationLock&&id!==state.generationLock.jobId){const url=new URL(location.href);url.searchParams.set('job',state.generationLock.jobId);history.replaceState({job:state.generationLock.jobId},'',url);selectJob(state.generationLock.jobId,{historyMode:'none'});return}if(id&&id!==state.selected)selectJob(id,{historyMode:'none'})});
+    Promise.all([loadJobs(), loadQueue()]).then(()=>{const id=new URL(location.href).searchParams.get('job');if(id&&state.jobs.some(job=>job.id===id))selectJob(id,{historyMode:'replace'})}).catch(error => { if (error.message !== 'auth') setConnection('API unavailable', 'bad'); });
   </script>
 </body>
 </html>
