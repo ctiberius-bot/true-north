@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="color-scheme" content="dark">
+  <meta name="color-scheme" content="light">
   <title>True North · Application Review</title>
   <link rel="icon" href="./TrueNorth-Polaris-mark_transparent.svg" type="image/svg+xml">
   <style>
@@ -14,32 +14,32 @@
       --font-display: "Oswald", "Bahnschrift SemiCondensed", "Arial Narrow", var(--font);
       --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
-      --obsidian: #0A0C10;
-      --bg: #0A0C10;
-      --bg-raised: #0E1116;
-      --surface: #12161C;
-      --surface-2: #171B22;
-      --hover: #141820;
-      --line: #22262D;
-      --line-strong: #2E333B;
-      --text: #EEE7D7;
-      --text-2: #B3AB9B;
-      --text-3: #8A8374;
-      --gold: #D9A93F;
-      --gold-bright: #E9C46A;
-      --gold-dim: #6E5520;
-      --gold-wash: rgba(217, 169, 63, .08);
-      --ink-on-gold: #0A0C10;
-      --green: #82BE95;
-      --green-wash: rgba(130, 190, 149, .09);
-      --red: #E58A7F;
-      --red-wash: rgba(229, 138, 127, .09);
+      --obsidian: #F4EFE4;
+      --bg: #F4EFE4;
+      --bg-raised: #FAF7F0;
+      --surface: #FFFDF8;
+      --surface-2: #F0EADD;
+      --hover: #EEE7D8;
+      --line: #DDD4C2;
+      --line-strong: #C9BEA8;
+      --text: #1B2433;
+      --text-2: #4A5568;
+      --text-3: #6B7280;
+      --gold: #1F3B70;
+      --gold-bright: #2B5296;
+      --gold-dim: #A9B9D6;
+      --gold-wash: rgba(31, 59, 112, .08);
+      --ink-on-gold: #FFFFFF;
+      --green: #2E7D4F;
+      --green-wash: rgba(46, 125, 79, .09);
+      --red: #B83227;
+      --red-wash: rgba(184, 50, 39, .08);
       --paper: #F6F2EA;
       --paper-ink: #1C1D20;
 
       --radius: 6px;
       --radius-sm: 4px;
-      --appbar-h: 84px;
+      --appbar-h: 176px;
       --index-w: 400px;
       --focus: 0 0 0 2px var(--bg), 0 0 0 4px var(--gold);
     }
@@ -65,8 +65,8 @@
     /* ---------- Controls ---------- */
     .field { display: grid; gap: 6px; }
     .field > span { font-size: 12px; font-weight: 600; letter-spacing: .02em; color: var(--text-2); }
-    input, select, textarea { width: 100%; padding: 9px 11px; background: var(--bg); border: 1px solid var(--line-strong); border-radius: var(--radius-sm); color-scheme: dark; transition: border-color .12s; }
-    input:hover, select:hover, textarea:hover { border-color: #3a3f48; }
+    input, select, textarea { width: 100%; padding: 9px 11px; background: var(--bg); border: 1px solid var(--line-strong); border-radius: var(--radius-sm); color-scheme: light; transition: border-color .12s; }
+    input:hover, select:hover, textarea:hover { border-color: #B5A88E; }
     input:focus, select:focus, textarea:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px var(--gold-wash); }
     input[type="checkbox"] { width: 16px; height: 16px; padding: 0; accent-color: var(--gold); flex: 0 0 auto; margin-top: 3px; }
     textarea { min-height: 84px; resize: vertical; line-height: 1.5; }
@@ -74,10 +74,10 @@
     .check { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; color: var(--text); }
 
     .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 36px; padding: 7px 14px; border-radius: var(--radius-sm); border: 1px solid var(--line-strong); background: transparent; color: var(--text); font-size: 14px; font-weight: 600; text-decoration: none; white-space: nowrap; transition: background .12s, border-color .12s; }
-    .btn:hover:not(:disabled) { background: var(--hover); border-color: #3a3f48; }
+    .btn:hover:not(:disabled) { background: var(--hover); border-color: #B5A88E; }
     .btn-primary { background: var(--gold); border-color: var(--gold); color: var(--ink-on-gold); }
     .btn-primary:hover:not(:disabled) { background: var(--gold-bright); border-color: var(--gold-bright); }
-    .btn-danger { color: var(--red); border-color: rgba(229, 138, 127, .35); }
+    .btn-danger { color: var(--red); border-color: rgba(184, 50, 39, .35); }
     .btn-danger:hover:not(:disabled) { background: var(--red-wash); border-color: var(--red); }
     .btn-quiet { border-color: transparent; color: var(--text-2); padding-inline: 8px; }
     .btn-quiet:hover:not(:disabled) { color: var(--text); background: var(--hover); border-color: transparent; }
@@ -86,13 +86,13 @@
 
     /* ---------- State marks: one vocabulary used everywhere ---------- */
     .mark { display: inline-block; width: 10px; height: 10px; border-radius: 50%; flex: 0 0 auto; border: 1.5px solid var(--text-3); background: transparent; }
-    .mark[data-state="none"] { border-style: dashed; border-color: #4a4e56; }
+    .mark[data-state="none"] { border-style: dashed; border-color: #A89B80; }
     .mark[data-state="draft"] { border-color: var(--text-2); }
     .mark[data-state="review"] { border-color: var(--gold); }
     .mark[data-state="approved"] { border-color: var(--gold); background: linear-gradient(90deg, var(--gold) 50%, transparent 50%); }
     .mark[data-state="submitted"] { border-color: var(--green); background: var(--green); }
     .mark[data-state="attention"] { border-color: var(--red); background: var(--red); border-radius: 2px; transform: rotate(45deg) scale(.85); }
-    .mark[data-state="closed"] { border-color: #4a4e56; background: #4a4e56; }
+    .mark[data-state="closed"] { border-color: #A89B80; background: #A89B80; }
     .state-label { font-size: 13px; font-weight: 600; color: var(--text-2); }
     .state-label[data-state="review"], .state-label[data-state="approved"] { color: var(--gold-bright); }
     .state-label[data-state="submitted"] { color: var(--green); }
@@ -104,9 +104,9 @@
     .tone-bad { color: var(--red); }
 
     /* ---------- App bar ---------- */
-    .appbar { position: sticky; top: 0; z-index: 20; height: var(--appbar-h); display: flex; align-items: center; gap: 24px; padding: 0 20px; background: rgba(10, 12, 16, .94); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+    .appbar { position: sticky; top: 0; z-index: 20; height: var(--appbar-h); display: flex; align-items: center; gap: 24px; padding: 0 20px; background: rgba(244, 239, 228, .94); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
     .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text); min-width: 0; }
-    .brand .lockup { height: 76px; width: auto; display: block; }
+    .brand .lockup { height: 160px; width: auto; display: block; }
     .brand-name { font-family: var(--font-display); font-size: 18px; font-weight: 500; letter-spacing: .2em; text-transform: uppercase; }
     .brand-sub { font-family: var(--font-display); font-size: 14px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--text-2); padding-left: 14px; border-left: 1px solid var(--line-strong); white-space: nowrap; }
     .viewnav { display: flex; gap: 4px; margin-left: 12px; }
@@ -224,7 +224,7 @@
     .kv dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
 
     /* Original listing: a reading column, not a scroll box */
-    .listing { max-width: 72ch; font-size: 16px; line-height: 1.72; color: #E6DFCF; }
+    .listing { max-width: 72ch; font-size: 16px; line-height: 1.72; color: #1B2433; }
     .listing > :first-child { margin-top: 0; }
     .listing h1, .listing h2, .listing h3, .listing h4 { font-family: var(--font-display); font-weight: 500; color: var(--text); letter-spacing: .02em; line-height: 1.25; margin: 1.8em 0 .5em; text-transform: none; }
     .listing h1 { font-size: 22px; } .listing h2 { font-size: 20px; } .listing h3 { font-size: 18px; } .listing h4 { font-size: 16px; letter-spacing: .06em; text-transform: uppercase; }
@@ -259,7 +259,7 @@
     .doc-actions { display: flex; gap: 6px; flex-wrap: wrap; }
     .viewer { border: 1px solid var(--line-strong); border-radius: var(--radius); overflow: hidden; }
     .viewer-bar { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 8px 12px; background: var(--surface-2); border-bottom: 1px solid var(--line-strong); font-size: 13px; color: var(--text-2); }
-    .viewer-body { max-height: 70vh; overflow: auto; background: #1A1D22; padding: clamp(12px, 3vw, 32px); }
+    .viewer-body { max-height: 70vh; overflow: auto; background: #E8E1D2; padding: clamp(12px, 3vw, 32px); }
     .paper { max-width: 760px; margin: 0 auto; padding: clamp(24px, 5vw, 56px); background: var(--paper); color: var(--paper-ink); font: 14.5px/1.6 Georgia, "Iowan Old Style", "Times New Roman", serif; border-radius: 2px; box-shadow: 0 1px 0 rgba(0,0,0,.4); }
     .paper h1, .paper h2, .paper h3 { font-family: var(--font-display); font-weight: 500; letter-spacing: .03em; color: #111; margin: 1.2em 0 .4em; }
     .paper h1:first-child, .paper h2:first-child { margin-top: 0; }
@@ -318,7 +318,7 @@
 
     /* ---------- Sign in ---------- */
     dialog { border: 1px solid var(--line-strong); border-radius: var(--radius); background: var(--surface); color: var(--text); padding: 0; width: min(400px, calc(100% - 32px)); }
-    dialog::backdrop { background: rgba(5, 6, 8, .82); backdrop-filter: blur(3px); }
+    dialog::backdrop { background: rgba(27, 36, 51, .45); backdrop-filter: blur(3px); }
     .signin { padding: 32px; display: grid; gap: 18px; }
     .signin-brand { display: grid; justify-items: center; gap: 10px; text-align: center; margin-bottom: 6px; }
     
@@ -332,9 +332,9 @@
       .decision-grid { grid-template-columns: 1fr; }
     }
     @media (max-width: 860px) {
-      :root { --appbar-h: 68px; }
+      :root { --appbar-h: 116px; }
       .appbar { padding: 0 16px; gap: 12px; }
-      .brand .lockup { height: 60px; }
+      .brand .lockup { height: 104px; }
       .viewnav { margin-left: auto; }
       .viewnav button { padding: 0 8px; font-size: 12px; letter-spacing: .08em; }
       .appbar-meta { display: none; }
@@ -368,6 +368,9 @@
     }
     .mobile-meta { display: none; gap: 14px; padding: 10px 16px; border-bottom: 1px solid var(--line); font-size: 12.5px; color: var(--text-3); }
     @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+  
+    /* Navy app bar (night sky behind the Polaris lockup); the rest of the page is cream for readability. */
+    .appbar,.mobile-meta{--obsidian:#0B1426;--bg:#0B1426;--bg-raised:#0F1A30;--surface:#13203A;--surface-2:#182746;--hover:#152340;--line:#233355;--line-strong:#2F4168;--text:#E8EEF7;--text-2:#A9B7CC;--text-3:#8496AF;--gold:#A8D8FF;--gold-bright:#D6EEFF;--gold-dim:#2E5A80;--gold-wash:rgba(168,216,255,.08);--ink-on-gold:#0B1426;--green:#7FD1A8;--red:#F08C8C;color-scheme:dark;background:#0B1426!important;color:var(--text)}
   </style>
 </head>
 <body data-view="jobs" data-pane="list">
