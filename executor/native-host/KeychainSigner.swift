@@ -28,7 +28,7 @@ switch command {
 case "convert-der":
   let der=FileHandle.standardInput.readDataToEndOfFile();guard let raw=p1363(der) else{fail(4)};print(base64url(raw))
 case "create":
-  guard lookup(tag)==nil else{fail(5)}
+  if let existing=lookup(tag){guard let publicSpki=spki(existing) else{fail(6)};print(base64url(publicSpki));break}
   let attributes:[String:Any]=[kSecAttrKeyType as String:kSecAttrKeyTypeECSECPrimeRandom,kSecAttrKeySizeInBits as String:256,kSecPrivateKeyAttrs as String:[kSecAttrIsPermanent as String:true,kSecAttrIsExtractable as String:false,kSecAttrApplicationTag as String:tag,kSecAttrAccessible as String:kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly]]
   var error:Unmanaged<CFError>?;guard let created=SecKeyCreateRandomKey(attributes as CFDictionary,&error),let publicSpki=spki(created) else{fail(6)};print(base64url(publicSpki))
 case "public":
