@@ -1,0 +1,2 @@
+import test from "node:test";import assert from "node:assert/strict";import {canonicalBodyHash,canonicalJson} from "../executor/shared/canonical-json.js";
+test("canonical request bytes are stable across object key order and nested platform construction",async()=>{const a={device_id:"mac",body:{z:1,a:[{y:true,x:"v"}]},path:"/consume"},b={path:"/consume",body:{a:[{x:"v",y:true}],z:1},device_id:"mac"};assert.equal(canonicalJson(a),canonicalJson(b));assert.equal(await canonicalBodyHash(a),await canonicalBodyHash(b))});

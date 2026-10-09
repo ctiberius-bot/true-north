@@ -1,6 +1,7 @@
 import {workspaceHtml,polarisLockup,polarisMark} from "./workspace-ui.js";
 import {createApplicationExecutionService,routeApplicationExecution} from "./application-execution/application-execution.js";
 import {verifyTrustedEmployerReceipt} from "./application-execution/trusted-service-adapters.js";
+import {canonicalBodyHash} from "./executor/shared/canonical-json.js";
 // True North Citadel — private career-operation intake and research queue.
 // Drive is the master. Build-only slice; cleanup is preview-only by design.
 export const VERSION = "2.3.39-2026-10-09";
@@ -902,7 +903,8 @@ export default {
       if(u.pathname==="/TrueNorth-Polaris-mark_transparent.svg")return new Response(polarisMark,{headers:{"content-type":"image/svg+xml","cache-control":"public,max-age=86400","x-content-type-options":"nosniff"}});
       if(u.pathname==="/api/login"&&request.method==="POST") return login(request,env);
       if(u.pathname==="/oauth/google/callback"&&request.method==="GET"){const state=u.searchParams.get("state"),code=u.searchParams.get("code"),binding=decodeURIComponent((request.headers.get("cookie")||"").match(/(?:^|;\s*)tn_oauth=([^;]+)/)?.[1]||""),split=binding.indexOf("."),browser_nonce=split<0?"":binding.slice(0,split),session_binding=split<0?"":binding.slice(split+1);const r=await brokerRequest(env,"/callback",{state,code,browser_nonce,session_binding});const body=await r.json();return new Response(r.ok?"Gmail read-only connection verified. You may close this window.":`Connection failed: ${body.error}`,{status:r.status,headers:{"content-type":"text/plain; charset=utf-8","cache-control":"no-store","set-cookie":"tn_oauth=; HttpOnly; Secure; SameSite=Lax; Path=/oauth/google/callback; Max-Age=0"}})}
-      if(!u.pathname.startsWith("/api/")||!await sessionValid(request,env)) return Response.json({error:"auth"},{status:401});
+      const signedDeviceRoute=request.method==="POST"&&/^\/api\/applications\/[^/]+\/(claim|consume-final-submit|receipt|uncertain)$/.test(u.pathname);
+      if(!u.pathname.startsWith("/api/")||!signedDeviceRoute&&!await sessionValid(request,env)) return Response.json({error:"auth"},{status:401});
       const repo=repoForEnv(env);
       if(u.pathname.startsWith("/api/applications/")){
         const executionResponse=await routeApplicationExecution(request,{
@@ -913,7 +915,7 @@ export default {
           },
           verifyTrustedDevice:async(deviceId,signedBody,sourceRequest)=>{
             if(!env.EXECUTOR_DEVICE_VERIFIER?.fetch)return undefined;
-            const timestamp=sourceRequest.headers.get("x-executor-timestamp"),nonce=sourceRequest.headers.get("x-executor-nonce"),signature_b64url=sourceRequest.headers.get("x-executor-signature"),path=new URL(sourceRequest.url).pathname,body_hash=await sha256(JSON.stringify(signedBody)),response=await env.EXECUTOR_DEVICE_VERIFIER.fetch(new Request("https://executor-device-verifier/verify",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({device_id:deviceId,method:sourceRequest.method,path,body_hash,timestamp,nonce,signature_b64url})}));
+            const timestamp=sourceRequest.headers.get("x-executor-timestamp"),nonce=sourceRequest.headers.get("x-executor-nonce"),signature_b64url=sourceRequest.headers.get("x-executor-signature"),path=new URL(sourceRequest.url).pathname,body_hash=await canonicalBodyHash(signedBody),response=await env.EXECUTOR_DEVICE_VERIFIER.fetch(new Request("https://executor-device-verifier/verify",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({device_id:deviceId,method:sourceRequest.method,path,body_hash,timestamp,nonce,signature_b64url})}));
             if(!response.ok)return undefined;const value=await response.json();return value?.verified===true&&value?.device_id===deviceId?{verified:true,device_id:deviceId}:undefined;
           },
           trustedEmployerReceipt:async(queueId,receipt)=>verifyTrustedEmployerReceipt(env.EXECUTOR_DEVICE_VERIFIER,queueId,receipt,request)

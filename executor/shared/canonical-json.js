@@ -1,0 +1,2 @@
+export function canonicalJson(value){if(value===null||typeof value!=="object")return JSON.stringify(value);if(Array.isArray(value))return`[${value.map(canonicalJson).join(",")}]`;return`{${Object.keys(value).sort().map(k=>`${JSON.stringify(k)}:${canonicalJson(value[k])}`).join(",")}}`}
+export async function canonicalBodyHash(value){const bytes=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(canonicalJson(value)));return[...new Uint8Array(bytes)].map(x=>x.toString(16).padStart(2,"0")).join("")}
