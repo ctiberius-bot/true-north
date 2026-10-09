@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {readFile} from "node:fs/promises";
-import {artifactManifestHash,canonicalManifestRows,EXECUTION_STATUSES,executionProgress,validateSubmittedAt} from "../application-execution/application-execution.js";
+import {artifactManifestHash,canonicalManifestRows,EXECUTION_STATUSES,executionProgress,routeApplicationExecution,validateSubmittedAt} from "../application-execution/application-execution.js";
 
 const rows=[
   {artifact_id:"b",artifact_type:"cover_letter",drive_file_id:"drive-b",content_hash:"b".repeat(64),byte_size:20,drive_modified_time:"2026-10-08T10:00:00.000Z"},
@@ -34,6 +34,22 @@ test("manual submission timestamp must be real, nonfuture, and after approval",(
   const now=Date.parse("2026-10-08T12:00:00.000Z"),approved="2026-10-08T11:00:00.000Z";
   assert.equal(validateSubmittedAt("2026-10-08T11:30:00Z",now,approved),"2026-10-08T11:30:00.000Z");
   for(const value of ["not-a-date","2026-10-08T10:59:59Z","2026-10-08T12:01:01Z"])assert.throws(()=>validateSubmittedAt(value,now,approved),/invalid_submitted_at/);
+});
+
+test("authenticated execution router exposes destination registration separately from approval",async()=>{
+  const calls=[],service={
+    registerDestination:async(jobId,input)=>{calls.push({jobId,input});return{id:"destination-1",job_id:jobId,...input}},
+    listDestinations:async jobId=>[{id:"destination-1",job_id:jobId}]
+  };
+  const input={listing_version_id:"lv-1",listing_check_id:"check-1",destination_url:"https://jobs.example/apply",verification_source:"public_server_fetch",verified_at:"2026-10-09T18:00:00.000Z"};
+  const created=await routeApplicationExecution(new Request("https://truenorth.justsignal.company/api/applications/job%2F1/destinations",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(input)}),{service});
+  assert.equal(created.status,200);
+  assert.deepEqual(calls,[{jobId:"job/1",input}]);
+  assert.equal((await created.json()).id,"destination-1");
+  const listed=await routeApplicationExecution(new Request("https://truenorth.justsignal.company/api/applications/job%2F1/destinations"),{service});
+  assert.deepEqual(await listed.json(),[{id:"destination-1",job_id:"job/1"}]);
+  const ignored=await routeApplicationExecution(new Request("https://truenorth.justsignal.company/api/applications/job%2F1/destinations",{method:"DELETE"}),{service});
+  assert.equal(ignored,null);
 });
 
 test("claim, receipt, revocation, and migration SQL retain fail-closed guards",async()=>{

@@ -39,6 +39,7 @@ Mount `gui-fragment.js` only inside the authenticated workspace and pass the exi
 | Method | Endpoint | Meaning |
 |---|---|---|
 | GET | `/api/applications/:job_id/execution-preview?destination_id=...` | Exact approval review data; no state change |
+| POST | `/api/applications/:job_id/destinations` | Register a destination already bound to an exact listing check; trusted registration requires an open, same-host `public_server_fetch` check and its exact capture timestamp |
 | POST | `/api/applications/:job_id/approve-execution` | Reauthenticated exact approval; creates one queue item; not submitted |
 | GET | `/api/applications/queue` | Safe queue/status list |
 | POST | `/api/applications/:queue_id/claim` | Bounded same-origin lease; can resume a resolved login/input stop after lease expiry; not submitted |
@@ -50,4 +51,4 @@ Mount `gui-fragment.js` only inside the authenticated workspace and pass the exi
 
 Executor mutation calls send the one-time claim secret in `X-Application-Lease`. All calls must remain under the existing authenticated dashboard session and same browser origin.
 
-`registerDestination()` is a repository method, not an exposed public route. It requires `listing_version_id`, `listing_check_id`, `destination_url`, `verification_source`, and `verified_at`. Only a destination whose host and timestamp exactly match an open `public_server_fetch` check can authorize approval; an `unverified_browser_observation` remains display-only. Never allow a caller to create a destination during approval.
+Destination registration is a separate authenticated route and is never accepted inside an approval request. It requires `listing_version_id`, `listing_check_id`, `destination_url`, `verification_source`, and `verified_at`. Only a destination whose host and timestamp exactly match an open `public_server_fetch` check can authorize approval; an `unverified_browser_observation` remains display-only.
