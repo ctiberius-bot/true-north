@@ -23,7 +23,7 @@ CREATE TRIGGER execution_receipt_guard BEFORE INSERT ON application_submission_r
       AND c.availability='open' AND c.capture_source='public_server_fetch'
       AND c.captured_at>=strftime('%Y-%m-%dT%H:%M:%fZ','now','-15 minutes')
       AND ((NEW.receipt_kind='employer_confirmation' AND q.status='claimed' AND q.lease_expires_at>NEW.recorded_at AND f.id IS NOT NULL AND NEW.submitted_at>=f.consumed_at AND j.status='consumed_pending_action' AND (NEW.confirmation_url IS NULL OR LOWER(CASE WHEN INSTR(SUBSTR(NEW.confirmation_url,9),'/')=0 THEN SUBSTR(NEW.confirmation_url,9) ELSE SUBSTR(NEW.confirmation_url,9,INSTR(SUBSTR(NEW.confirmation_url,9),'/')-1) END)=d.destination_host))
-        OR (NEW.receipt_kind='user_attested_manual_submission'))
+        OR (NEW.receipt_kind='user_attested_manual_submission' AND q.status IN('approved','claimed','login_required','user_input_required','submission_uncertain') AND a.revoked_at IS NULL))
   ) THEN RAISE(ABORT,'submission_receipt_binding_invalid') END;
 END;
 CREATE TRIGGER resolve_submit_attempt_on_receipt AFTER INSERT ON application_submission_receipts BEGIN

@@ -1,0 +1,1 @@
+export function renderNativeHostManifest(template,{hostPath,extensionId}){if(!String(hostPath||"").startsWith("/")||!/^[a-p]{32}$/.test(String(extensionId||"")))throw new Error("native_host_manifest_input_invalid");return template.replace("__ABSOLUTE_HOST_PATH__",hostPath).replace("__EXTENSION_ID__",extensionId)}
