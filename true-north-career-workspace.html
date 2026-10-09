@@ -106,7 +106,27 @@
     /* ---------- App bar ---------- */
     .appbar { position: sticky; top: 0; z-index: 20; height: var(--appbar-h); display: flex; align-items: center; gap: 24px; padding: 0 20px; background: rgba(244, 239, 228, .94); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
     .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text); min-width: 0; }
-    .brand .lockup { height: 160px; width: auto; display: block; }
+    /* Lockup: the unmodified brand SVG shown as two crops (star, then wordmark and tagline) side by side, so the text stays legible. */
+    .lockup { display: flex; align-items: center; gap: 4px; }
+    .lockup svg { display: block; flex: 0 0 auto; }
+    .lockup-star { height: 132px; width: 119px; }
+    .lockup-words { height: 84px; width: 354px; }
+    .viewnav button { white-space: nowrap; }
+    @media (max-width: 1500px) { .brand-sub { display: none; } }
+    .brand { flex: 0 0 auto; }
+    /* Narrower desktops: the lockup gets its own row, with the views and status on the row below. */
+    @media (min-width: 861px) and (max-width: 1320px) {
+      :root { --appbar-h: 168px; }
+      .appbar { flex-wrap: wrap; align-content: center; row-gap: 2px; }
+      .brand { flex: 1 0 100%; }
+      .lockup-star { height: 100px; width: 90px; }
+      .lockup-words { height: 64px; width: 270px; }
+      .viewnav { margin-left: 0; }
+      .appbar .viewnav button { height: 48px; }
+    }
+    .lockup-stacked { flex-direction: column; gap: 0; background: #0B1426; padding: 18px 24px 16px; border-radius: var(--radius-sm); }
+    .lockup-stacked .lockup-star { height: 108px; width: 97px; }
+    .lockup-stacked .lockup-words { height: 60px; width: 253px; }
     .brand-name { font-family: var(--font-display); font-size: 18px; font-weight: 500; letter-spacing: .2em; text-transform: uppercase; }
     .brand-sub { font-family: var(--font-display); font-size: 14px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--text-2); padding-left: 14px; border-left: 1px solid var(--line-strong); white-space: nowrap; }
     .viewnav { display: flex; gap: 4px; margin-left: 12px; }
@@ -334,8 +354,12 @@
     @media (max-width: 860px) {
       :root { --appbar-h: 116px; }
       .appbar { padding: 0 16px; gap: 12px; }
-      .brand .lockup { height: 104px; }
-      .viewnav { margin-left: auto; }
+      .appbar { height: auto; flex-wrap: wrap; row-gap: 0; padding-top: 8px; }
+      .brand { flex: 1 0 100%; }
+      .lockup-star { height: 72px; width: 65px; }
+      .lockup-words { height: 56px; width: 236px; }
+      .appbar .viewnav button { height: 44px; }
+      .viewnav { margin-left: 0; }
       .viewnav button { padding: 0 8px; font-size: 12px; letter-spacing: .08em; }
       .appbar-meta { display: none; }
       .mobile-meta { display: flex !important; }
@@ -394,7 +418,7 @@
 <body data-view="jobs" data-pane="list">
   <header class="appbar">
     <a class="brand" href="/" aria-label="True North home">
-      <img class="lockup" src="./TrueNorth-Polaris-full_dark.svg" alt="True North — Steer by it">
+      <span class="lockup" role="img" aria-label="True North — Steer by it"><svg class="lockup-star" viewBox="70 28 360 400" aria-hidden="true" focusable="false"><image href="./TrueNorth-Polaris-full_dark.svg" width="500" height="560"/></svg><svg class="lockup-words" viewBox="56 424 388 92" aria-hidden="true" focusable="false"><image href="./TrueNorth-Polaris-full_dark.svg" width="500" height="560"/></svg></span>
       <span class="brand-sub">Application review</span>
     </a>
     <nav class="viewnav" aria-label="Views">
@@ -464,7 +488,7 @@
 
   <dialog id="loginDialog">
     <form id="loginForm" method="dialog" class="signin">
-      <div class="signin-brand"><img src="./TrueNorth-Polaris-full_dark.svg" alt="True North — Steer by it" style="width:auto;height:140px"><p class="muted" style="font-size:14px">Private workspace. Sign in with the dashboard password.</p></div>
+      <div class="signin-brand"><span class="lockup lockup-stacked" role="img" aria-label="True North — Steer by it"><svg class="lockup-star" viewBox="70 28 360 400" aria-hidden="true" focusable="false"><image href="./TrueNorth-Polaris-full_dark.svg" width="500" height="560"/></svg><svg class="lockup-words" viewBox="56 424 388 92" aria-hidden="true" focusable="false"><image href="./TrueNorth-Polaris-full_dark.svg" width="500" height="560"/></svg></span><p class="muted" style="font-size:14px">Private workspace. Sign in with the dashboard password.</p></div>
       <label class="field"><span>Password</span><input name="password" type="password" autocomplete="current-password" required></label>
       <button class="btn btn-primary">Sign in</button>
       <p id="loginError" class="notice" data-tone="bad" role="alert"></p>
