@@ -1,5 +1,11 @@
 # Change log
 
+## 2026-10-09 — v2.3.40 legible Polaris lockup
+
+- Integrated Claude's approved logo-only handoff on the exact v2.3.39 production base.
+- Rendered the unmodified Polaris SVG as separate star and wordmark crops so the name and tagline remain legible across desktop, laptop, phone, and sign-in layouts.
+- Preserved all existing API, intake, application-execution, and safety behavior; this release does not activate the separately developed executor runtime.
+
 ## 2026-10-09 — v2.3.39 approved redesign and execution progress integration
 
 - Integrated Claude's approved `live-f78eaed9` navy/cream workspace and exact recolored Polaris assets without recreating the redesign by hand.
