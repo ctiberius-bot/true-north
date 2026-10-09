@@ -49,7 +49,7 @@ Deployment approval would cover these exact files/services and no public verifie
 
 Implemented today: the authenticated route and create → download → exact-byte-hash → D1 verification/audit workflow.
 
-Still missing: a concrete live connector service and OAuth client/binding. The existing interactive ChatGPT Drive connection cannot be silently reused by the Worker.
+A concrete private connector implementation and mocked contract tests are now present, but it is not deployed or connected. The OAuth client/token-provider binding and exact approved destination folder remain unconfigured. The existing interactive ChatGPT Drive connection cannot be silently reused by the Worker.
 
 The proposed provider is Google Drive for `ctiberius@gmail.com`, using OAuth scope `https://www.googleapis.com/auth/drive.file`. This scope is not read-only: it permits True North to create and edit files it creates or files Chris explicitly selects for the app. The application behavior would be restricted to:
 
@@ -57,7 +57,7 @@ The proposed provider is Google Drive for `ctiberius@gmail.com`, using OAuth sco
 - Read back that exact new file's metadata and bytes for hash verification.
 - Never list/search the account, edit after verification, delete, share, or access unrelated files.
 
-Approval must name the destination folder and authorize creation/readback there. No OAuth grant or connector deployment should occur before the connector implementation and consent screen are reviewed.
+Approval must name the destination folder and authorize creation/readback there. The connector requires the verified account `ctiberius@gmail.com`, exactly `drive.file`, and the fixed configured folder; it exposes no list, search, update, delete, or share operation. No OAuth grant, token-provider configuration, or connector deployment should occur before the implementation and consent screen are reviewed.
 
 ## F. Signing, binaries, and terms
 

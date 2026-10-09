@@ -1,0 +1,17 @@
+name = "true-north-drive-artifact-connector"
+main = "drive-artifact-connector.js"
+compatibility_date = "2026-10-09"
+workers_dev = false
+
+# Non-secret, exact approved values. Deployment and OAuth consent remain separate
+# user actions; this file does not create a grant or store credentials.
+[vars]
+DRIVE_ACCOUNT_EMAIL = "ctiberius@gmail.com"
+DRIVE_ARTIFACT_FOLDER_ID = "REPLACE_ONLY_AFTER_USER_APPROVES_EXACT_FOLDER"
+
+# Private broker contract: GET /token returns an ephemeral access token plus the
+# verified account_email and exact granted scope. Token material never reaches D1
+# or the browser. The named service must not be created/configured without consent.
+[[services]]
+binding = "DRIVE_TOKEN_PROVIDER"
+service = "true-north-drive-token-provider"
