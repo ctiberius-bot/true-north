@@ -39,7 +39,7 @@
 
       --radius: 6px;
       --radius-sm: 4px;
-      --appbar-h: 60px;
+      --appbar-h: 84px;
       --index-w: 400px;
       --focus: 0 0 0 2px var(--bg), 0 0 0 4px var(--gold);
     }
@@ -106,7 +106,7 @@
     /* ---------- App bar ---------- */
     .appbar { position: sticky; top: 0; z-index: 20; height: var(--appbar-h); display: flex; align-items: center; gap: 24px; padding: 0 20px; background: rgba(10, 12, 16, .94); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
     .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text); min-width: 0; }
-    .brand .lockup { height: 52px; width: auto; display: block; }
+    .brand .lockup { height: 76px; width: auto; display: block; }
     .brand-name { font-family: var(--font-display); font-size: 18px; font-weight: 500; letter-spacing: .2em; text-transform: uppercase; }
     .brand-sub { font-family: var(--font-display); font-size: 14px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--text-2); padding-left: 14px; border-left: 1px solid var(--line-strong); white-space: nowrap; }
     .viewnav { display: flex; gap: 4px; margin-left: 12px; }
@@ -332,9 +332,9 @@
       .decision-grid { grid-template-columns: 1fr; }
     }
     @media (max-width: 860px) {
-      :root { --appbar-h: 56px; }
+      :root { --appbar-h: 68px; }
       .appbar { padding: 0 16px; gap: 12px; }
-      .brand .lockup { height: 46px; }
+      .brand .lockup { height: 60px; }
       .viewnav { margin-left: auto; }
       .viewnav button { padding: 0 8px; font-size: 12px; letter-spacing: .08em; }
       .appbar-meta { display: none; }
