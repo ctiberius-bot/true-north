@@ -1,5 +1,6 @@
 import {workspaceHtml,polarisLockup,polarisMark} from "./workspace-ui.js";
 import {createApplicationExecutionService,routeApplicationExecution} from "./application-execution/application-execution.js";
+import {verifyTrustedEmployerReceipt} from "./application-execution/trusted-service-adapters.js";
 // True North Citadel — private career-operation intake and research queue.
 // Drive is the master. Build-only slice; cleanup is preview-only by design.
 export const VERSION = "2.3.39-2026-10-09";
@@ -914,7 +915,8 @@ export default {
             if(!env.EXECUTOR_DEVICE_VERIFIER?.fetch)return undefined;
             const response=await env.EXECUTOR_DEVICE_VERIFIER.fetch(new Request("https://executor-device-verifier/verify",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({device_id:deviceId})}));
             if(!response.ok)return undefined;const value=await response.json();return value?.verified===true&&value?.device_id===deviceId?{verified:true,device_id:deviceId}:undefined;
-          }
+          },
+          trustedEmployerReceipt:async(queueId,receipt)=>verifyTrustedEmployerReceipt(env.TRUSTED_EMPLOYER_RECEIPT_VERIFIER,queueId,receipt,request)
         });
         if(executionResponse)return executionResponse;
       }
