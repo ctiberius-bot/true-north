@@ -1,0 +1,9 @@
+name = "true-north-executor-device-verifier"
+main = "executor-device-verifier.js"
+compatibility_date = "2026-10-09"
+workers_dev = false
+
+[[d1_databases]]
+binding = "DB"
+database_name = "true-north-citadel"
+database_id = "ad8374c7-a2fa-410e-bded-652de8f04fd0"

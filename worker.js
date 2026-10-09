@@ -911,12 +911,12 @@ export default {
             if(!env.DASHBOARD_PASSWORD||password!==env.DASHBOARD_PASSWORD)throw new Error("human_reauthentication_required");
             return{actor:"chris",reauthenticated:true};
           },
-          verifyTrustedDevice:async deviceId=>{
+          verifyTrustedDevice:async(deviceId,signedBody,sourceRequest)=>{
             if(!env.EXECUTOR_DEVICE_VERIFIER?.fetch)return undefined;
-            const response=await env.EXECUTOR_DEVICE_VERIFIER.fetch(new Request("https://executor-device-verifier/verify",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({device_id:deviceId})}));
+            const timestamp=sourceRequest.headers.get("x-executor-timestamp"),nonce=sourceRequest.headers.get("x-executor-nonce"),signature_b64url=sourceRequest.headers.get("x-executor-signature"),path=new URL(sourceRequest.url).pathname,body_hash=await sha256(JSON.stringify(signedBody)),response=await env.EXECUTOR_DEVICE_VERIFIER.fetch(new Request("https://executor-device-verifier/verify",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({device_id:deviceId,method:sourceRequest.method,path,body_hash,timestamp,nonce,signature_b64url})}));
             if(!response.ok)return undefined;const value=await response.json();return value?.verified===true&&value?.device_id===deviceId?{verified:true,device_id:deviceId}:undefined;
           },
-          trustedEmployerReceipt:async(queueId,receipt)=>verifyTrustedEmployerReceipt(env.TRUSTED_EMPLOYER_RECEIPT_VERIFIER,queueId,receipt,request)
+          trustedEmployerReceipt:async(queueId,receipt)=>verifyTrustedEmployerReceipt(env.EXECUTOR_DEVICE_VERIFIER,queueId,receipt,request)
         });
         if(executionResponse)return executionResponse;
       }

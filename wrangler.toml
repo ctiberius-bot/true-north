@@ -30,6 +30,11 @@ database_id = "ad8374c7-a2fa-410e-bded-652de8f04fd0"
 binding = "GMAIL_TOKEN_PROVIDER"
 service = "true-north-citadel-oauth-core"
 
+[[services]]
+binding = "EXECUTOR_DEVICE_VERIFIER"
+service = "true-north-executor-device-verifier"
+
+
 # No cron is configured in test mode. Add scheduling only after the read-only
 # Gmail credential provider and production run handler are separately approved.
 

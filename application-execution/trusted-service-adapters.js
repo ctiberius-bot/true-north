@@ -1,11 +1,12 @@
 function exact(value,keys){return !!value&&typeof value==="object"&&!Array.isArray(value)&&Object.keys(value).every(k=>keys.includes(k))}
 function required(value,name,max=500){const v=String(value??"").trim();if(!v||v.length>max)throw new Error(`${name}_required`);return v}
+async function hash(value){const bytes=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(value));return[...new Uint8Array(bytes)].map(x=>x.toString(16).padStart(2,"0")).join("")}
 
 export async function verifyTrustedEmployerReceipt(binding,queueId,receipt,request){
   if(!binding?.fetch)throw new Error("trusted_employer_receipt_verifier_unavailable");
-  const deviceId=required(request.headers.get("x-executor-device-id"),"executor_device_id",200),proof=required(request.headers.get("x-executor-proof"),"executor_proof",4096);
-  const response=await binding.fetch(new Request("https://trusted-employer-receipt/verify",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({queue_id:queueId,device_id:deviceId,device_proof:proof,receipt})}));
-  if(!response.ok)throw new Error("trusted_employer_confirmation_required");const value=await response.json();if(!exact(value,["queue_id","device_id","source","verified"])||value.queue_id!==queueId||value.device_id!==deviceId||value.source!=="trusted_browser_observation"||value.verified!==true)throw new Error("trusted_employer_confirmation_required");return{source:value.source,verified:true};
+  const deviceId=required(request.headers.get("x-executor-device-id"),"executor_device_id",200),timestamp=required(request.headers.get("x-executor-timestamp"),"executor_timestamp",80),nonce=required(request.headers.get("x-executor-nonce"),"executor_nonce",200),signature_b64url=required(request.headers.get("x-executor-signature"),"executor_signature",4096),path=new URL(request.url).pathname,body_hash=await hash(JSON.stringify(receipt));
+  const response=await binding.fetch(new Request("https://executor-device-verifier/verify",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({device_id:deviceId,method:request.method,path,body_hash,timestamp,nonce,signature_b64url})}));
+  if(!response.ok)throw new Error("trusted_employer_confirmation_required");const value=await response.json();if(!exact(value,["device_id","verified"])||value.device_id!==deviceId||value.verified!==true)throw new Error("trusted_employer_confirmation_required");return{source:"trusted_browser_observation",verified:true};
 }
 
 export async function verifyTrustedDriveArtifact(binding,artifactId,claim){

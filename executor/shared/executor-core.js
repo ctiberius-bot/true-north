@@ -9,9 +9,9 @@ export function validatePreparedSubmission(value){
 
 // The server consumes the capability before the adapter clicks. Any error after
 // consumption is terminal/uncertain and must never retry the submit operation.
-export async function executeFinalSubmit(prepared,{consume,observe,submitOnce}){
+export async function executeFinalSubmit(prepared,{consume,observe,submitOnce,reportReceipt,reportUncertain}){
   const expected=validatePreparedSubmission(prepared),observed=await observe();const current=validatePreparedSubmission({...expected,...observed,authorization_id:expected.authorization_id,capability_token:expected.capability_token,device_id:expected.device_id,queue_id:expected.queue_id});
   if(new URL(current.destination_url).hostname!==new URL(expected.destination_url).hostname)throw new Error("executor_destination_changed");if(current.form_state_hash!==expected.form_state_hash)throw new Error("executor_form_state_changed");
-  const consumed=await consume(expected);if(consumed?.authorization_id!==expected.authorization_id||consumed?.queue_id!==expected.queue_id||consumed?.device_id!==expected.device_id||consumed?.action!=="submit_once"||!consumed?.consumed_at)throw new Error("executor_capability_not_consumed");
-  try{const receipt=await submitOnce();return{status:"submitted_pending_receipt",authorization_id:expected.authorization_id,receipt}}catch(error){return{status:"submission_uncertain",authorization_id:expected.authorization_id,error_code:"submit_after_capability_consumption_failed"}}
+  const consumed=await consume({...expected,destination_url:current.destination_url,form_state_hash:current.form_state_hash});if(consumed?.authorization_id!==expected.authorization_id||consumed?.queue_id!==expected.queue_id||consumed?.device_id!==expected.device_id||consumed?.action!=="submit_once"||!consumed?.consumed_at)throw new Error("executor_capability_not_consumed");
+  try{const receipt=await submitOnce();if(typeof reportReceipt!=="function")throw new Error("receipt_reporter_required");await reportReceipt(receipt);return{status:"receipt_reported",authorization_id:expected.authorization_id,receipt}}catch(error){if(typeof reportUncertain==="function")await reportUncertain({detail:"Submit was attempted after capability consumption but a trusted receipt was not persisted."});return{status:"submission_uncertain",authorization_id:expected.authorization_id,error_code:"submit_after_capability_consumption_failed"}}
 }
