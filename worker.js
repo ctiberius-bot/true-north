@@ -3,6 +3,7 @@ import {createApplicationExecutionService,routeApplicationExecution} from "./app
 import {verifyTrustedEmployerReceipt} from "./application-execution/trusted-service-adapters.js";
 import {canonicalBodyHash} from "./executor/shared/canonical-json.js";
 import {createAndVerifyDriveArtifact} from "./application-execution/drive-artifact-workflow.js";
+import {createExecutorDeviceRegistry,routeExecutorDeviceRegistry} from "./executor-device-registry.js";
 // True North Citadel — private career-operation intake and research queue.
 // Drive is the master. Build-only slice; cleanup is preview-only by design.
 export const VERSION = "2.3.39-2026-10-09";
@@ -909,12 +910,15 @@ export default {
       if(!u.pathname.startsWith("/api/")||!signedDeviceRoute&&!await sessionValid(request,env)) return Response.json({error:"auth"},{status:401});
       const repo=repoForEnv(env);
       if(u.pathname.startsWith("/api/applications/")){
+        const reauthenticate=async password=>{
+          if(!env.DASHBOARD_PASSWORD||password!==env.DASHBOARD_PASSWORD)throw new Error("human_reauthentication_required");
+          return{actor:"chris",reauthenticated:true};
+        };
+        const deviceResponse=await routeExecutorDeviceRegistry(request,{registry:createExecutorDeviceRegistry(env.DB),reauthenticate});
+        if(deviceResponse)return deviceResponse;
         const executionResponse=await routeApplicationExecution(request,{
           service:createApplicationExecutionService(env.DB),
-          reauthenticate:async password=>{
-            if(!env.DASHBOARD_PASSWORD||password!==env.DASHBOARD_PASSWORD)throw new Error("human_reauthentication_required");
-            return{actor:"chris",reauthenticated:true};
-          },
+          reauthenticate,
           verifyTrustedDevice:async(deviceId,signedBody,sourceRequest)=>{
             if(!env.EXECUTOR_DEVICE_VERIFIER?.fetch)return undefined;
             const timestamp=sourceRequest.headers.get("x-executor-timestamp"),nonce=sourceRequest.headers.get("x-executor-nonce"),signature_b64url=sourceRequest.headers.get("x-executor-signature"),path=new URL(sourceRequest.url).pathname,body_hash=await canonicalBodyHash(signedBody),response=await env.EXECUTOR_DEVICE_VERIFIER.fetch(new Request("https://executor-device-verifier/verify",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({device_id:deviceId,method:sourceRequest.method,path,body_hash,timestamp,nonce,signature_b64url})}));
