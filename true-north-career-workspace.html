@@ -3,154 +3,471 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
   <title>True North · Application Review</title>
+  <link rel="icon" href="./TrueNorth-Polaris-mark_transparent.svg" type="image/svg+xml">
   <style>
+    /* True North workspace. Oswald is self-hosted (SIL OFL 1.1) so it loads under default-src 'self'; until the worker serves the file, the stack falls back to condensed system faces. */
+    @font-face { font-family: "Oswald"; src: url("./fonts/oswald-latin-wght-normal.woff2") format("woff2"); font-weight: 200 700; font-style: normal; font-display: swap; }
     :root {
-      /* Integration owner should replace these with the existing brand tokens. */
-      --tn-font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      --tn-display-font: "Oswald", "Arial Narrow", var(--tn-font);
-      --tn-bg: #0A0C10;
-      --tn-surface: #12161d;
-      --tn-surface-alt: #1a202a;
-      --tn-text: #f4eddc;
-      --tn-muted: #a69e8d;
-      --tn-border: #393326;
-      --tn-brand: #D9A93F;
-      --tn-brand-contrast: #0A0C10;
-      --tn-danger: #ee847b;
-      --tn-danger-soft: #2d1718;
-      --tn-warning: #e4bd62;
-      --tn-warning-soft: #292313;
-      --tn-success: #86c59d;
-      --tn-radius: 14px;
-      --tn-shadow: 0 16px 38px rgba(0, 0, 0, .28);
+      --font: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-display: "Oswald", "Bahnschrift SemiCondensed", "Arial Narrow", var(--font);
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+      --obsidian: #0A0C10;
+      --bg: #0A0C10;
+      --bg-raised: #0E1116;
+      --surface: #12161C;
+      --surface-2: #171B22;
+      --hover: #141820;
+      --line: #22262D;
+      --line-strong: #2E333B;
+      --text: #EEE7D7;
+      --text-2: #B3AB9B;
+      --text-3: #8A8374;
+      --gold: #D9A93F;
+      --gold-bright: #E9C46A;
+      --gold-dim: #6E5520;
+      --gold-wash: rgba(217, 169, 63, .08);
+      --ink-on-gold: #0A0C10;
+      --green: #82BE95;
+      --green-wash: rgba(130, 190, 149, .09);
+      --red: #E58A7F;
+      --red-wash: rgba(229, 138, 127, .09);
+      --paper: #F6F2EA;
+      --paper-ink: #1C1D20;
+
+      --radius: 6px;
+      --radius-sm: 4px;
+      --appbar-h: 84px;
+      --index-w: 400px;
+      --focus: 0 0 0 2px var(--bg), 0 0 0 4px var(--gold);
     }
     * { box-sizing: border-box; }
-    body { margin: 0; background: var(--tn-bg); color: var(--tn-text); font: 15px/1.55 var(--tn-font); }
-    button, input, select, textarea { font: inherit; }
+    html, body { height: 100%; }
+    body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.55 var(--font); -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+    button, input, select, textarea { font: inherit; color: inherit; }
     button { cursor: pointer; }
-    button:disabled { cursor: not-allowed; opacity: .55; }
-    a { color: var(--tn-brand); }
-    .shell { width: min(100%, 1480px); margin: 0 auto; padding: 20px clamp(16px, 2.2vw, 32px) 32px; }
-    .topbar { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-bottom: 18px; min-height: 82px; }
-    .brand { display: flex; align-items: center; gap: 16px; min-width: 0; }
-    .brand-lockup { width: 112px; height: 72px; object-fit: contain; object-position: left center; flex: 0 0 auto; }
-    h1, h2, h3, p { margin-top: 0; }
-    h1 { font: 700 clamp(22px, 2vw, 28px)/1.08 var(--tn-display-font); letter-spacing: .075em; text-transform: uppercase; margin-bottom: 5px; }
-    h2 { font-size: 19px; }
-    h3 { font-size: 15px; margin-bottom: 8px; }
-    .muted { color: var(--tn-muted); }
-    .eyebrow { color: var(--tn-muted); font-size: 12px; font-weight: 750; letter-spacing: .08em; text-transform: uppercase; }
-    .panel { background: var(--tn-surface); border: 1px solid var(--tn-border); border-radius: var(--tn-radius); box-shadow: var(--tn-shadow); }
-    .filters { padding: 16px 18px 18px; margin-bottom: 16px; }
-    .filter-grid { display: grid; grid-template-columns: minmax(260px, 1.4fr) minmax(190px, .85fr) repeat(2, minmax(170px, .72fr)); gap: 14px; align-items: end; }
-    label { display: grid; gap: 6px; font-weight: 650; }
-    input, select, textarea { width: 100%; padding: 10px 11px; color: var(--tn-text); color-scheme: dark; background: var(--tn-surface); border: 1px solid var(--tn-border); border-radius: 9px; }
-    textarea { min-height: 90px; resize: vertical; }
-    .layout { display: grid; grid-template-columns: minmax(340px, 390px) minmax(0, 1fr); gap: 16px; align-items: stretch; }
-    .list-panel { overflow: hidden; }
-    .panel-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 16px 18px; border-bottom: 1px solid var(--tn-border); }
-    .panel-head h2 { margin: 0; }
-    .job-list { display: grid; max-height: min(620px, calc(100vh - 255px)); overflow: auto; }
-    .job-row { display: grid; gap: 7px; width: 100%; padding: 16px 18px; text-align: left; background: transparent; color: inherit; border: 0; border-bottom: 1px solid var(--tn-border); }
-    .job-row:hover, .job-row[aria-current="true"] { background: var(--tn-surface-alt); }
-    .job-title { font-weight: 760; }
-    .job-meta, .chips, .actions, .status-line { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-    .chip { display: inline-flex; align-items: center; border: 1px solid var(--tn-border); border-radius: 999px; padding: 3px 8px; font-size: 12px; background: var(--tn-surface); }
-    .chip[data-tone="good"] { color: var(--tn-success); border-color: #315e42; background: #14261b; }
-    .chip[data-tone="warn"] { color: var(--tn-warning); border-color: #6b5723; background: var(--tn-warning-soft); }
-    .chip[data-tone="bad"] { color: var(--tn-danger); border-color: #653133; background: var(--tn-danger-soft); }
-    .detail { min-width: 0; min-height: 520px; }
-    .detail-inner { padding: clamp(18px, 2vw, 26px); }
-    .hero { display: flex; justify-content: space-between; gap: 24px; align-items: flex-start; padding-bottom: 18px; border-bottom: 1px solid var(--tn-border); }
-    .hero h2 { font-size: 25px; margin-bottom: 4px; }
-    .primary, .secondary, .danger { border-radius: 9px; padding: 9px 13px; font-weight: 750; }
-    .primary { border: 1px solid var(--tn-brand); background: var(--tn-brand); color: var(--tn-brand-contrast); }
-    .secondary { border: 1px solid var(--tn-border); background: var(--tn-surface); color: var(--tn-text); }
-    .danger { border: 1px solid var(--tn-danger); background: var(--tn-danger-soft); color: var(--tn-danger); }
-    .tabs { display: flex; gap: 6px; margin: 18px 0; border-bottom: 1px solid var(--tn-border); }
-    .tab { border: 0; border-bottom: 3px solid transparent; padding: 9px 11px; background: transparent; color: var(--tn-muted); font-weight: 750; }
-    .tab[aria-selected="true"] { color: var(--tn-text); border-color: var(--tn-brand); }
-    .tab-panel[hidden] { display: none; }
-    .stack { display: grid; gap: 14px; }
-    .subcard { border: 1px solid var(--tn-border); border-radius: 12px; padding: 15px; }
-    .subcard-head { display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; }
-    .source-text { white-space: pre-wrap; max-height: 360px; overflow: auto; padding: 14px; border-radius: 10px; background: var(--tn-surface-alt); }
-    .listing-render { max-height: 560px; overflow: auto; padding: clamp(16px, 2vw, 24px); border-radius: 10px; background: var(--tn-surface-alt); line-height: 1.65; }
-    .listing-render h1, .listing-render h2, .listing-render h3, .listing-render h4 { margin: 1.35em 0 .45em; font-family: var(--tn-display-font); letter-spacing: .02em; text-transform: none; }
-    .listing-render h1:first-child, .listing-render h2:first-child, .listing-render h3:first-child { margin-top: 0; }
-    .listing-render p { margin: 0 0 1em; }
-    .listing-render ul, .listing-render ol { margin: .4em 0 1.15em; padding-left: 1.5em; }
-    .listing-render li { margin: .35em 0; padding-left: .2em; }
-    .callout { padding: 12px 14px; border-radius: 10px; background: var(--tn-warning-soft); color: var(--tn-warning); }
-    .callout.bad { background: var(--tn-danger-soft); color: var(--tn-danger); }
-    .review-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .artifact { display: grid; gap: 8px; padding: 12px 0; border-top: 1px solid var(--tn-border); }
-    .code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; overflow-wrap: anywhere; }
-    .queue { margin-top: 16px; overflow: hidden; }
-    .queue-scroll { max-height: 430px; overflow: auto; overscroll-behavior: contain; }
-    table { width: 100%; border-collapse: collapse; table-layout: fixed; }
-    th, td { padding: 11px 14px; text-align: left; border-bottom: 1px solid var(--tn-border); vertical-align: top; }
-    th { position: sticky; top: 0; z-index: 1; color: var(--tn-muted); background: var(--tn-surface); font-size: 12px; text-transform: uppercase; letter-spacing: .06em; }
-    th:nth-child(1), td:nth-child(1) { width: 12%; } th:nth-child(2), td:nth-child(2) { width: 17%; } th:nth-child(3), td:nth-child(3) { width: 14%; } th:nth-child(4), td:nth-child(4) { width: 45%; } th:nth-child(5), td:nth-child(5) { width: 12%; }
-    td a { display: block; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .notice { min-height: 22px; margin: 10px 0 0; }
-    .notice[data-tone="bad"] { color: var(--tn-danger); }
-    .notice[data-tone="good"] { color: var(--tn-success); }
-    .empty { padding: 34px 20px; text-align: center; color: var(--tn-muted); }
-    dialog { border: 0; border-radius: 14px; box-shadow: var(--tn-shadow); max-width: 430px; width: calc(100% - 32px); }
-    dialog::backdrop { background: rgba(8, 15, 10, .48); }
-    @media (max-width: 1050px) { .filter-grid { grid-template-columns: 1fr 1fr; } .layout { grid-template-columns: minmax(300px, 36%) minmax(0, 1fr); } }
-    @media (max-width: 760px) { .shell { padding-inline: 12px; } .topbar { align-items: flex-start; flex-direction: column; gap: 10px; } .brand-lockup { width: 94px; height: 62px; } .filter-grid, .layout, .review-grid { grid-template-columns: 1fr; } .job-list { max-height: 330px; } .detail { min-height: 420px; } .hero, .panel-head { align-items: flex-start; flex-direction: column; } .tabs { overflow-x: auto; } .tab { white-space: nowrap; } .queue-scroll { max-height: 360px; } table { min-width: 760px; } }
+    button:disabled { cursor: not-allowed; opacity: .5; }
+    a { color: var(--gold-bright); text-underline-offset: 3px; text-decoration-thickness: 1px; }
+    :focus-visible { outline: none; box-shadow: var(--focus); border-radius: var(--radius-sm); }
+    h1, h2, h3, h4, p { margin: 0; }
+    [hidden] { display: none !important; }
+    .visually-hidden { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+    /* ---------- Type ---------- */
+    .display { font-family: var(--font-display); font-weight: 500; letter-spacing: .04em; text-transform: uppercase; }
+    .eyebrow { font-family: var(--font-display); font-size: 12px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--text-3); }
+    .muted { color: var(--text-2); }
+    .faint { color: var(--text-3); }
+    .mono { font-family: var(--font-mono); font-size: 12px; overflow-wrap: anywhere; color: var(--text-2); }
+
+    /* ---------- Controls ---------- */
+    .field { display: grid; gap: 6px; }
+    .field > span { font-size: 12px; font-weight: 600; letter-spacing: .02em; color: var(--text-2); }
+    input, select, textarea { width: 100%; padding: 9px 11px; background: var(--bg); border: 1px solid var(--line-strong); border-radius: var(--radius-sm); color-scheme: dark; transition: border-color .12s; }
+    input:hover, select:hover, textarea:hover { border-color: #3a3f48; }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px var(--gold-wash); }
+    input[type="checkbox"] { width: 16px; height: 16px; padding: 0; accent-color: var(--gold); flex: 0 0 auto; margin-top: 3px; }
+    textarea { min-height: 84px; resize: vertical; line-height: 1.5; }
+    ::placeholder { color: var(--text-3); }
+    .check { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; color: var(--text); }
+
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 36px; padding: 7px 14px; border-radius: var(--radius-sm); border: 1px solid var(--line-strong); background: transparent; color: var(--text); font-size: 14px; font-weight: 600; text-decoration: none; white-space: nowrap; transition: background .12s, border-color .12s; }
+    .btn:hover:not(:disabled) { background: var(--hover); border-color: #3a3f48; }
+    .btn-primary { background: var(--gold); border-color: var(--gold); color: var(--ink-on-gold); }
+    .btn-primary:hover:not(:disabled) { background: var(--gold-bright); border-color: var(--gold-bright); }
+    .btn-danger { color: var(--red); border-color: rgba(229, 138, 127, .35); }
+    .btn-danger:hover:not(:disabled) { background: var(--red-wash); border-color: var(--red); }
+    .btn-quiet { border-color: transparent; color: var(--text-2); padding-inline: 8px; }
+    .btn-quiet:hover:not(:disabled) { color: var(--text); background: var(--hover); border-color: transparent; }
+    .btn-sm { min-height: 30px; padding: 4px 10px; font-size: 13px; }
+    .btn .ext { font-size: 12px; opacity: .7; }
+
+    /* ---------- State marks: one vocabulary used everywhere ---------- */
+    .mark { display: inline-block; width: 10px; height: 10px; border-radius: 50%; flex: 0 0 auto; border: 1.5px solid var(--text-3); background: transparent; }
+    .mark[data-state="none"] { border-style: dashed; border-color: #4a4e56; }
+    .mark[data-state="draft"] { border-color: var(--text-2); }
+    .mark[data-state="review"] { border-color: var(--gold); }
+    .mark[data-state="approved"] { border-color: var(--gold); background: linear-gradient(90deg, var(--gold) 50%, transparent 50%); }
+    .mark[data-state="submitted"] { border-color: var(--green); background: var(--green); }
+    .mark[data-state="attention"] { border-color: var(--red); background: var(--red); border-radius: 2px; transform: rotate(45deg) scale(.85); }
+    .mark[data-state="closed"] { border-color: #4a4e56; background: #4a4e56; }
+    .state-label { font-size: 13px; font-weight: 600; color: var(--text-2); }
+    .state-label[data-state="review"], .state-label[data-state="approved"] { color: var(--gold-bright); }
+    .state-label[data-state="submitted"] { color: var(--green); }
+    .state-label[data-state="attention"] { color: var(--red); }
+    .status-pair { display: inline-flex; align-items: center; gap: 8px; }
+
+    .tone-good { color: var(--green); }
+    .tone-warn { color: var(--gold-bright); }
+    .tone-bad { color: var(--red); }
+
+    /* ---------- App bar ---------- */
+    .appbar { position: sticky; top: 0; z-index: 20; height: var(--appbar-h); display: flex; align-items: center; gap: 24px; padding: 0 20px; background: rgba(10, 12, 16, .94); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+    .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text); min-width: 0; }
+    .brand .lockup { height: 76px; width: auto; display: block; }
+    .brand-name { font-family: var(--font-display); font-size: 18px; font-weight: 500; letter-spacing: .2em; text-transform: uppercase; }
+    .brand-sub { font-family: var(--font-display); font-size: 14px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--text-2); padding-left: 14px; border-left: 1px solid var(--line-strong); white-space: nowrap; }
+    .viewnav { display: flex; gap: 4px; margin-left: 12px; }
+    .viewnav button { position: relative; height: var(--appbar-h); padding: 0 12px; border: 0; background: none; color: var(--text-3); font-family: var(--font-display); font-size: 13px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; }
+    .viewnav button:hover { color: var(--text); }
+    .viewnav button[aria-current="page"] { color: var(--text); }
+    .viewnav button[aria-current="page"]::after { content: ""; position: absolute; left: 12px; right: 12px; bottom: -1px; height: 2px; background: var(--gold); }
+    .appbar-meta { margin-left: auto; display: flex; align-items: center; gap: 18px; font-size: 13px; color: var(--text-3); white-space: nowrap; }
+    .conn { display: inline-flex; align-items: center; gap: 7px; }
+    .conn::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--text-3); }
+    .conn[data-tone="good"]::before { background: var(--green); }
+    .conn[data-tone="bad"]::before { background: var(--red); }
+    .appbar-meta a { color: var(--text-3); text-decoration: none; }
+    .appbar-meta a:hover { color: var(--text); }
+    .safeguard { display: inline-flex; align-items: center; gap: 7px; }
+    .safeguard::before { content: ""; width: 9px; height: 9px; border: 1.5px solid var(--text-3); border-radius: 2px; }
+
+    /* ---------- Jobs workspace ---------- */
+    .workspace { display: grid; grid-template-columns: var(--index-w) minmax(0, 1fr); height: calc(100vh - var(--appbar-h)); height: calc(100dvh - var(--appbar-h)); }
+    .index { display: flex; flex-direction: column; min-height: 0; border-right: 1px solid var(--line); background: var(--bg-raised); }
+    .filters { padding: 16px 16px 12px; border-bottom: 1px solid var(--line); display: grid; gap: 10px; }
+    .filter-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .search { position: relative; }
+    .search input { padding-left: 32px; }
+    .search svg { position: absolute; left: 10px; top: 50%; translate: 0 -50%; width: 14px; height: 14px; color: var(--text-3); pointer-events: none; }
+    .segmented { display: grid; grid-template-columns: repeat(4, 1fr); border: 1px solid var(--line-strong); border-radius: var(--radius-sm); overflow: hidden; }
+    .segmented button { border: 0; border-right: 1px solid var(--line-strong); background: transparent; padding: 7px 4px; font-size: 12.5px; font-weight: 600; color: var(--text-2); display: flex; flex-direction: column; align-items: center; gap: 1px; line-height: 1.2; }
+    .segmented button:last-child { border-right: 0; }
+    .segmented button:hover { background: var(--hover); color: var(--text); }
+    .segmented button[aria-pressed="true"] { background: var(--surface-2); color: var(--text); box-shadow: inset 0 -2px 0 var(--gold); }
+    .segmented .n { font-family: var(--font-mono); font-size: 11px; color: var(--text-3); font-weight: 400; }
+    .more-filters summary { list-style: none; cursor: pointer; font-size: 12.5px; color: var(--text-2); display: inline-flex; gap: 6px; align-items: center; }
+    .more-filters summary::-webkit-details-marker { display: none; }
+    .more-filters summary::before { content: "+"; font-family: var(--font-mono); color: var(--text-3); }
+    .more-filters[open] summary::before { content: "−"; }
+    .more-filters .filter-row { margin-top: 10px; }
+    .index-meta { display: flex; justify-content: space-between; align-items: center; padding: 8px 16px; border-bottom: 1px solid var(--line); font-size: 12.5px; color: var(--text-3); min-height: 37px; }
+    .linkish { border: 0; background: none; padding: 0; color: var(--gold-bright); font-size: 12.5px; }
+    .linkish:hover { text-decoration: underline; }
+    .job-list { flex: 1; overflow: auto; overscroll-behavior: contain; }
+    .job { display: grid; grid-template-columns: 14px minmax(0, 1fr); gap: 12px; width: 100%; padding: 14px 16px 14px 14px; text-align: left; border: 0; border-left: 2px solid transparent; border-bottom: 1px solid var(--line); background: transparent; }
+    .job:hover { background: var(--hover); }
+    .job[aria-current="true"] { background: var(--surface-2); border-left-color: var(--gold); }
+    .job .mark { margin-top: 6px; }
+    .job-main { display: grid; gap: 3px; min-width: 0; }
+    .job-top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+    .job-time { flex: 0 0 auto; font-size: 12px; color: var(--text-3); white-space: nowrap; }
+    .job-title { font-size: 15px; font-weight: 600; line-height: 1.35; color: var(--text); overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+    .job-org { font-size: 13.5px; color: var(--text-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .job-foot { display: flex; gap: 6px; flex-wrap: wrap; align-items: baseline; font-size: 12.5px; color: var(--text-3); margin-top: 3px; }
+    .job-foot .state-label { font-size: 12.5px; }
+    .dot-sep::before { content: "·"; color: var(--text-3); }
+
+    .empty { padding: 48px 24px; text-align: center; color: var(--text-3); font-size: 14px; }
+    .empty strong { display: block; color: var(--text-2); font-weight: 600; margin-bottom: 4px; }
+
+    /* ---------- Reader ---------- */
+    .reader { overflow: auto; overscroll-behavior: contain; min-width: 0; }
+    .reader-inner { max-width: 980px; margin: 0 auto; padding: 32px clamp(20px, 4vw, 48px) 64px; }
+    .back { display: none; margin-bottom: 16px; }
+    .reader-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; }
+    .reader-head h1 { font-family: var(--font-display); font-weight: 500; font-size: clamp(26px, 2.6vw, 34px); line-height: 1.12; letter-spacing: .01em; margin: 8px 0 8px; text-wrap: balance; }
+    .org { font-size: 16px; color: var(--text-2); }
+    .org strong { color: var(--text); font-weight: 600; }
+    .head-actions { display: flex; gap: 8px; flex: 0 0 auto; padding-top: 22px; }
+
+    /* Progress track: the single source of truth for draft vs approved vs submitted */
+    .track { list-style: none; margin: 28px 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .step { position: relative; padding: 14px 16px 14px 0; display: grid; gap: 4px; align-content: start; }
+    .step + .step { padding-left: 16px; border-left: 1px solid var(--line); }
+    .step-name { display: flex; align-items: center; gap: 8px; font-family: var(--font-display); font-size: 12.5px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--text-3); }
+    .step-note { font-size: 13.5px; color: var(--text-2); line-height: 1.4; }
+    .step[data-status="done"] .step-name { color: var(--text); }
+    .step[data-status="current"] .step-name { color: var(--gold-bright); }
+    .step[data-status="current"] { box-shadow: inset 0 2px 0 var(--gold); }
+    .step[data-status="blocked"] .step-name { color: var(--red); }
+    .step[data-status="submitted"] .step-name { color: var(--green); }
+    .step[data-status="submitted"] { box-shadow: inset 0 2px 0 var(--green); }
+
+    .tabs { display: flex; gap: 4px; margin: 28px 0 24px; border-bottom: 1px solid var(--line); overflow-x: auto; scrollbar-width: none; }
+    .tab { position: relative; border: 0; background: none; padding: 10px 14px 12px; color: var(--text-3); font-size: 14px; font-weight: 600; white-space: nowrap; }
+    .tab:first-child { padding-left: 0; }
+    .tab:hover { color: var(--text); }
+    .tab[aria-selected="true"] { color: var(--text); }
+    .tab[aria-selected="true"]::after { content: ""; position: absolute; left: 14px; right: 14px; bottom: -1px; height: 2px; background: var(--gold); }
+    .tab:first-child[aria-selected="true"]::after { left: 0; }
+    .tab .count { font-family: var(--font-mono); font-size: 11.5px; color: var(--text-3); margin-left: 4px; font-weight: 400; }
+
+    .section { display: grid; gap: 14px; }
+    .section + .section { margin-top: 36px; }
+    .section-head { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; flex-wrap: wrap; }
+    .section-head h2 { font-family: var(--font-display); font-weight: 500; font-size: 15px; letter-spacing: .12em; text-transform: uppercase; color: var(--text); }
+    .note { font-size: 13.5px; color: var(--text-2); }
+    .callout { padding: 12px 14px; border-left: 2px solid var(--gold); background: var(--gold-wash); font-size: 14px; color: var(--text); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
+    .callout.bad { border-left-color: var(--red); background: var(--red-wash); }
+    .callout.good { border-left-color: var(--green); background: var(--green-wash); }
+    .callout.plain { border-left-color: var(--line-strong); background: var(--surface); color: var(--text-2); }
+    .notice { min-height: 20px; font-size: 13.5px; color: var(--text-2); }
+    .notice:empty { min-height: 0; }
+    .notice[data-tone="bad"] { color: var(--red); }
+    .notice[data-tone="good"] { color: var(--green); }
+
+    /* Freshness strip */
+    .fresh { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px 24px; align-items: center; padding: 16px 18px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+    .fresh-title { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 15px; }
+    .fresh-sub { grid-column: 1; font-size: 13.5px; color: var(--text-2); }
+    .fresh-actions { grid-column: 2; grid-row: 1 / span 2; display: flex; align-items: center; gap: 8px; }
+    .fresh .notice, .fresh details { grid-column: 1 / -1; }
+
+    details.tech { font-size: 13px; color: var(--text-3); }
+    details.tech summary { cursor: pointer; width: max-content; color: var(--text-3); }
+    details.tech summary:hover { color: var(--text-2); }
+    .kv { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 4px 16px; margin: 10px 0 0; }
+    .kv dt { color: var(--text-3); font-size: 12.5px; }
+    .kv dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+
+    /* Original listing: a reading column, not a scroll box */
+    .listing { max-width: 72ch; font-size: 16px; line-height: 1.72; color: #E6DFCF; }
+    .listing > :first-child { margin-top: 0; }
+    .listing h1, .listing h2, .listing h3, .listing h4 { font-family: var(--font-display); font-weight: 500; color: var(--text); letter-spacing: .02em; line-height: 1.25; margin: 1.8em 0 .5em; text-transform: none; }
+    .listing h1 { font-size: 22px; } .listing h2 { font-size: 20px; } .listing h3 { font-size: 18px; } .listing h4 { font-size: 16px; letter-spacing: .06em; text-transform: uppercase; }
+    .listing p { margin: 0 0 1em; }
+    .listing ul, .listing ol { margin: .2em 0 1.2em; padding-left: 1.3em; }
+    .listing li { margin: .4em 0; padding-left: .3em; }
+    .listing li::marker { color: var(--gold-dim); }
+    .listing strong, .listing b { color: var(--text); font-weight: 600; }
+    .listing blockquote { margin: 1em 0; padding-left: 1em; border-left: 2px solid var(--line-strong); color: var(--text-2); }
+    .listing.plain { white-space: pre-wrap; }
+    .listing-frame { padding-top: 8px; }
+
+    .evidence { display: grid; border-top: 1px solid var(--line); }
+    .evidence-item { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
+    .evidence-item .kind { font-size: 12.5px; color: var(--text-3); text-transform: capitalize; }
+    .evidence-item .claim { color: var(--text); }
+    .evidence-item .src { font-size: 12.5px; color: var(--text-3); margin-top: 4px; }
+
+    /* Packages & documents */
+    .package { border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+    .package + .package { margin-top: 20px; }
+    .package-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; padding: 16px 18px; border-bottom: 1px solid var(--line); }
+    .package-head h3 { font-size: 16px; font-weight: 600; margin-top: 2px; }
+    .package-body { padding: 18px; display: grid; gap: 20px; }
+    .docs { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; }
+    .doc { display: grid; gap: 10px; align-content: start; padding: 14px; border: 1px solid var(--line-strong); border-radius: var(--radius); background: var(--bg-raised); }
+    .doc[aria-current="true"] { border-color: var(--gold-dim); box-shadow: inset 0 0 0 1px var(--gold-dim); }
+    .doc-top { display: flex; gap: 12px; align-items: flex-start; }
+    .doc-icon { width: 30px; height: 38px; flex: 0 0 auto; border: 1px solid var(--line-strong); border-radius: 2px; background: linear-gradient(var(--line-strong), var(--line-strong)) 6px 9px / 16px 1px no-repeat, linear-gradient(var(--line-strong), var(--line-strong)) 6px 14px / 16px 1px no-repeat, linear-gradient(var(--line-strong), var(--line-strong)) 6px 19px / 11px 1px no-repeat, var(--surface); }
+    .doc-name { font-weight: 600; font-size: 14.5px; }
+    .doc-meta { font-size: 12.5px; color: var(--text-3); }
+    .doc-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+    .viewer { border: 1px solid var(--line-strong); border-radius: var(--radius); overflow: hidden; }
+    .viewer-bar { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 8px 12px; background: var(--surface-2); border-bottom: 1px solid var(--line-strong); font-size: 13px; color: var(--text-2); }
+    .viewer-body { max-height: 70vh; overflow: auto; background: #1A1D22; padding: clamp(12px, 3vw, 32px); }
+    .paper { max-width: 760px; margin: 0 auto; padding: clamp(24px, 5vw, 56px); background: var(--paper); color: var(--paper-ink); font: 14.5px/1.6 Georgia, "Iowan Old Style", "Times New Roman", serif; border-radius: 2px; box-shadow: 0 1px 0 rgba(0,0,0,.4); }
+    .paper h1, .paper h2, .paper h3 { font-family: var(--font-display); font-weight: 500; letter-spacing: .03em; color: #111; margin: 1.2em 0 .4em; }
+    .paper h1:first-child, .paper h2:first-child { margin-top: 0; }
+    .paper p { margin: 0 0 .9em; } .paper ul { padding-left: 1.2em; }
+    .paper.plain { white-space: pre-wrap; }
+    .viewer-empty { padding: 32px 20px; text-align: center; color: var(--text-2); font-size: 14px; display: grid; gap: 12px; justify-items: center; }
+
+    .history { display: grid; }
+    .history-item { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 16px; padding: 10px 0; border-bottom: 1px solid var(--line); font-size: 13.5px; }
+    .history-item:last-child { border-bottom: 0; }
+    .history-item time { color: var(--text-3); font-size: 12.5px; }
+
+    .decision { display: grid; gap: 14px; padding: 18px; border-top: 1px solid var(--line); background: var(--bg-raised); border-radius: 0 0 var(--radius) var(--radius); }
+    .decision h4 { font-family: var(--font-display); font-weight: 500; font-size: 13px; letter-spacing: .12em; text-transform: uppercase; color: var(--text-2); }
+    .decision-grid { display: grid; grid-template-columns: minmax(0, 1fr) 260px; gap: 14px; align-items: end; }
+    .decision-actions { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; align-items: center; }
+
+    .disclose summary { cursor: pointer; font-size: 13.5px; color: var(--text-2); width: max-content; }
+    .disclose summary:hover { color: var(--text); }
+    .disclose[open] summary { margin-bottom: 10px; }
+    pre.raw { margin: 0; padding: 14px; max-height: 360px; overflow: auto; background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius-sm); font: 12px/1.5 var(--font-mono); color: var(--text-2); white-space: pre-wrap; overflow-wrap: anywhere; }
+
+    /* Submission */
+    .ledger { display: grid; grid-template-columns: repeat(3, 1fr); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+    .ledger > div { padding: 14px 16px; display: grid; gap: 4px; align-content: start; }
+    .ledger > div + div { border-left: 1px solid var(--line); }
+    .ledger .lbl { display: flex; gap: 8px; align-items: center; font-family: var(--font-display); font-size: 12.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--text-3); }
+    .ledger .val { font-size: 14px; color: var(--text-2); }
+    .ledger [data-on="true"] { background: var(--surface-2); }
+    .ledger [data-on="true"] .lbl { color: var(--text); }
+    .panel { border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); padding: 18px; display: grid; gap: 14px; }
+    .panel-title { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .panel-title h3 { font-size: 16px; font-weight: 600; }
+    .queue-item { display: grid; gap: 8px; padding: 14px 0; border-top: 1px solid var(--line); }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .form-grid .full { grid-column: 1 / -1; }
+    .form-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+
+    /* ---------- Research queue view ---------- */
+    .queue-view { max-width: 1280px; margin: 0 auto; padding: 32px clamp(16px, 3vw, 40px) 64px; }
+    .queue-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 20px; flex-wrap: wrap; margin-bottom: 20px; }
+    .queue-head h1 { font-family: var(--font-display); font-weight: 500; font-size: 28px; letter-spacing: .02em; }
+    .queue-tools { display: flex; gap: 8px; align-items: end; flex-wrap: wrap; }
+    .queue-tools .field { width: 190px; }
+    .table-wrap { border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; background: var(--surface); }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    th, td { padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: top; }
+    tbody tr:last-child td { border-bottom: 0; }
+    tbody tr:hover td { background: var(--hover); }
+    th { position: sticky; top: 0; background: var(--surface-2); color: var(--text-3); font-family: var(--font-display); font-size: 12px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; }
+    td.url a { display: block; max-width: 520px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;  color: var(--text-2); text-decoration: none; }
+    td.url a:hover { color: var(--gold-bright); text-decoration: underline; }
+    td.nowrap { white-space: nowrap; }
+    td.act { text-align: right; width: 1%; white-space: nowrap; }
+    .err { font-family: var(--font-mono); font-size: 12px; color: var(--red); margin-top: 3px; }
+
+    /* ---------- Sign in ---------- */
+    dialog { border: 1px solid var(--line-strong); border-radius: var(--radius); background: var(--surface); color: var(--text); padding: 0; width: min(400px, calc(100% - 32px)); }
+    dialog::backdrop { background: rgba(5, 6, 8, .82); backdrop-filter: blur(3px); }
+    .signin { padding: 32px; display: grid; gap: 18px; }
+    .signin-brand { display: grid; justify-items: center; gap: 10px; text-align: center; margin-bottom: 6px; }
+    
+    /* ---------- Responsive ---------- */
+    @media (max-width: 1180px) {
+      :root { --index-w: 340px; }
+      .brand-sub { display: none; }
+      .track { grid-template-columns: repeat(2, 1fr); }
+      .step:nth-child(3) { padding-left: 0; border-left: 0; }
+      .step:nth-child(n+3) { border-top: 1px solid var(--line); }
+      .decision-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 860px) {
+      :root { --appbar-h: 68px; }
+      .appbar { padding: 0 16px; gap: 12px; }
+      .brand .lockup { height: 60px; }
+      .viewnav { margin-left: auto; }
+      .viewnav button { padding: 0 8px; font-size: 12px; letter-spacing: .08em; }
+      .appbar-meta { display: none; }
+      .mobile-meta { display: flex !important; }
+      .workspace { grid-template-columns: 1fr; height: auto; }
+      .index { border-right: 0; min-height: calc(100dvh - var(--appbar-h)); }
+      .job-list { overflow: visible; }
+      .reader { display: none; overflow: visible; }
+      body[data-pane="detail"] .index { display: none; }
+      body[data-pane="detail"] .reader { display: block; }
+      .reader-inner { padding: 20px 16px 48px; }
+      .back { display: inline-flex; }
+      .reader-head { flex-direction: column; gap: 12px; }
+      .head-actions { padding-top: 0; }
+      .fresh { grid-template-columns: 1fr; }
+      .fresh-actions { grid-column: 1; grid-row: auto; }
+      .evidence-item, .history-item { grid-template-columns: 1fr; gap: 2px; }
+      .ledger { grid-template-columns: 1fr; }
+      .ledger > div + div { border-left: 0; border-top: 1px solid var(--line); }
+      .form-grid { grid-template-columns: 1fr; }
+      .queue-view { padding: 20px 16px 48px; }
+      .queue-tools, .queue-tools .field { width: 100%; }
+      table, thead, tbody, tr, td { display: block; }
+      thead { display: none; }
+      tbody tr { padding: 12px 14px; border-bottom: 1px solid var(--line); }
+      td { border: 0; padding: 2px 0; }
+      td::before { content: attr(data-label); display: inline-block; min-width: 72px; color: var(--text-3); font-size: 12px; }
+      td.act { text-align: left; padding-top: 8px; }
+      td.act::before, td.url::before { display: none; }
+      td.url a { max-width: 100%; }
+    }
+    .mobile-meta { display: none; gap: 14px; padding: 10px 16px; border-bottom: 1px solid var(--line); font-size: 12.5px; color: var(--text-3); }
+    @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
   </style>
 </head>
-<body>
-  <div class="shell">
-    <header class="topbar">
-      <div class="brand"><img class="brand-lockup" src="./TrueNorth-Polaris-full_dark.svg" alt="True North — Steer by it"><div><h1>Application Review</h1><div class="muted">Evidence-bound career operations</div></div></div>
-      <div class="status-line"><span class="chip" id="connectionChip">Connecting…</span><span class="chip" data-tone="warn">Submission disabled</span><a class="chip" href="/legacy">Legacy utilities</a></div>
-    </header>
+<body data-view="jobs" data-pane="list">
+  <header class="appbar">
+    <a class="brand" href="/" aria-label="True North home">
+      <img class="lockup" src="./TrueNorth-Polaris-full_dark.svg" alt="True North — Steer by it">
+      <span class="brand-sub">Application review</span>
+    </a>
+    <nav class="viewnav" aria-label="Views">
+      <button type="button" data-view="jobs" aria-current="page">Jobs</button>
+      <button type="button" data-view="queue">Research queue</button>
+    </nav>
+    <div class="appbar-meta">
+      <span class="conn" id="connectionChip">Connecting…</span>
+      <span class="safeguard" title="Nothing in this workspace submits an application on your behalf.">Submission disabled</span>
+      <a href="/legacy">Legacy utilities</a>
+    </div>
+  </header>
+  <div class="mobile-meta"><span class="conn" id="connectionChipMobile">Connecting…</span><span class="safeguard">Submission disabled</span><a href="/legacy" style="color:inherit;margin-left:auto">Legacy</a></div>
 
-    <section class="panel filters" aria-labelledby="filtersTitle">
-      <div class="filter-grid">
-        <label><span id="filtersTitle">Role or company</span><input id="roleFilter" type="search" placeholder="Enterprise architecture, Cor Partners…"></label>
-        <label>Location<input id="locationFilter" type="search" placeholder="Atlanta, remote…"></label>
-        <label>Application status<select id="pipelineFilter"><option value="">All statuses</option><option value="untracked">Not yet tracked</option><option>target</option><option>considering</option><option>package_draft</option><option>chris_review</option><option>approved_to_send</option><option>applied</option><option>conversation</option><option>interviewing</option><option>offer</option><option>closed</option></select></label>
-        <label>Research status<select id="researchFilter"><option value="">All statuses</option><option>complete</option><option>pending</option><option>login_required</option><option>blocked</option><option>incomplete_retry</option></select></label>
+  <main id="jobsView" class="workspace">
+    <aside class="index" aria-label="Jobs">
+      <div class="filters" role="search">
+        <label class="search"><span class="visually-hidden">Role or company</span>
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="7" cy="7" r="5"/><path d="m11 11 3.5 3.5"/></svg>
+          <input id="roleFilter" type="search" placeholder="Role or company" autocomplete="off"></label>
+        <label class="search"><span class="visually-hidden">Location</span>
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M8 14.5s5-4.6 5-8.5a5 5 0 0 0-10 0c0 3.9 5 8.5 5 8.5Z"/><circle cx="8" cy="6" r="1.8"/></svg>
+          <input id="locationFilter" type="search" placeholder="Location — Atlanta, remote…" autocomplete="off"></label>
+        <div class="segmented" role="group" aria-label="Application state" id="stateFilter">
+          <button type="button" data-state-filter="" aria-pressed="true">All<span class="n" data-count="all">–</span></button>
+          <button type="button" data-state-filter="draft" aria-pressed="false">Drafts<span class="n" data-count="draft">–</span></button>
+          <button type="button" data-state-filter="approved" aria-pressed="false">Approved<span class="n" data-count="approved">–</span></button>
+          <button type="button" data-state-filter="submitted" aria-pressed="false">Submitted<span class="n" data-count="submitted">–</span></button>
+        </div>
+        <details class="more-filters" id="moreFilters">
+          <summary>Stage and research filters</summary>
+          <div class="filter-row">
+            <label class="field"><span>Pipeline stage</span><select id="pipelineFilter"><option value="">All stages</option><option value="untracked">Not yet tracked</option><option value="target">Target</option><option value="considering">Considering</option><option value="package_draft">Package in draft</option><option value="chris_review">Awaiting your review</option><option value="approved_to_send">Approved to send</option><option value="applied">Applied</option><option value="conversation">In conversation</option><option value="interviewing">Interviewing</option><option value="offer">Offer</option><option value="closed">Closed</option></select></label>
+            <label class="field"><span>Research</span><select id="researchFilter"><option value="">Any research state</option><option value="complete">Complete</option><option value="pending">Pending</option><option value="login_required">Login required</option><option value="blocked">Blocked</option><option value="incomplete_retry">Retry pending</option></select></label>
+          </div>
+        </details>
       </div>
+      <div class="index-meta"><span id="jobCount" aria-live="polite">Loading…</span><button type="button" class="linkish" id="clearFilters" hidden>Clear filters</button></div>
+      <div id="jobList" class="job-list"><div class="empty">Loading jobs…</div></div>
+    </aside>
+
+    <section class="reader" id="reader" aria-live="polite">
+      <div id="jobDetail" class="reader-inner"><div class="empty" style="padding-top:18vh"><strong>Select a job</strong>Its original listing, documents, approval and submission status open here.</div></div>
     </section>
+  </main>
 
-    <main class="layout">
-      <section class="panel list-panel" aria-labelledby="jobsTitle">
-        <div class="panel-head"><h2 id="jobsTitle">Jobs</h2><span id="jobCount" class="muted"></span></div>
-        <div id="jobList" class="job-list"><div class="empty">Loading real job data…</div></div>
-      </section>
-
-      <section class="panel detail" aria-live="polite">
-        <div id="jobDetail" class="detail-inner"><div class="empty">Choose a job to review its listing evidence and application package.</div></div>
-      </section>
-    </main>
-
-    <section class="panel queue" aria-labelledby="queueTitle">
-      <div class="panel-head"><h2 id="queueTitle">Research queue</h2><div class="actions"><label>Status <select id="queueStatus"><option value="">All</option><option>login_required</option><option>blocked</option><option>incomplete_retry</option><option>pending</option><option>complete</option></select></label><label>Provider <select id="researchSource"><option value="jobright">Jobright</option><option value="ladders">Ladders</option><option value="indeed">Indeed</option><option value="backstage">Backstage</option><option value="linkedin">LinkedIn</option></select></label><button id="runResearch" class="secondary" type="button">Research up to 5</button><button id="runAssessments" class="secondary" type="button">Assess up to 25 current listings</button><button id="refreshQueue" class="secondary" type="button">Refresh</button></div></div>
-      <div class="queue-scroll"><table><thead><tr><th>Source</th><th>Task</th><th>Status</th><th>Listing / issue</th><th>Action</th></tr></thead><tbody id="queueBody"></tbody></table></div>
-      <p id="queueNotice" class="notice" role="status"></p>
-    </section>
-  </div>
+  <main id="queueView" class="queue-view" hidden>
+    <div class="queue-head">
+      <div><div class="eyebrow">Listing research</div><h1>Research queue</h1></div>
+      <div class="queue-tools">
+        <label class="field"><span>Status</span><select id="queueStatus"><option value="">All statuses</option><option value="login_required">Login required</option><option value="blocked">Blocked</option><option value="incomplete_retry">Retry pending</option><option value="pending">Pending</option><option value="complete">Complete</option></select></label>
+        <label class="field"><span>Provider</span><select id="researchSource"><option value="jobright">Jobright</option><option value="ladders">Ladders</option><option value="indeed">Indeed</option><option value="backstage">Backstage</option><option value="linkedin">LinkedIn</option></select></label>
+        <button id="refreshQueue" class="btn" type="button">Refresh</button>
+        <button id="runAssessments" class="btn" type="button">Assess up to 25 current listings</button>
+        <button id="runResearch" class="btn btn-primary" type="button">Research up to 5</button>
+      </div>
+    </div>
+    <p id="queueNotice" class="notice" role="status" style="margin-bottom:12px"></p>
+    <div class="table-wrap"><table><thead><tr><th>Source</th><th>Task</th><th>Status</th><th>Listing</th><th><span class="visually-hidden">Action</span></th></tr></thead><tbody id="queueBody"><tr><td colspan="5" class="empty">Loading…</td></tr></tbody></table></div>
+  </main>
 
   <dialog id="loginDialog">
-    <form id="loginForm" method="dialog" class="stack">
-      <div><div class="eyebrow">Private workspace</div><h2>Sign in</h2><p class="muted">Use the configured dashboard password.</p></div>
-      <label>Password<input name="password" type="password" autocomplete="current-password" required></label>
-      <button class="primary">Sign in</button><p id="loginError" class="notice" data-tone="bad" role="alert"></p>
+    <form id="loginForm" method="dialog" class="signin">
+      <div class="signin-brand"><img src="./TrueNorth-Polaris-full_dark.svg" alt="True North — Steer by it" style="width:auto;height:140px"><p class="muted" style="font-size:14px">Private workspace. Sign in with the dashboard password.</p></div>
+      <label class="field"><span>Password</span><input name="password" type="password" autocomplete="current-password" required></label>
+      <button class="btn btn-primary">Sign in</button>
+      <p id="loginError" class="notice" data-tone="bad" role="alert"></p>
     </form>
   </dialog>
 
   <script>
+    /* Set to a path template such as '/api/artifacts/{id}/preview' once the backend serves artifact previews. Left null, the UI makes no preview requests. */
+    const ARTIFACT_PREVIEW_ENDPOINT = null;
+
     const el = id => document.getElementById(id);
     const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
     const fmtDate = value => value ? new Intl.DateTimeFormat(undefined, {dateStyle:'medium', timeStyle:'short'}).format(new Date(value)) : 'Unavailable';
-    const state = {jobs: [], workflows: new Map(), selected: null, tab: 'listing'};
+    const fmtDay = value => value ? new Intl.DateTimeFormat(undefined, {dateStyle:'medium'}).format(new Date(value)) : 'Unavailable';
+    const rel = value => {
+      if (!value) return 'never';
+      const ms = Date.now() - new Date(value).getTime();
+      if (!Number.isFinite(ms)) return 'unknown';
+      const m = Math.round(ms / 60000);
+      if (m < 1) return 'just now'; if (m < 60) return `${m} min ago`;
+      const h = Math.round(m / 60); if (h < 24) return `${h} hr ago`;
+      const d = Math.round(h / 24); if (d < 30) return `${d} day${d === 1 ? '' : 's'} ago`;
+      return fmtDay(value);
+    };
+    const shortAge = value => {
+      const m = Math.round((Date.now() - new Date(value).getTime()) / 60000);
+      if (!Number.isFinite(m)) return ''; if (m < 60) return `${Math.max(m, 1)}m`; if (m < 1440) return `${Math.round(m / 60)}h`; if (m < 43200) return `${Math.round(m / 1440)}d`;
+      return new Intl.DateTimeFormat(undefined, {month:'short', day:'numeric'}).format(new Date(value));
+    };
+    const state = {jobs: [], workflows: new Map(), appQueue: [], selected: null, tab: 'listing', stateFilter: '', details: new Map()};
 
     async function api(path, options) {
       const response = await fetch(path, options);
@@ -164,12 +481,50 @@
     }
     const post = (path, body) => api(path, {method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify(body)});
     const latest = rows => Array.isArray(rows) && rows.length ? rows[0] : null;
-    const tone = value => /approved|complete|offer|conversation|interviewing/.test(value || '') ? 'good' : /reject|blocked|login_required|closed/.test(value || '') ? 'bad' : 'warn';
-    const chip = (value, label = value) => `<span class="chip" data-tone="${tone(value)}">${esc(label || 'Unavailable')}</span>`;
+    const humanize = value => String(value || '').replaceAll('_', ' ');
+
+    /* ---------- Vocabulary ---------- */
+    const STAGE_LABEL = {untracked:'Not yet tracked', target:'Target', considering:'Considering', package_draft:'Package in draft', chris_review:'Awaiting your review', approved_to_send:'Approved to send', applied:'Applied', conversation:'In conversation', interviewing:'Interviewing', offer:'Offer', closed:'Closed'};
+    const PACKAGE_LABEL = {writer_draft:'Draft — writer', critic_review:'Draft — critic review', chris_review:'Draft — awaiting your review', approved:'Approved', rejected:'Rejected'};
+    const PACKAGE_STATE = {writer_draft:'draft', critic_review:'draft', chris_review:'review', approved:'approved', rejected:'attention'};
+    const RESEARCH_LABEL = {complete:'Researched', pending:'Research pending', running:'Researching', login_required:'Login required', blocked:'Research blocked', incomplete_retry:'Retry pending'};
+    const RESEARCH_TONE = {complete:'tone-good', login_required:'tone-bad', blocked:'tone-bad', incomplete_retry:'tone-warn', pending:'', running:'tone-warn'};
+    const ARTIFACT_LABEL = {tailored_resume:'Tailored résumé', resume:'Résumé', cover_letter:'Cover letter', pain_letter:'Pain letter', outreach:'Outreach note'};
+    const ATTENTION = ['submission_uncertain', 'login_required', 'user_input_required'];
+    const stageLabel = stage => STAGE_LABEL[stage] || humanize(stage);
+    const mark = (s, title = '') => `<span class="mark" data-state="${esc(s)}"${title ? ` title="${esc(title)}" role="img" aria-label="${esc(title)}"` : ' aria-hidden="true"'}></span>`;
+    const statusPair = (s, label) => `<span class="status-pair">${mark(s)}<span class="state-label" data-state="${esc(s)}">${esc(label)}</span></span>`;
+
+    /* One derived state per job. "submitted" is shown only with a receipt (queue submitted) or the receipt-driven "applied" stage. */
+    function appState(jobId) {
+      const wf = state.workflows.get(jobId) || {};
+      const stage = latest(wf.pipeline_items)?.stage || 'untracked';
+      const queue = state.appQueue.filter(item => item.canonical_job_id === jobId);
+      const packages = wf.application_packages || [];
+      const pkg = latest(packages);
+      if (queue.some(item => item.status === 'submitted') || stage === 'applied') return {key:'submitted', group:'submitted', label:'Submitted'};
+      const attention = queue.find(item => ATTENTION.includes(item.status));
+      if (attention) return {key:'attention', group:'approved', label:`Needs you — ${humanize(attention.status)}`};
+      if (['conversation','interviewing','offer'].includes(stage)) return {key:'submitted', group:'submitted', label:stageLabel(stage)};
+      if (stage === 'closed') return {key:'closed', group:'', label:'Closed'};
+      if (queue.some(item => ['approved','claimed'].includes(item.status))) return {key:'approved', group:'approved', label:'Approved — queued, not submitted'};
+      if (stage === 'approved_to_send' || pkg?.status === 'approved') return {key:'approved', group:'approved', label:'Approved — not submitted'};
+      if (pkg?.status === 'chris_review' || stage === 'chris_review') return {key:'review', group:'draft', label:'Draft — awaiting your review'};
+      if (pkg && ['writer_draft','critic_review'].includes(pkg.status) || stage === 'package_draft') return {key:'draft', group:'draft', label:'Draft in progress'};
+      if (pkg?.status === 'rejected') return {key:'draft', group:'draft', label:'Draft — rejected'};
+      return {key:'none', group:'', label:stageLabel(stage)};
+    }
+
+    /* ---------- Loading ---------- */
+    function setConnection(text, tone) { for (const id of ['connectionChip','connectionChipMobile']) { el(id).textContent = text; if (tone) el(id).dataset.tone = tone; else delete el(id).dataset.tone; } }
+
+    async function loadAppQueue() {
+      try { state.appQueue = await api('/api/applications/queue'); } catch (error) { if (error.message === 'auth') throw error; state.appQueue = []; }
+    }
 
     async function loadJobs() {
-      el('connectionChip').textContent = 'Loading';
-      const jobs = await api('/api/jobs?limit=250');
+      setConnection('Loading');
+      const [jobs] = await Promise.all([api('/api/jobs?limit=250'), loadAppQueue()]);
       state.jobs = await Promise.all(jobs.map(async job => {
         try {
           const workflow = await api('/api/workflows/' + encodeURIComponent(job.id));
@@ -180,66 +535,117 @@
           return job;
         }
       }));
-      el('connectionChip').textContent = 'Live API';
-      el('connectionChip').dataset.tone = 'good';
+      setConnection('Live', 'good');
       renderJobs();
+      const fromHash = new URLSearchParams(location.hash.slice(1)).get('job');
+      if (fromHash && !state.selected && state.jobs.some(job => job.id === fromHash)) selectJob(fromHash, {fromHash:true});
     }
 
+    /* ---------- Filtering & list ---------- */
     function filters() {
       return {
         role: el('roleFilter').value.trim().toLowerCase(), location: el('locationFilter').value.trim().toLowerCase(),
-        pipeline: el('pipelineFilter').value, research: el('researchFilter').value
+        pipeline: el('pipelineFilter').value, research: el('researchFilter').value, group: state.stateFilter
       };
     }
     function jobStage(job) { return latest(state.workflows.get(job.id)?.pipeline_items)?.stage || 'untracked'; }
+    function baseMatch(job, f) {
+      const roleHaystack = `${job.title || ''} ${job.company || ''}`.toLowerCase();
+      const location = String(job.location || '').toLowerCase();
+      return (!f.role || roleHaystack.includes(f.role)) && (!f.location || location.includes(f.location)) &&
+        (!f.pipeline || jobStage(job) === f.pipeline) && (!f.research || job.research_status === f.research);
+    }
     function filteredJobs() {
       const f = filters();
-      return state.jobs.filter(job => {
-        const roleHaystack = `${job.title || ''} ${job.company || ''}`.toLowerCase();
-        const location = String(job.location || '').toLowerCase();
-        return (!f.role || roleHaystack.includes(f.role)) && (!f.location || location.includes(f.location)) &&
-          (!f.pipeline || jobStage(job) === f.pipeline) && (!f.research || job.research_status === f.research);
-      });
+      return state.jobs.filter(job => baseMatch(job, f) && (!f.group || appState(job.id).group === f.group));
     }
     function renderJobs() {
-      const jobs = filteredJobs();
-      el('jobCount').textContent = `${jobs.length} of ${state.jobs.length}`;
+      const f = filters(), base = state.jobs.filter(job => baseMatch(job, f)), jobs = filteredJobs();
+      const counts = {all: base.length, draft: 0, approved: 0, submitted: 0};
+      for (const job of base) { const g = appState(job.id).group; if (g in counts) counts[g]++; }
+      document.querySelectorAll('[data-count]').forEach(node => node.textContent = counts[node.dataset.count]);
+      const active = f.role || f.location || f.pipeline || f.research || f.group;
+      el('jobCount').textContent = active ? `${jobs.length} of ${state.jobs.length} jobs` : `${state.jobs.length} jobs`;
+      el('clearFilters').hidden = !active;
       el('jobList').innerHTML = jobs.length ? jobs.map(job => {
-        const stage = jobStage(job);
-        return `<button class="job-row" type="button" data-job="${esc(job.id)}" aria-current="${state.selected === job.id}">
-          <span class="job-title">${esc(job.title || 'Untitled role')}</span>
-          <span>${esc(job.company || 'Company unavailable')} · ${esc(job.location || 'Location unavailable')}</span>
-          <span class="chips">${chip(stage)}${chip(job.research_status, `research: ${job.research_status || 'unknown'}`)}<span class="chip">${esc(job.source || 'source unknown')}</span></span>
+        const app = appState(job.id), research = job.research_status;
+        return `<button class="job" type="button" data-job="${esc(job.id)}" aria-current="${state.selected === job.id}">
+          ${mark(app.key, app.label)}
+          <span class="job-main">
+            <span class="job-top"><span class="job-title">${esc(job.title || 'Untitled role')}</span>${job.last_seen_at ? `<span class="job-time" title="Last seen in intake ${esc(fmtDate(job.last_seen_at))}">${esc(shortAge(job.last_seen_at))}</span>` : ''}</span>
+            <span class="job-org">${esc(job.company || 'Company unavailable')} · ${esc(job.location || 'Location unavailable')}</span>
+            <span class="job-foot"><span class="state-label" data-state="${esc(app.key)}">${esc(app.label)}</span><span class="dot-sep"></span><span class="${RESEARCH_TONE[research] || ''}">${esc(RESEARCH_LABEL[research] || (research ? humanize(research) : 'No research'))}</span></span>
+          </span>
         </button>`;
-      }).join('') : '<div class="empty">No real API records match these filters.</div>';
+      }).join('') : `<div class="empty"><strong>No jobs match</strong>${state.jobs.length ? 'Try a broader role or location.' : 'No job records are available yet.'}</div>`;
     }
 
-    async function selectJob(id) {
+    /* ---------- Detail ---------- */
+    async function selectJob(id, {fromHash = false} = {}) {
       const generation = (state.selectionGeneration || 0) + 1;
       state.selectionGeneration = generation;
-      state.selected = id; state.tab = 'listing'; renderJobs();
-      el('jobDetail').innerHTML = '<div class="empty">Loading job details and workflow…</div>';
+      state.selected = id; state.tab = state.keepTab || 'listing'; state.keepTab = null; renderJobs();
+      document.body.dataset.pane = 'detail';
+      if (!fromHash) history.replaceState(null, '', '#job=' + encodeURIComponent(id));
+      el('jobDetail').innerHTML = '<div class="empty" style="padding-top:18vh">Loading listing and workflow…</div>';
       try {
         const [detail, workflow] = await Promise.all([
           api('/api/jobs/' + encodeURIComponent(id)), api('/api/workflows/' + encodeURIComponent(id))
         ]);
         if (state.selected !== id || state.selectionGeneration !== generation) return;
-        state.workflows.set(id, workflow); renderDetail(detail, workflow); renderJobs();
+        state.workflows.set(id, workflow); state.details.set(id, detail); renderDetail(detail, workflow); renderJobs();
+        el('reader').scrollTop = 0; if (matchMedia('(max-width: 860px)').matches) window.scrollTo(0, 0);
       } catch (error) {
         if (state.selected !== id || state.selectionGeneration !== generation) return;
-        if (error.message !== 'auth') el('jobDetail').innerHTML = `<div class="callout bad">Could not load this job: ${esc(error.message)}</div>`;
+        if (error.message !== 'auth') el('jobDetail').innerHTML = `${backButton()}<div class="callout bad">Could not load this job: ${esc(error.message)}</div>`;
       }
+    }
+    const backButton = () => '<button type="button" class="btn btn-quiet back" data-back>← All jobs</button>';
+
+    const PUBLIC_VERIFY_HOST = 'corpartners.wd5.myworkdayjobs.com';
+    function freshnessInfo(detail) {
+      const check = detail.latest_listing_check, version = latest(detail.listing_versions);
+      if (!version) return {status:'blocked', title:'No stored listing', note:'Approval readiness cannot be established.', mark:'attention'};
+      if (check && check.trusted_for_freshness && check.availability === 'open') {
+        const minutes = (Date.now() - new Date(check.captured_at).getTime()) / 60000;
+        if (minutes <= 15) return {status:'done', title:'Verified open', note:`Employer site checked ${rel(check.captured_at)}`, mark:'submitted', fresh:true};
+        return {status:'current', title:'Verified earlier', note:`Open as of ${rel(check.captured_at)} — re-verify before approval`, mark:'review'};
+      }
+      if (check && check.availability && check.availability !== 'open') return {status:'blocked', title:`Listing ${humanize(check.availability)}`, note:`Checked ${rel(check.captured_at)}`, mark:'attention'};
+      return {status:'current', title:'Stored copy only', note:`Captured ${rel(version.fetched_at)}; not verified open`, mark:'draft'};
     }
 
     function freshness(detail) {
-      const version = latest(detail.listing_versions);
-      if (!version) return '<div class="callout bad">No listing version is available. Approval readiness cannot be established.</div>';
-      const employerUrl = [detail.canonical_url, ...(detail.evidence || []).map(x => x.source_url)].find(value => { try { return new URL(value).hostname.toLowerCase() === 'corpartners.wd5.myworkdayjobs.com'; } catch { return false; } });
-      return `<div class="subcard"><div class="subcard-head"><div><div class="eyebrow">Latest stored listing version</div><strong>${esc(version.id)}</strong></div>${chip('', 'Freshness check unavailable')}</div>
-        <p class="muted">Fetched ${esc(fmtDate(version.fetched_at))} · Provider ${esc(version.provider || 'unavailable')}</p>
-        <div class="code">Content hash: ${esc(version.content_hash || 'unavailable')}</div>
-        <div class="callout">The current GET contracts do not expose the trusted check record. This timestamp and hash prove the stored version only; they do not prove the listing is still open.</div>
-        ${employerUrl ? `<div class="actions" style="margin-top:12px"><button class="secondary" type="button" data-public-verify data-job="${esc(detail.id)}" data-source-url="${esc(employerUrl)}">Verify employer listing now</button><span class="muted">Uses the backend's allowlisted public server fetch.</span></div><p class="notice" data-freshness-notice role="status"></p>` : '<p class="muted">Public verification is unavailable because no allowlisted Cor Partners Workday URL is present in this job’s real API data.</p>'}</div>`;
+      const version = latest(detail.listing_versions), info = freshnessInfo(detail), check = detail.latest_listing_check;
+      if (!version) return '<div class="callout bad">No listing version is stored for this job, so approval readiness cannot be established.</div>';
+      const employerUrl = [detail.canonical_url, ...(detail.evidence || []).map(x => x.source_url)].find(value => { try { return new URL(value).hostname.toLowerCase() === PUBLIC_VERIFY_HOST; } catch { return false; } });
+      return `<div class="fresh">
+          <div class="fresh-title">${mark(info.mark)}<span>${esc(info.title)}</span></div>
+          <div class="fresh-sub">${esc(info.note)}. Listing captured ${esc(fmtDate(version.fetched_at))} via ${esc(version.provider || 'unknown provider')}.${info.fresh ? '' : ' A stored copy proves what the listing said, not that it is still open.'}</div>
+          <div class="fresh-actions">${employerUrl ? `<button class="btn btn-sm" type="button" data-public-verify data-job="${esc(detail.id)}" data-source-url="${esc(employerUrl)}">Verify on employer site</button>` : `<span class="faint" style="font-size:12.5px;max-width:220px;text-align:right">Live verification is available only for allowlisted employer sites.</span>`}</div>
+          <p class="notice" data-freshness-notice role="status"></p>
+          <details class="tech"><summary>Technical details</summary><dl class="kv">
+            <dt>Listing version</dt><dd class="mono">${esc(version.id)}</dd>
+            <dt>Content hash</dt><dd class="mono">${esc(version.content_hash || 'unavailable')}</dd>
+            ${check ? `<dt>Latest check</dt><dd class="mono">${esc(check.id)} · ${esc(check.capture_source)} · ${esc(check.availability)} · ${esc(fmtDate(check.captured_at))}</dd>` : '<dt>Latest check</dt><dd>None recorded</dd>'}
+          </dl></details>
+        </div>`;
+    }
+
+    /* Fit bands use text tone only, so they never read as application states. */
+    const bandTone = band => band === 'strong' ? 'tone-good' : band === 'blocked' ? 'tone-bad' : 'tone-warn';
+    function assessmentCards(detail) {
+      const assessments = detail.assessments || [];
+      if (!assessments.length) return '<div class="callout plain">No deterministic fit assessment is persisted for this exact listing version. No qualification claim should be inferred.</div>';
+      return assessments.map(row => {
+        const x = row.explanation || {}, hard = x.hard_constraints || {}, matches = x.arsenal_matches || [], gaps = [...(hard.vetoes || []), ...(hard.review_reasons || [])];
+        return `<article class="panel"><div class="panel-title"><div><div class="eyebrow">Deterministic fit assessment</div><h3><span style="font-family:var(--font-display);font-size:24px;font-weight:500">${esc(row.score)}</span><span class="faint"> / 100</span></h3></div><span class="state-label ${bandTone(row.band)}" style="text-transform:capitalize">${esc(row.band || 'unbanded')}</span></div>
+          <dl class="kv" style="margin:0"><dt>Title evidence</dt><dd>${esc((x.alias_hits || []).join(', ') || 'No configured title alias matched')}</dd><dt>Compensation</dt><dd>${esc(hard.compensation || 'unknown')}</dd><dt>Engagement</dt><dd>${esc(hard.engagement || 'unknown')}</dd><dt>Geography</dt><dd>${esc(hard.geography || 'unknown')}</dd></dl>
+          <div class="callout ${gaps.length ? 'bad' : 'plain'}"><strong>Gaps and blockers:</strong> ${esc(gaps.join(', ') || 'No explicit veto recorded; unsupported requirements still require human review.')}</div>
+          <details class="disclose"><summary>Supported Arsenal evidence (${matches.length})</summary>${matches.length ? `<div class="evidence">${matches.map(m => `<div class="evidence-item"><div class="kind">${esc((m.tags || []).join(', ') || 'no tags')}</div><div><div class="claim">${esc(m.source_anchor || 'source anchor unavailable')}</div><div class="src mono">${esc(m.claim_id)}</div></div></div>`).join('')}</div>` : '<p class="note">No Arsenal evidence matched.</p>'}</details>
+          <details class="tech"><summary>Technical details</summary><dl class="kv"><dt>Profile</dt><dd class="mono">${esc(row.profile_id)} v${esc(row.profile_version)}</dd><dt>Arsenal</dt><dd class="mono">${esc(row.arsenal_version)}</dd><dt>Listing</dt><dd class="mono">${esc(row.listing_version_id)}</dd><dt>Listing hash</dt><dd class="mono">${esc(row.listing_content_hash || 'unavailable')}</dd><dt>Method</dt><dd class="mono">${esc(x.assessment_method_version || 'legacy')}</dd></dl></details>
+        </article>`;
+      }).join('');
     }
 
     function safeListingHtml(value) {
@@ -253,68 +659,119 @@
       return doc.body.innerHTML;
     }
 
-    function packageCards(workflow) {
-      const packages = workflow.application_packages || [];
-      if (!packages.length) return '<div class="empty">No application package exists for this job.</div>';
-      const artifacts = workflow.application_artifacts || [], reviews = workflow.package_reviews || [], verifications = workflow.artifact_verifications || [];
-      return packages.map(pkg => {
-        const ownArtifacts = artifacts.filter(a => a.package_id === pkg.id);
-        const ownReviews = reviews.filter(r => r.package_id === pkg.id);
-        const canApprove = pkg.status === 'chris_review';
-        return `<article class="subcard" data-package-card="${esc(pkg.id)}">
-          <div class="subcard-head"><div><div class="eyebrow">Package</div><h3>${esc(pkg.id)}</h3></div>${chip(pkg.status)}</div>
-          <p class="muted">Revision ${esc(pkg.revision ?? 'unavailable')} · Listing version ${esc(pkg.listing_version_id || 'unavailable')} · Arsenal ${esc(pkg.arsenal_version || 'unavailable')}</p>
-          <div class="stack">${ownArtifacts.length ? ownArtifacts.map(a => {
-            const verified = verifications.some(v => v.artifact_id === a.id && v.drive_file_id === a.drive_file_id && String(v.content_hash).toLowerCase() === String(a.content_hash).toLowerCase());
-            return `<div class="artifact"><div class="subcard-head"><strong>${esc(a.artifact_type)}</strong>${chip(verified ? 'complete' : 'pending', verified ? 'Readback verified' : 'Readback not verified')}</div><div class="code">${esc(a.content_hash)}</div><div>Drive file: ${esc(a.drive_file_id || 'Not attached')}</div><details><summary>Evidence map (${(a.evidence_map || []).length})</summary><pre class="source-text">${esc(JSON.stringify(a.evidence_map || [], null, 2))}</pre></details></div>`;
-          }).join('') : '<div class="callout bad">No artifacts are attached to this package.</div>'}</div>
-          <details><summary>Review history (${ownReviews.length})</summary><pre class="source-text">${esc(JSON.stringify(ownReviews, null, 2))}</pre></details>
-          <form class="review-grid review-form" data-package="${esc(pkg.id)}" data-revision="${esc(pkg.revision)}">
-            <label style="grid-column:1/-1">Review note<textarea name="notes" placeholder="Required context for the audit trail"></textarea></label>
-            <label style="grid-column:1/-1">Chris reauthentication<input name="confirmation_password" type="password" autocomplete="current-password" required></label>
-            <button class="primary" name="decision" value="approve" ${canApprove ? '' : 'disabled'}>Approve package</button>
-            <button class="danger" name="decision" value="reject">Reject package</button>
-          </form>
-          ${canApprove ? '' : `<p class="muted">Approval is available only when the real package status is <span class="code">chris_review</span>. Current status: ${esc(pkg.status)}.</p>`}
-          <p class="notice" data-package-notice role="status"></p>
-        </article>`;
-      }).join('');
-    }
-
-    function assessmentCards(detail) {
-      const assessments = detail.assessments || [];
-      if (!assessments.length) return '<div class="callout">No deterministic fit assessment is persisted for this exact listing version. No qualification claim should be inferred.</div>';
-      return assessments.map(row => {
-        const x = row.explanation || {}, hard = x.hard_constraints || {}, matches = x.arsenal_matches || [], gaps = [...(hard.vetoes || []), ...(hard.review_reasons || [])];
-        return `<article class="subcard"><div class="subcard-head"><div><div class="eyebrow">Deterministic fit assessment</div><h3>${esc(row.score)} / 100 · ${esc(row.band)}</h3></div>${chip(row.band)}</div>
-          <p class="muted">Profile ${esc(row.profile_id)} v${esc(row.profile_version)} · Arsenal ${esc(row.arsenal_version)} · Listing ${esc(row.listing_version_id)}</p>
-          <p class="muted">Method ${esc(x.assessment_method_version || 'legacy')}</p>
-          <div class="code">Listing hash: ${esc(row.listing_content_hash || 'unavailable')}</div>
-          <p><strong>Title evidence:</strong> ${esc((x.alias_hits || []).join(', ') || 'No configured title alias matched')}</p>
-          <p><strong>Constraint findings:</strong> compensation ${esc(hard.compensation || 'unknown')} · engagement ${esc(hard.engagement || 'unknown')} · geography ${esc(hard.geography || 'unknown')}</p>
-          <div class="callout ${gaps.length ? 'bad' : ''}"><strong>Gaps and blockers:</strong> ${esc(gaps.join(', ') || 'No explicit veto recorded; unsupported requirements still require human review.')}</div>
-          <details><summary>Supported Arsenal evidence (${matches.length})</summary><div class="stack">${matches.length ? matches.map(m => `<div><strong>${esc(m.source_anchor || 'source anchor unavailable')}</strong><div class="code">${esc(m.claim_id)}</div><span class="muted">Matched tags: ${esc((m.tags || []).join(', ') || 'none')}</span></div>`).join('') : '<p>No Arsenal evidence matched.</p>'}</div></details>
-        </article>`;
-      }).join('');
+    function track(detail, workflow) {
+      const info = freshnessInfo(detail), pkg = latest(workflow.application_packages || []), stage = latest(workflow.pipeline_items)?.stage || 'untracked';
+      const queue = state.appQueue.filter(item => item.canonical_job_id === detail.id), submitted = queue.find(item => item.status === 'submitted');
+      const queued = queue.find(item => ['approved','claimed'].includes(item.status)), attention = queue.find(item => ATTENTION.includes(item.status));
+      const pkgStep = !pkg ? {status:'todo', mark:'none', note:'No package yet'} : pkg.status === 'approved' ? {status:'done', mark:'approved', note:`Approved · revision ${pkg.revision ?? '–'}`} : pkg.status === 'rejected' ? {status:'blocked', mark:'attention', note:`Rejected · revision ${pkg.revision ?? '–'}`} : {status:'current', mark:PACKAGE_STATE[pkg.status] || 'draft', note:`${PACKAGE_LABEL[pkg.status] || humanize(pkg.status)} · revision ${pkg.revision ?? '–'}`};
+      const sendStep = submitted || stage === 'applied' ? {status:'done', mark:'approved', note:'Approved and sent'} : attention ? {status:'blocked', mark:'attention', note:`Needs you — ${humanize(attention.status)}`} : queued ? {status:'current', mark:'approved', note:'Approved and queued — not submitted'} : stage === 'approved_to_send' ? {status:'current', mark:'approved', note:'Approved to send — not queued'} : {status:'todo', mark:'none', note:'Not approved to send'};
+      const subStep = submitted ? {status:'submitted', mark:'submitted', note:`Submitted · ${fmtDay(submitted.updated_at)}`} : stage === 'applied' ? {status:'submitted', mark:'submitted', note:'Applied (receipt recorded)'} : {status:'todo', mark:'none', note:'Not submitted'};
+      const steps = [['Listing', {status:info.status, mark:info.mark, note:info.title}], ['Documents', pkgStep], ['Approval to send', sendStep], ['Submitted', subStep]];
+      return `<ol class="track" aria-label="Application progress">${steps.map(([name, s]) => `<li class="step" data-status="${s.status}"><span class="step-name">${mark(s.mark)}${esc(name)}</span><span class="step-note">${esc(s.note)}</span></li>`).join('')}</ol>`;
     }
 
     function renderDetail(detail, workflow) {
-      const version = latest(detail.listing_versions), pipeline = latest(workflow.pipeline_items), evidence = detail.evidence || [];
-      const listingUrl = detail.canonical_url ? `<a class="secondary" href="${esc(detail.canonical_url)}" target="_blank" rel="noreferrer">Open source listing</a>` : '<button class="secondary" disabled>Source URL unavailable</button>';
-      el('jobDetail').innerHTML = `<div class="hero"><div><div class="eyebrow">${esc(detail.source || 'Source unavailable')}</div><h2>${esc(detail.title || 'Untitled role')}</h2><p>${esc(detail.company || 'Company unavailable')} · ${esc(detail.location || 'Location unavailable')}</p><div class="chips">${chip(pipeline?.stage || 'untracked')}${chip(detail.research_status, `research: ${detail.research_status || 'unknown'}`)}</div></div><div class="actions">${listingUrl}</div></div>
-        <div class="tabs" role="tablist"><button class="tab" data-tab="listing" role="tab" aria-selected="true">Listing & evidence</button><button class="tab" data-tab="package" role="tab" aria-selected="false">Package & approval</button><button class="tab" data-tab="status" role="tab" aria-selected="false">Application status</button></div>
-        <section class="tab-panel stack" data-panel="listing">${freshness(detail)}${assessmentCards(detail)}<div class="subcard"><div class="subcard-head"><div><h3>Full stored listing</h3><span class="muted">Sanitized semantic rendering · source text and hash preserved</span></div><span class="muted">${esc(version?.id || 'No version')}</span></div>${version?.render_html ? `<article class="listing-render">${safeListingHtml(version.render_html)}</article>` : version?.full_description ? `<div class="source-text">${esc(version.full_description)}</div>` : '<div class="callout bad">Full listing text is unavailable.</div>'}</div><div class="subcard"><h3>Anchored evidence (${evidence.length})</h3>${evidence.length ? evidence.map(e => `<details><summary>${esc(e.evidence_type)} · ${esc(e.source_anchor || 'anchor unavailable')}</summary><p>${esc(e.claim_text)}</p><a href="${esc(e.source_url)}" target="_blank" rel="noreferrer">Source</a></details>`).join('') : '<div class="callout bad">No evidence records are available.</div>'}</div></section>
-        <section class="tab-panel stack" data-panel="package" hidden><div class="callout">Nothing in this screen submits an application. Approve/reject records a package review through the existing backend only.</div>${packageCards(workflow)}</section>
-        <section class="tab-panel stack" data-panel="status" hidden>${pipelineCard(detail.id, pipeline, workflow)}<div id="executionPanel" class="subcard"><div class="empty">Loading submission controls…</div></div></section>`;
+      const version = latest(detail.listing_versions), evidence = detail.evidence || [], pkgs = workflow.application_packages || [];
+      const listingUrl = detail.canonical_url ? `<a class="btn" href="${esc(detail.canonical_url)}" target="_blank" rel="noreferrer">Original listing <span class="ext">↗</span></a>` : '<button class="btn" disabled>Source URL unavailable</button>';
+      const meta = [detail.source || 'Source unavailable', detail.engagement_type, detail.first_seen_at ? `first seen ${fmtDay(detail.first_seen_at)}` : ''].filter(Boolean).join(' · ');
+      el('jobDetail').innerHTML = `${backButton()}
+        <header class="reader-head"><div style="min-width:0"><div class="eyebrow">${esc(meta)}</div><h1>${esc(detail.title || 'Untitled role')}</h1><p class="org"><strong>${esc(detail.company || 'Company unavailable')}</strong> · ${esc(detail.location || 'Location unavailable')}</p></div><div class="head-actions">${listingUrl}</div></header>
+        ${track(detail, workflow)}
+        <div class="tabs" role="tablist"><button class="tab" data-tab="listing" role="tab" aria-selected="true">Listing</button><button class="tab" data-tab="package" role="tab" aria-selected="false">Documents &amp; approval<span class="count">${pkgs.length}</span></button><button class="tab" data-tab="status" role="tab" aria-selected="false">Submission</button></div>
+        <section class="tab-panel" data-panel="listing" role="tabpanel">
+          <div class="section">${freshness(detail)}</div>
+          <div class="section"><div class="section-head"><h2>Fit assessment</h2></div>${assessmentCards(detail)}</div>
+          <div class="section"><div class="section-head"><h2>Original listing</h2><span class="faint" style="font-size:12.5px">${version?.render_html ? 'Original formatting, sanitized' : 'Plain text as captured'}</span></div>
+            <div class="listing-frame">${version?.render_html ? `<article class="listing">${safeListingHtml(version.render_html)}</article>` : version?.full_description ? `<article class="listing plain">${esc(version.full_description)}</article>` : '<div class="callout bad">The full listing text is unavailable.</div>'}</div></div>
+          <div class="section"><div class="section-head"><h2>Anchored evidence</h2><span class="faint">${evidence.length}</span></div>
+            ${evidence.length ? `<div class="evidence">${evidence.map(e => `<div class="evidence-item"><div class="kind">${esc(humanize(e.evidence_type))}</div><div><div class="claim">${esc(e.claim_text)}</div><div class="src">${esc(e.source_anchor || 'anchor unavailable')}${e.source_url ? ` · <a href="${esc(e.source_url)}" target="_blank" rel="noreferrer">source</a>` : ''}</div></div></div>`).join('')}</div>` : '<div class="callout bad">No evidence records are available.</div>'}</div>
+        </section>
+        <section class="tab-panel" data-panel="package" role="tabpanel" hidden>
+          <div class="callout plain" style="margin-bottom:20px">Approving a package records your review. It never submits an application.</div>
+          ${packageCards(workflow)}
+        </section>
+        <section class="tab-panel" data-panel="status" role="tabpanel" hidden>
+          <div class="section"><div id="executionPanel" class="panel"><div class="empty">Loading submission status…</div></div></div>
+          <div class="section">${pipelineCard(detail.id, latest(workflow.pipeline_items), workflow)}</div>
+        </section>`;
+      setTab(state.tab);
       loadExecution(detail.id);
     }
 
+    function setTab(name) {
+      state.tab = name;
+      document.querySelectorAll('#jobDetail .tab').forEach(x => x.setAttribute('aria-selected', String(x.dataset.tab === name)));
+      document.querySelectorAll('#jobDetail .tab-panel').forEach(x => x.hidden = x.dataset.panel !== name);
+    }
+
+    function packageCards(workflow) {
+      const packages = workflow.application_packages || [];
+      if (!packages.length) return '<div class="empty"><strong>No application package yet</strong>Drafted résumés and letters will appear here for review.</div>';
+      const artifacts = workflow.application_artifacts || [], reviews = workflow.package_reviews || [], verifications = workflow.artifact_verifications || [];
+      return packages.map((pkg, index) => {
+        const ownArtifacts = artifacts.filter(a => a.package_id === pkg.id);
+        const ownReviews = reviews.filter(r => r.package_id === pkg.id);
+        const canApprove = pkg.status === 'chris_review';
+        const pState = PACKAGE_STATE[pkg.status] || 'draft';
+        return `<article class="package" data-package-card="${esc(pkg.id)}">
+          <div class="package-head"><div><div class="eyebrow">${index === 0 ? 'Current package' : 'Earlier package'} · revision ${esc(pkg.revision ?? '–')}</div><h3>${statusPair(pState, PACKAGE_LABEL[pkg.status] || humanize(pkg.status))}</h3></div>
+            <details class="tech" style="text-align:right"><summary>Package details</summary><dl class="kv" style="text-align:left"><dt>Package</dt><dd class="mono">${esc(pkg.id)}</dd><dt>Listing version</dt><dd class="mono">${esc(pkg.listing_version_id || 'unavailable')}</dd><dt>Arsenal</dt><dd class="mono">${esc(pkg.arsenal_version || 'unavailable')}</dd></dl></details></div>
+          <div class="package-body">
+            ${ownArtifacts.length ? `<div class="docs">${ownArtifacts.map(a => {
+              const verified = verifications.some(v => v.artifact_id === a.id && v.drive_file_id === a.drive_file_id && String(v.content_hash).toLowerCase() === String(a.content_hash).toLowerCase());
+              return `<div class="doc" data-doc="${esc(a.id)}"><div class="doc-top"><span class="doc-icon" aria-hidden="true"></span><div style="min-width:0"><div class="doc-name">${esc(ARTIFACT_LABEL[a.artifact_type] || humanize(a.artifact_type))}</div><div class="doc-meta ${verified ? 'tone-good' : 'tone-warn'}">${verified ? 'Drive copy verified' : 'Drive copy not yet verified'}</div></div></div>
+                <div class="doc-meta mono" title="${esc(a.content_hash)}">${esc(String(a.content_hash || '').slice(0, 16))}${a.content_hash ? '…' : 'no hash'}</div>
+                <div class="doc-actions"><button type="button" class="btn btn-sm" data-preview="${esc(a.id)}" data-drive="${esc(a.drive_file_id || '')}" data-label="${esc(ARTIFACT_LABEL[a.artifact_type] || humanize(a.artifact_type))}">Preview</button>${a.drive_file_id ? `<a class="btn btn-sm btn-quiet" href="https://drive.google.com/file/d/${encodeURIComponent(a.drive_file_id)}/view" target="_blank" rel="noreferrer">Open in Drive <span class="ext">↗</span></a>` : '<span class="faint" style="font-size:12.5px;align-self:center">No Drive file</span>'}</div>
+                ${(a.evidence_map || []).length ? `<details class="tech"><summary>${(a.evidence_map || []).length} cited claims</summary><dl class="kv">${(a.evidence_map || []).map(e => `<dt class="mono">${esc(e.claim_id)}</dt><dd>${esc(e.source_anchor)}</dd>`).join('')}</dl></details>` : ''}
+              </div>`;
+            }).join('')}</div>
+            <div class="viewer" data-viewer hidden></div>` : '<div class="callout bad">No documents are attached to this package.</div>'}
+            ${ownReviews.length ? `<details class="disclose"><summary>Review history (${ownReviews.length})</summary><div class="history">${ownReviews.map(r => `<div class="history-item"><time>${esc(fmtDate(r.created_at))}</time><div><strong style="text-transform:capitalize">${esc(r.reviewer_role)}</strong> ${esc(humanize(r.decision))}${r.package_revision != null ? ` <span class="faint">· rev ${esc(r.package_revision)}</span>` : ''}${r.notes ? `<div class="muted">${esc(r.notes)}</div>` : ''}</div></div>`).join('')}</div></details>` : ''}
+          </div>
+          <form class="decision review-form" data-package="${esc(pkg.id)}" data-revision="${esc(pkg.revision)}">
+            <h4>Your decision</h4>
+            ${canApprove ? '' : `<p class="note">Approval opens when the package reaches your review. It is currently <em>${esc(PACKAGE_LABEL[pkg.status] || humanize(pkg.status))}</em>.</p>`}
+            <div class="decision-grid">
+              <label class="field"><span>Review note</span><textarea name="notes" placeholder="Context for the audit trail"></textarea></label>
+              <label class="field"><span>Confirm with your password</span><input name="confirmation_password" type="password" autocomplete="current-password" required></label>
+            </div>
+            <div class="decision-actions"><button class="btn btn-primary" name="decision" value="approve" ${canApprove ? '' : 'disabled'}>Approve package</button><button class="btn btn-danger" name="decision" value="reject">Reject package</button></div>
+            <p class="notice" data-package-notice role="status"></p>
+          </form>
+        </article>`;
+      }).join('');
+    }
+
+    async function showPreview(button) {
+      const card = button.closest('[data-package-card]'), viewer = card.querySelector('[data-viewer]'); if (!viewer) return;
+      card.querySelectorAll('.doc').forEach(d => d.setAttribute('aria-current', String(d.dataset.doc === button.dataset.preview)));
+      viewer.hidden = false;
+      const drive = button.dataset.drive ? `<a class="btn btn-sm btn-quiet" href="https://drive.google.com/file/d/${encodeURIComponent(button.dataset.drive)}/view" target="_blank" rel="noreferrer">Open in Drive <span class="ext">↗</span></a>` : '';
+      const bar = `<div class="viewer-bar"><span>${esc(button.dataset.label)}</span><span>${drive}<button type="button" class="btn btn-sm btn-quiet" data-close-viewer>Close</button></span></div>`;
+      if (!ARTIFACT_PREVIEW_ENDPOINT) {
+        viewer.innerHTML = `${bar}<div class="viewer-empty"><span>In-app preview needs the artifact preview endpoint, which the backend does not provide yet.</span>${drive}</div>`;
+        return;
+      }
+      viewer.innerHTML = `${bar}<div class="viewer-empty">Loading document…</div>`;
+      try {
+        const doc = await api(ARTIFACT_PREVIEW_ENDPOINT.replace('{id}', encodeURIComponent(button.dataset.preview)));
+        const body = doc.format === 'html' ? `<div class="paper">${safeListingHtml(doc.content)}</div>` : `<div class="paper plain">${esc(doc.content)}</div>`;
+        viewer.innerHTML = `${bar}<div class="viewer-body">${body}</div>${doc.hash_matches === false ? '<div class="callout bad">This preview does not match the approved file hash.</div>' : ''}`;
+      } catch (error) { if (error.message !== 'auth') viewer.innerHTML = `${bar}<div class="viewer-empty">Preview unavailable: ${esc(error.message)}${drive}</div>`; }
+    }
+
     function pipelineCard(jobId, pipeline, workflow) {
-      return `<div class="subcard"><div class="subcard-head"><div><div class="eyebrow">Application status</div><h3>${esc(pipeline?.stage || 'Not yet tracked')}</h3></div>${chip(pipeline?.stage || 'untracked')}</div>
-        <p>Next action: ${esc(pipeline?.next_action || 'Unavailable')}</p><p>Owner: ${esc(pipeline?.owner || 'Unavailable')} · Due: ${esc(fmtDate(pipeline?.due_at))}</p>
-        <form id="pipelineForm" class="stack" data-job="${esc(jobId)}"><label>Stage<select name="stage">${['target','considering','package_draft','chris_review','approved_to_send','conversation','interviewing','offer','closed'].map(x => `<option ${pipeline?.stage === x ? 'selected' : ''}>${x}</option>`).join('')}</select></label><label>Next action<input name="next_action" value="${esc(pipeline?.next_action || '')}"></label><div class="review-grid"><label>Owner<input name="owner" value="${esc(pipeline?.owner || '')}"></label><label>Due at<input name="due_at" type="datetime-local"></label></div><button class="primary">Save status</button></form>
-        <div class="callout">The backend enforces a current approved package and listing freshness before <span class="code">approved_to_send</span>. This UI does not bypass those checks. No endpoint in the inspected worker submits an application.</div><p id="pipelineNotice" class="notice" role="status"></p>
-        <details><summary>Workflow record</summary><pre class="source-text">${esc(JSON.stringify(workflow.pipeline_items || [], null, 2))}</pre></details></div>`;
+      return `<div class="panel"><div class="panel-title"><div><div class="eyebrow">Pipeline tracking</div><h3>${esc(stageLabel(pipeline?.stage || 'untracked'))}</h3></div></div>
+        <dl class="kv" style="margin:0"><dt>Next action</dt><dd>${esc(pipeline?.next_action || '—')}</dd><dt>Owner</dt><dd>${esc(pipeline?.owner || '—')}</dd><dt>Due</dt><dd>${pipeline?.due_at ? esc(fmtDate(pipeline.due_at)) : '—'}</dd></dl>
+        <details class="disclose"><summary>Update tracking</summary>
+        <form id="pipelineForm" class="form-grid" data-job="${esc(jobId)}"><label class="field"><span>Stage</span><select name="stage">${['target','considering','package_draft','chris_review','approved_to_send','conversation','interviewing','offer','closed'].map(x => `<option value="${x}" ${pipeline?.stage === x ? 'selected' : ''}>${esc(stageLabel(x))}</option>`).join('')}</select></label><label class="field"><span>Owner</span><input name="owner" value="${esc(pipeline?.owner || '')}"></label><label class="field full"><span>Next action</span><input name="next_action" value="${esc(pipeline?.next_action || '')}"></label><label class="field"><span>Due at</span><input name="due_at" type="datetime-local"></label><div class="form-actions full"><button class="btn btn-primary">Save tracking</button><span class="faint" style="font-size:12.5px">“Approved to send” requires a current approved package and a fresh listing check; the backend enforces this.</span></div></form>
+        <p id="pipelineNotice" class="notice" role="status"></p></details>
+        <details class="disclose"><summary>Raw workflow record</summary><pre class="raw">${esc(JSON.stringify(workflow.pipeline_items || [], null, 2))}</pre></details></div>`;
+    }
+
+    function ledger(on) {
+      const cell = (key, s, label, text) => `<div data-on="${on === key}"><span class="lbl">${mark(on === key ? s : 'none')}${esc(label)}</span><span class="val">${esc(text)}</span></div>`;
+      return `<div class="ledger">${cell('draft','review','Draft','Package written; you have not approved sending.')}${cell('approved','approved','Approved','You approved this exact package. Nothing has been sent.')}${cell('submitted','submitted','Submitted','An employer receipt or your signed attestation is on record.')}</div>`;
     }
 
     async function loadExecution(jobId) {
@@ -322,37 +779,72 @@
       try {
         const [destinations, queue] = await Promise.all([api(`/api/applications/${encodeURIComponent(jobId)}/destinations`), api('/api/applications/queue')]);
         if (state.selected !== jobId || !el('executionPanel')) return;
+        state.appQueue = queue;
+        const trackNode = document.querySelector('#jobDetail .track'), detail = state.details.get(jobId);
+        if (trackNode && detail) trackNode.outerHTML = track(detail, state.workflows.get(jobId) || {});
         const destination = destinations[0], items = queue.filter(item => item.canonical_job_id === jobId);
-        if (!destination) { panel.innerHTML = '<div class="subcard-head"><h3>Application execution</h3>' + chip('pending') + '</div><div class="callout">No server-verified application destination is registered for this listing. Submission approval remains blocked.</div>'; return; }
+        const on = items.some(i => i.status === 'submitted') ? 'submitted' : items.length ? 'approved' : 'draft';
+        if (!destination) { panel.innerHTML = `<div class="panel-title"><div><div class="eyebrow">Submission</div><h3>No verified destination</h3></div>${statusPair('none', 'Blocked')}</div>${ledger(on)}<div class="callout">No server-verified application destination is registered for this listing, so approval to send stays blocked.</div>`; return; }
         const exact = await api(`/api/applications/${encodeURIComponent(jobId)}/execution-preview?destination_id=${encodeURIComponent(destination.id)}`);
         if (state.selected !== jobId || !el('executionPanel')) return;
-        panel.innerHTML = `<div class="subcard-head"><div><div class="eyebrow">Exact bound package</div><h3>Application execution</h3></div>${chip(exact.listing_current ? 'complete' : 'blocked', exact.listing_current ? 'Ready for approval' : 'Listing not current')}</div>
-          <div class="callout bad"><strong>Approval and queue status are not submission.</strong> “Applied” is recorded only after an employer receipt or your password-reauthenticated manual attestation.</div>
-          <p><strong>Destination:</strong> <a href="${esc(exact.destination_url)}" target="_blank" rel="noreferrer">${esc(exact.destination_host)}</a></p><p><strong>Package:</strong> ${esc(exact.package_id)} · revision ${esc(exact.package_revision)}</p><p><strong>Listing check:</strong> ${esc(exact.listing_check_id)}</p><div class="code">Manifest ${esc(exact.artifact_manifest_hash)}</div>
-          ${items.length ? `<div class="stack">${items.map(item => `<div class="artifact"><strong>${esc(item.status_label)}</strong><div>${esc(item.execution_notice || '')}</div>${item.status !== 'submitted' && item.status !== 'rejected' ? `<button class="secondary" type="button" data-manual-attest="${esc(item.id)}">Record external manual submission</button>` : ''}</div>`).join('')}</div>` : `<form id="executionApprove" class="stack"><label><input name="confirm_exact_package" type="checkbox" required> I approve this exact package revision, destination, listing check, and artifact manifest.</label><label>Chris reauthentication<input name="confirmation_password" type="password" autocomplete="current-password" required></label><button class="primary">Approve and queue — does not submit</button></form>`}<div id="executionAction"></div><p id="executionNotice" class="notice" role="status"></p>`;
+        panel.innerHTML = `<div class="panel-title"><div><div class="eyebrow">Submission</div><h3>Exact package bound for sending</h3></div>${exact.listing_current ? statusPair('submitted', 'Listing current') : statusPair('attention', 'Listing not current')}</div>
+          ${ledger(on)}
+          <dl class="kv" style="margin:0"><dt>Destination</dt><dd><a href="${esc(exact.destination_url)}" target="_blank" rel="noreferrer">${esc(exact.destination_host)}</a></dd><dt>Package</dt><dd><span class="mono">${esc(exact.package_id)}</span> · revision ${esc(exact.package_revision)}</dd><dt>Listing check</dt><dd class="mono">${esc(exact.listing_check_id)}</dd><dt>Manifest</dt><dd class="mono">${esc(exact.artifact_manifest_hash)}</dd></dl>
+          ${items.length ? `<div>${items.map(item => `<div class="queue-item"><div class="panel-title">${statusPair(item.status === 'submitted' ? 'submitted' : ATTENTION.includes(item.status) ? 'attention' : item.status === 'rejected' ? 'closed' : 'approved', item.status_label)}<span class="faint" style="font-size:12.5px">Updated ${esc(fmtDate(item.updated_at))}</span></div>${item.execution_notice ? `<div class="muted">${esc(item.execution_notice)}</div>` : ''}${item.blocker_detail ? `<div class="callout bad">${esc(item.blocker_detail)}</div>` : ''}${item.status !== 'submitted' && item.status !== 'rejected' ? `<div><button class="btn btn-sm" type="button" data-manual-attest="${esc(item.id)}">Record a manual submission</button></div>` : ''}</div>`).join('')}</div>` : `<form id="executionApprove" class="decision" style="margin:0 -18px -18px"><h4>Approve to send</h4><label class="check"><input name="confirm_exact_package" type="checkbox" required> <span>I approve this exact package revision, destination, listing check and document manifest.</span></label><div class="decision-grid"><label class="field"><span>Confirm with your password</span><input name="confirmation_password" type="password" autocomplete="current-password" required></label><div></div></div><div class="form-actions"><button class="btn btn-primary">Approve and queue — does not submit</button></div></form>`}
+          <div id="executionAction"></div><p id="executionNotice" class="notice" role="status"></p>`;
         panel.dataset.job = jobId; panel.dataset.destination = destination.id; panel.dataset.preview = JSON.stringify(exact);
-      } catch (error) { if (state.selected === jobId && el('executionPanel')) panel.innerHTML = `<div class="subcard-head"><h3>Application execution</h3>${chip('blocked')}</div><div class="callout">Execution controls are unavailable: ${esc(error.message)}</div>`; }
+      } catch (error) { if (state.selected === jobId && el('executionPanel')) panel.innerHTML = `<div class="panel-title"><div><div class="eyebrow">Submission</div><h3>Not ready to send</h3></div>${statusPair('none', 'Blocked')}</div>${ledger('draft')}<div class="callout plain">Submission controls are unavailable: ${esc(humanize(error.message))}</div>`; }
     }
 
+    /* ---------- Research queue ---------- */
     async function loadQueue() {
       const query = new URLSearchParams({limit:'100', offset:'0'}); if (el('queueStatus').value) query.set('status', el('queueStatus').value);
       const rows = await api('/api/queue?' + query);
-      el('queueBody').innerHTML = rows.length ? rows.map(row => `<tr><td>${esc(row.source)}</td><td>${esc(row.task_kind)}</td><td>${chip(row.status)}</td><td><a href="${esc(row.url)}" target="_blank" rel="noreferrer">listing</a>${row.error_code ? `<div class="muted">${esc(row.error_code)}</div>` : ''}</td><td>${row.status === 'pending' && row.task_kind === 'fetch_listing' ? `<button class="secondary" data-research="${esc(row.id)}">Research this task</button>` : ['login_required','blocked','incomplete_retry'].includes(row.status) ? `<button class="secondary" data-retry="${esc(row.id)}">Retry</button>` : ''}</td></tr>`).join('') : '<tr><td colspan="5" class="empty">No queue records match this status.</td></tr>';
+      el('queueBody').innerHTML = rows.length ? rows.map(row => `<tr><td data-label="Source">${esc(row.source)}</td><td class="nowrap" data-label="Task">${esc(humanize(row.task_kind))}</td><td data-label="Status"><span class="${RESEARCH_TONE[row.status] || ''}">${esc(RESEARCH_LABEL[row.status] || humanize(row.status))}</span>${row.attempts ? ` <span class="faint">· ${esc(row.attempts)} attempt${row.attempts == 1 ? '' : 's'}</span>` : ''}</td><td class="url" data-label="Listing"><a href="${esc(row.url)}" target="_blank" rel="noreferrer">${esc(row.url)}</a>${row.error_code ? `<div class="err">${esc(row.error_code)}</div>` : ''}</td><td class="act">${row.status === 'pending' && row.task_kind === 'fetch_listing' ? `<button class="btn btn-sm" data-research="${esc(row.id)}">Research this task</button>` : ['login_required','blocked','incomplete_retry'].includes(row.status) ? `<button class="btn btn-sm" data-retry="${esc(row.id)}">Retry</button>` : ''}</td></tr>`).join('') : '<tr><td colspan="5" class="empty">No research tasks match this status.</td></tr>';
     }
 
+    function setView(view) {
+      document.body.dataset.view = view;
+      el('jobsView').hidden = view !== 'jobs'; el('queueView').hidden = view !== 'queue';
+      document.querySelectorAll('.viewnav [data-view]').forEach(b => b.setAttribute('aria-current', b.dataset.view === view ? 'page' : 'false'));
+    }
+
+    /* ---------- Events ---------- */
     document.addEventListener('input', event => { if (['roleFilter','locationFilter'].includes(event.target.id)) renderJobs(); });
     document.addEventListener('change', event => { if (['pipelineFilter','researchFilter'].includes(event.target.id)) renderJobs(); });
+    el('stateFilter').addEventListener('click', event => {
+      const b = event.target.closest('[data-state-filter]'); if (!b) return;
+      state.stateFilter = b.dataset.stateFilter;
+      el('stateFilter').querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+      renderJobs();
+    });
+    el('clearFilters').onclick = () => {
+      for (const id of ['roleFilter','locationFilter','pipelineFilter','researchFilter']) el(id).value = '';
+      state.stateFilter = ''; el('stateFilter').querySelectorAll('button').forEach((x, i) => x.setAttribute('aria-pressed', String(i === 0)));
+      renderJobs();
+    };
+    document.querySelector('.viewnav').addEventListener('click', event => { const b = event.target.closest('[data-view]'); if (b) setView(b.dataset.view); });
     el('jobList').addEventListener('click', event => { const row = event.target.closest('[data-job]'); if (row) selectJob(row.dataset.job); });
+    el('jobList').addEventListener('keydown', event => {
+      if (!['ArrowDown','ArrowUp'].includes(event.key)) return;
+      const rows = [...el('jobList').querySelectorAll('.job')], i = rows.indexOf(document.activeElement); if (i < 0) return;
+      event.preventDefault(); rows[Math.max(0, Math.min(rows.length - 1, i + (event.key === 'ArrowDown' ? 1 : -1)))].focus();
+    });
     el('jobDetail').addEventListener('click', event => {
+      if (event.target.closest('[data-back]')) { document.body.dataset.pane = 'list'; return; }
       const tab = event.target.closest('[data-tab]');
-      if (tab) { state.tab = tab.dataset.tab; document.querySelectorAll('.tab').forEach(x => x.setAttribute('aria-selected', String(x === tab))); document.querySelectorAll('.tab-panel').forEach(x => x.hidden = x.dataset.panel !== state.tab); }
+      if (tab) setTab(tab.dataset.tab);
+      const preview = event.target.closest('[data-preview]');
+      if (preview) showPreview(preview);
+      const close = event.target.closest('[data-close-viewer]');
+      if (close) { const v = close.closest('[data-viewer]'); v.hidden = true; v.closest('[data-package-card]').querySelectorAll('.doc').forEach(d => d.setAttribute('aria-current', 'false')); }
       const verify = event.target.closest('[data-public-verify]');
       if (verify) verifyPublicListing(verify);
       const attest = event.target.closest('[data-manual-attest]');
-      if (attest) el('executionAction').innerHTML = `<form id="manualAttestation" class="stack" data-queue="${esc(attest.dataset.manualAttest)}"><h4>Record an external manual submission</h4><div class="callout bad">This is your attestation, not an employer-verified receipt. Use it only after you personally submitted this exact application.</div><label>Submitted at<input name="submitted_at" type="datetime-local" required></label><label>Employer confirmation reference (optional)<input name="employer_confirmation_ref"></label><label><input name="attestation" type="checkbox" required> I manually submitted this exact approved application</label><label>Chris reauthentication<input name="confirmation_password" type="password" autocomplete="current-password" required></label><button class="primary">Record my manual attestation</button></form>`;
+      if (attest) el('executionAction').innerHTML = `<form id="manualAttestation" class="decision" style="margin:12px -18px -18px" data-queue="${esc(attest.dataset.manualAttest)}"><h4>Record a manual submission</h4><div class="callout bad">This is your attestation, not an employer receipt. Use it only after you personally submitted this exact approved application.</div><div class="form-grid"><label class="field"><span>Submitted at</span><input name="submitted_at" type="datetime-local" required></label><label class="field"><span>Employer confirmation reference (optional)</span><input name="employer_confirmation_ref"></label></div><label class="check"><input name="attestation" type="checkbox" required> <span>I manually submitted this exact approved application</span></label><div class="decision-grid"><label class="field"><span>Confirm with your password</span><input name="confirmation_password" type="password" autocomplete="current-password" required></label><div></div></div><div class="form-actions"><button class="btn btn-primary">Record my attestation</button></div></form>`;
     });
     async function verifyPublicListing(button) {
-      const notice = button.parentElement.nextElementSibling; button.disabled = true; notice.textContent = 'Verifying through the allowlisted public employer endpoint…'; notice.dataset.tone = '';
+      const notice = button.closest('.fresh').querySelector('[data-freshness-notice]'); button.disabled = true; notice.textContent = 'Checking the allowlisted employer listing…'; notice.dataset.tone = '';
       try {
         const result = await post('/api/run/public-listing-verification', {job_id:button.dataset.job, source_url:button.dataset.sourceUrl});
         const check = await post('/api/workflows/' + encodeURIComponent(button.dataset.job) + '/freshness', {phase:'approval'});
@@ -364,14 +856,14 @@
     el('jobDetail').addEventListener('submit', async event => {
       event.preventDefault();
       if (event.target.matches('.review-form')) {
-        const form = event.target, submitter = event.submitter, notice = form.closest('[data-package-card]').querySelector('[data-package-notice]');
+        const form = event.target, submitter = event.submitter, notice = form.querySelector('[data-package-notice]');
         notice.textContent = ''; notice.dataset.tone = '';
         if (!submitter?.value) return;
         submitter.disabled = true;
         try {
           const data = new FormData(form), result = await post('/api/packages/' + encodeURIComponent(form.dataset.package) + '/review', {reviewer_role:'chris', decision:submitter.value, expected_revision:Number(form.dataset.revision), notes:data.get('notes'), confirmation_password:data.get('confirmation_password')});
           notice.textContent = `${submitter.value === 'approve' ? 'Approval' : 'Rejection'} recorded. Backend status: ${result.status}.`; notice.dataset.tone = 'good';
-          await selectJob(state.selected); state.tab = 'package'; const packageTab = document.querySelector('[data-tab="package"]'); packageTab?.click();
+          state.keepTab = 'package'; await selectJob(state.selected);
         } catch (error) { if (error.message !== 'auth') { notice.textContent = `Not recorded: ${error.message}`; notice.dataset.tone = 'bad'; } }
         finally { submitter.disabled = false; }
       }
@@ -380,21 +872,21 @@
         notice.textContent = ''; button.disabled = true;
         try {
           const result = await post('/api/workflows/' + encodeURIComponent(form.dataset.job) + '/pipeline', {stage:data.get('stage'), next_action:data.get('next_action'), owner:data.get('owner'), due_at:data.get('due_at') || null});
-          notice.textContent = `Status saved: ${result.stage}.`; notice.dataset.tone = 'good'; await selectJob(state.selected);
+          notice.textContent = `Status saved: ${result.stage}.`; notice.dataset.tone = 'good'; state.keepTab = 'status'; await selectJob(state.selected);
         } catch (error) { if (error.message !== 'auth') { notice.textContent = `Not saved: ${error.message}`; notice.dataset.tone = 'bad'; } }
         finally { button.disabled = false; }
       }
       if (event.target.id === 'executionApprove') {
         const form = event.target, panel = el('executionPanel'), data = new FormData(form), exact = JSON.parse(panel.dataset.preview), notice = el('executionNotice'), button = event.submitter;
         notice.textContent = ''; button.disabled = true;
-        try { const result = await post(`/api/applications/${encodeURIComponent(panel.dataset.job)}/approve-execution`, {destination_id:panel.dataset.destination, expected_package_id:exact.package_id, expected_package_revision:exact.package_revision, expected_listing_version_id:exact.listing_version_id, expected_listing_check_id:exact.listing_check_id, expected_artifact_manifest_hash:exact.artifact_manifest_hash, confirm_exact_package:data.get('confirm_exact_package') === 'on', confirmation_password:data.get('confirmation_password')}); notice.textContent = result.execution_notice; notice.dataset.tone = 'good'; await loadExecution(panel.dataset.job); }
+        try { const result = await post(`/api/applications/${encodeURIComponent(panel.dataset.job)}/approve-execution`, {destination_id:panel.dataset.destination, expected_package_id:exact.package_id, expected_package_revision:exact.package_revision, expected_listing_version_id:exact.listing_version_id, expected_listing_check_id:exact.listing_check_id, expected_artifact_manifest_hash:exact.artifact_manifest_hash, confirm_exact_package:data.get('confirm_exact_package') === 'on', confirmation_password:data.get('confirmation_password')}); notice.textContent = result.execution_notice; notice.dataset.tone = 'good'; await loadExecution(panel.dataset.job); renderJobs(); }
         catch (error) { notice.textContent = `Not queued: ${error.message}`; notice.dataset.tone = 'bad'; }
         finally { button.disabled = false; }
       }
       if (event.target.id === 'manualAttestation') {
         const form = event.target, data = new FormData(form), notice = el('executionNotice'), button = event.submitter, submitted = new Date(String(data.get('submitted_at')));
         notice.textContent = ''; button.disabled = true;
-        try { const result = await post(`/api/applications/${encodeURIComponent(form.dataset.queue)}/manual-attestation`, {attestation:data.get('attestation') === 'on' ? 'I manually submitted this exact approved application' : '', submitted_at:submitted.toISOString(), employer_confirmation_ref:data.get('employer_confirmation_ref') || null, confirmation_password:data.get('confirmation_password')}); notice.textContent = `Recorded: ${result.status_label}.`; notice.dataset.tone = 'good'; await loadExecution(state.selected); }
+        try { const result = await post(`/api/applications/${encodeURIComponent(form.dataset.queue)}/manual-attestation`, {attestation:data.get('attestation') === 'on' ? 'I manually submitted this exact approved application' : '', submitted_at:submitted.toISOString(), employer_confirmation_ref:data.get('employer_confirmation_ref') || null, confirmation_password:data.get('confirmation_password')}); notice.textContent = `Recorded: ${result.status_label}.`; notice.dataset.tone = 'good'; await loadExecution(state.selected); renderJobs(); }
         catch (error) { notice.textContent = `Not recorded: ${error.message}`; notice.dataset.tone = 'bad'; }
         finally { button.disabled = false; }
       }
@@ -402,24 +894,18 @@
     el('queueBody').addEventListener('click', async event => {
       const research = event.target.closest('[data-research]');
       if (research) {
-        research.disabled = true; el('queueNotice').textContent = 'Researching this existing listing task…'; el('queueNotice').dataset.tone = '';
+        research.disabled = true; el('queueNotice').textContent = 'Researching this listing task…'; el('queueNotice').dataset.tone = '';
         try { const result = await post('/api/run/research-task', {task_id:research.dataset.research}); el('queueNotice').textContent = `Research task finished: ${result.result?.status || 'unknown'}.`; el('queueNotice').dataset.tone = 'good'; await Promise.all([loadJobs(), loadQueue()]); }
         catch (error) { if (error.message !== 'auth') { el('queueNotice').textContent = `Research task stopped: ${error.message}`; el('queueNotice').dataset.tone = 'bad'; } }
         return;
       }
       const button = event.target.closest('[data-retry]'); if (!button) return;
       button.disabled = true; el('queueNotice').textContent = '';
-      try { await post('/api/queue/retry', {task_id:button.dataset.retry}); el('queueNotice').textContent = 'Retry queued by the backend.'; el('queueNotice').dataset.tone = 'good'; await loadQueue(); }
+      try { await post('/api/queue/retry', {task_id:button.dataset.retry}); el('queueNotice').textContent = 'Retry queued.'; el('queueNotice').dataset.tone = 'good'; await loadQueue(); }
       catch (error) { if (error.message !== 'auth') { el('queueNotice').textContent = `Retry not queued: ${error.message}`; el('queueNotice').dataset.tone = 'bad'; } }
     });
     el('refreshQueue').onclick = () => loadQueue().catch(error => { if (error.message !== 'auth') el('queueNotice').textContent = error.message; });
     el('queueStatus').onchange = el('refreshQueue').onclick;
-    el('runAssessments').onclick = async () => {
-      const button = el('runAssessments'); button.disabled = true; el('queueNotice').textContent = 'Assessing up to 25 current full listings against the active profile and verified Arsenal…'; el('queueNotice').dataset.tone = '';
-      try { const result = await api('/api/assess/batch?limit=25', {method:'POST'}); const counts = (result.results || []).reduce((out,row) => { const key = row.band || row.status || 'unknown'; out[key] = (out[key] || 0) + 1; return out; }, {}); el('queueNotice').textContent = `Assessment batch finished: ${result.processed || 0} processed · ${Object.entries(counts).map(([key,value]) => `${key} ${value}`).join(' · ') || 'no current listings missing assessments'}.`; el('queueNotice').dataset.tone = 'good'; await loadJobs(); if (state.selected) await selectJob(state.selected); }
-      catch (error) { if (error.message !== 'auth') { el('queueNotice').textContent = `Assessment batch stopped: ${error.message}`; el('queueNotice').dataset.tone = 'bad'; } }
-      finally { button.disabled = false; }
-    };
     el('runResearch').onclick = async () => {
       if (state.researchInFlight) return;
       const source = el('researchSource').value;
@@ -432,6 +918,12 @@
       } catch (error) { if (error.message !== 'auth') { el('queueNotice').textContent = `Research batch stopped: ${error.message}`; el('queueNotice').dataset.tone = 'bad'; } }
       finally { state.researchInFlight = false; el('runResearch').disabled = false; }
     };
+    el('runAssessments').onclick = async () => {
+      const button = el('runAssessments'); button.disabled = true; el('queueNotice').textContent = 'Assessing up to 25 current full listings against the active profile and verified Arsenal…'; el('queueNotice').dataset.tone = '';
+      try { const result = await api('/api/assess/batch?limit=25', {method:'POST'}); const counts = (result.results || []).reduce((out,row) => { const key = row.band || row.status || 'unknown'; out[key] = (out[key] || 0) + 1; return out; }, {}); el('queueNotice').textContent = `Assessment batch finished: ${result.processed || 0} processed · ${Object.entries(counts).map(([key,value]) => `${key} ${value}`).join(' · ') || 'no current listings missing assessments'}.`; el('queueNotice').dataset.tone = 'good'; await loadJobs(); if (state.selected) await selectJob(state.selected); }
+      catch (error) { if (error.message !== 'auth') { el('queueNotice').textContent = `Assessment batch stopped: ${error.message}`; el('queueNotice').dataset.tone = 'bad'; } }
+      finally { button.disabled = false; }
+    };
     el('loginForm').onsubmit = async event => {
       event.preventDefault(); const form = event.target;
       const response = await fetch('/api/login', {method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify({password:new FormData(form).get('password')})});
@@ -439,7 +931,7 @@
       el('loginDialog').close(); form.reset(); el('loginError').textContent = ''; await Promise.all([loadJobs(), loadQueue()]);
     };
 
-    Promise.all([loadJobs(), loadQueue()]).catch(error => { if (error.message !== 'auth') { el('connectionChip').textContent = 'API unavailable'; el('connectionChip').dataset.tone = 'bad'; } });
+    Promise.all([loadJobs(), loadQueue()]).catch(error => { if (error.message !== 'auth') setConnection('API unavailable', 'bad'); });
   </script>
 </body>
 </html>
