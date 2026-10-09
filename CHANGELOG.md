@@ -1,5 +1,18 @@
 # Change log
 
+## 2026-10-09 — v2.3.39 approved redesign and execution progress integration
+
+- Integrated Claude's approved `live-f78eaed9` navy/cream workspace and exact recolored Polaris assets without recreating the redesign by hand.
+- Preserved all v2.3.38 generation, document, protocol, approval, browser-handoff, and receipt-gated execution behavior.
+- Added Application execution as a native workspace view with global lifecycle, blocker, lease, exact-binding, and receipt visibility.
+- Automatic browser dispatch remains unconfigured; approval still does not claim, open, fill, or submit an application.
+
+## 2026-10-09 — v2.3.38 receipt-aware execution progress
+
+- Added an always-visible execution summary with lifecycle step, exact queue/package identity, blocker detail, lease timing, next action, and receipt state.
+- Enriched queue views with deterministic progress metadata while preserving exact approval, lease, artifact, destination, and receipt guards.
+- Kept browser execution unconfigured and separately authorized; approval does not claim, open, fill, or submit an application.
+
 ## 2026-10-09 — v2.3.37 source-bound role-associated application documents
 
 - Preserves factual actor/action/outcome boundaries by rendering exact selected Career Arsenal statements separately from role-relevance sentences. Discover now remains “enabled tracking of 50 initiatives delivering $500M,” never personal delivery attribution.

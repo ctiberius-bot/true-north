@@ -400,6 +400,7 @@
     <nav class="viewnav" aria-label="Views">
       <button type="button" data-view="jobs" aria-current="page">Jobs</button>
       <button type="button" data-view="queue">Research queue</button>
+      <button type="button" data-view="execution">Application execution</button>
     </nav>
     <div class="appbar-meta">
       <span class="conn" id="connectionChip">Connecting…</span>
@@ -454,6 +455,11 @@
     </div>
     <p id="queueNotice" class="notice" role="status" style="margin-bottom:12px"></p>
     <div class="table-wrap"><table><thead><tr><th>Source</th><th>Task</th><th>Status</th><th>Listing</th><th><span class="visually-hidden">Action</span></th></tr></thead><tbody id="queueBody"><tr><td colspan="5" class="empty">Loading…</td></tr></tbody></table></div>
+  </main>
+
+  <main id="executionView" class="queue-view" hidden>
+    <div class="queue-head"><div><div class="eyebrow">Receipt-gated workflow</div><h1>Application execution</h1><p class="muted">Exact approvals, executor stops and receipt-backed completion.</p></div><button id="refreshExecution" class="btn" type="button">Refresh progress</button></div>
+    <div id="executionSummary" class="stack"><div class="empty">Loading execution progress…</div></div>
   </main>
 
   <dialog id="loginDialog">
@@ -543,6 +549,13 @@
 
     async function loadAppQueue() {
       try { state.appQueue = await api('/api/applications/queue'); } catch (error) { if (error.message === 'auth') throw error; state.appQueue = []; }
+    }
+
+    async function loadExecutionSummary() {
+      const root=el('executionSummary'),queue=await api('/api/applications/queue');
+      state.appQueue=queue; queue.forEach(item=>state.executionItems.set(item.id,item));
+      const counts=queue.reduce((out,item)=>(out[item.status]=(out[item.status]||0)+1,out),{});
+      root.innerHTML=queue.length?`<div class="actions">${Object.entries(counts).map(([status,count])=>chip(status,`${humanize(status)}: ${count}`)).join('')}</div>${queue.map(item=>`<article class="panel"><div class="panel-title"><div><div class="eyebrow">${esc(item.destination_host)}</div><h3>${esc(item.status_label)}</h3></div>${statusPair(item.status==='submitted'?'submitted':ATTENTION.includes(item.status)?'attention':item.status==='rejected'?'closed':'approved',`Step ${esc(item.progress_step)} of ${esc(item.progress_total)}`)}</div><p>${esc(item.next_action)}</p>${item.blocker_detail?`<div class="callout bad"><strong>${esc(item.blocker_code||'Blocked')}</strong><br>${esc(item.blocker_detail)}</div>`:''}<dl class="kv"><dt>Queue</dt><dd class="mono">${esc(item.id)}</dd><dt>Job</dt><dd class="mono">${esc(item.canonical_job_id)}</dd><dt>Package</dt><dd class="mono">${esc(item.package_id)} · revision ${esc(item.package_revision)}</dd><dt>Updated</dt><dd>${esc(fmtDate(item.updated_at))}</dd><dt>Receipt recorded:</dt><dd>${item.receipt_recorded?'Yes':'No'}</dd>${item.lease_expires_at?`<dt>Lease expires</dt><dd>${esc(fmtDate(item.lease_expires_at))}</dd>`:''}</dl></article>`).join('')}`:'<div class="empty"><strong>No application execution items</strong>Approving an exact package creates a queue item; it does not submit.</div>';
     }
 
     async function loadJobs() {
@@ -847,7 +860,7 @@
         panel.innerHTML = `<div class="panel-title"><div><div class="eyebrow">Submission</div><h3>Exact package bound for sending</h3></div>${exact.listing_current ? statusPair('submitted', 'Listing current') : statusPair('attention', 'Listing not current')}</div>
           ${ledger(on)}
           <dl class="kv" style="margin:0"><dt>Destination</dt><dd><a href="${esc(exact.destination_url)}" target="_blank" rel="noreferrer">${esc(exact.destination_host)}</a></dd><dt>Package</dt><dd><span class="mono">${esc(exact.package_id)}</span> · revision ${esc(exact.package_revision)}</dd><dt>Listing check</dt><dd class="mono">${esc(exact.listing_check_id)}</dd><dt>Manifest</dt><dd class="mono">${esc(exact.artifact_manifest_hash)}</dd></dl>
-          ${items.length ? `<div>${items.map(item => `<div class="queue-item"><div class="panel-title">${statusPair(item.status === 'submitted' ? 'submitted' : ATTENTION.includes(item.status) ? 'attention' : item.status === 'rejected' ? 'closed' : 'approved', item.status_label)}<span class="faint" style="font-size:12.5px">Updated ${esc(fmtDate(item.updated_at))}</span></div>${item.execution_notice ? `<div class="muted">${esc(item.execution_notice)}</div>` : ''}${item.blocker_detail ? `<div class="callout bad">${esc(item.blocker_detail)}</div>` : ''}<div class="form-actions">${['approved','login_required','user_input_required'].includes(item.status) ? `<button class="btn btn-sm btn-primary" type="button" data-operator-handoff="${esc(item.id)}">Download browser-executor handoff — does not claim or submit</button>` : ''}${item.status !== 'submitted' && item.status !== 'rejected' ? `<button class="btn btn-sm" type="button" data-manual-attest="${esc(item.id)}">Record a manual submission</button>` : ''}</div><div data-operator-action="${esc(item.id)}"></div></div>`).join('')}</div>` : `<form id="executionApprove" class="decision" style="margin:0 -18px -18px"><h4>Approve to send</h4><label class="check"><input name="confirm_exact_package" type="checkbox" required> <span>I approve this exact package revision, destination, listing check and document manifest.</span></label><div class="decision-grid"><label class="field"><span>Confirm with your password</span><input name="confirmation_password" type="password" autocomplete="current-password" required></label><div></div></div><div class="form-actions"><button class="btn btn-primary">Approve and queue — does not submit</button></div></form>`}
+          ${items.length ? `<div>${items.map(item => `<div class="queue-item"><div class="panel-title">${statusPair(item.status === 'submitted' ? 'submitted' : ATTENTION.includes(item.status) ? 'attention' : item.status === 'rejected' ? 'closed' : 'approved', item.status_label)}<span class="faint" style="font-size:12.5px">Step ${esc(item.progress_step)} of ${esc(item.progress_total)} · updated ${esc(fmtDate(item.updated_at))}</span></div><p>${esc(item.next_action)}</p>${item.blocker_detail ? `<div class="callout bad">${esc(item.blocker_detail)}</div>` : ''}<div class="mono">Queue ${esc(item.id)} · receipt recorded: ${item.receipt_recorded?'yes':'no'}</div><div class="form-actions">${['approved','login_required','user_input_required'].includes(item.status) ? `<button class="btn btn-sm btn-primary" type="button" data-operator-handoff="${esc(item.id)}">Download browser-executor handoff — does not claim or submit</button>` : ''}${item.status !== 'submitted' && item.status !== 'rejected' ? `<button class="btn btn-sm" type="button" data-manual-attest="${esc(item.id)}">Record a manual submission</button>` : ''}</div><div data-operator-action="${esc(item.id)}"></div></div>`).join('')}</div>` : `<form id="executionApprove" class="decision" style="margin:0 -18px -18px"><h4>Approve to send</h4><label class="check"><input name="confirm_exact_package" type="checkbox" required> <span>I approve this exact package revision, destination, listing check and document manifest.</span></label><div class="decision-grid"><label class="field"><span>Confirm with your password</span><input name="confirmation_password" type="password" autocomplete="current-password" required></label><div></div></div><div class="form-actions"><button class="btn btn-primary">Approve and queue — does not submit</button></div></form>`}
           <div id="executionAction"></div><p id="executionNotice" class="notice" role="status"></p>`;
         panel.dataset.job = jobId; panel.dataset.destination = destination.id; panel.dataset.preview = JSON.stringify(exact);
       } catch (error) { if (state.selected === jobId && el('executionPanel')) panel.innerHTML = `<div class="panel-title"><div><div class="eyebrow">Submission</div><h3>Not ready to send</h3></div>${statusPair('none', 'Blocked')}</div>${ledger('draft')}<div class="callout plain">Submission controls are unavailable: ${esc(humanize(error.message))}</div>`; }
@@ -862,7 +875,7 @@
 
     function setView(view) {
       document.body.dataset.view = view;
-      el('jobsView').hidden = view !== 'jobs'; el('queueView').hidden = view !== 'queue';
+      el('jobsView').hidden = view !== 'jobs'; el('queueView').hidden = view !== 'queue'; el('executionView').hidden = view !== 'execution';
       document.querySelectorAll('.viewnav [data-view]').forEach(b => b.setAttribute('aria-current', b.dataset.view === view ? 'page' : 'false'));
     }
 
@@ -988,6 +1001,7 @@
       catch (error) { if (error.message !== 'auth') { el('queueNotice').textContent = `Retry not queued: ${error.message}`; el('queueNotice').dataset.tone = 'bad'; } }
     });
     el('refreshQueue').onclick = () => loadQueue().catch(error => { if (error.message !== 'auth') el('queueNotice').textContent = error.message; });
+    el('refreshExecution').onclick = () => loadExecutionSummary().catch(error => { if (error.message !== 'auth') el('executionSummary').innerHTML=`<div class="callout bad">Execution progress unavailable: ${esc(error.message)}</div>`; });
     el('queueStatus').onchange = el('refreshQueue').onclick;
     addEventListener('pagehide',()=>state.executorLeases.clear());
     el('runResearch').onclick = async () => {
@@ -1012,11 +1026,11 @@
       event.preventDefault(); const form = event.target;
       const response = await fetch('/api/login', {method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify({password:new FormData(form).get('password')})});
       if (!response.ok) { el('loginError').textContent = 'Sign-in failed.'; return; }
-      el('loginDialog').close(); form.reset(); el('loginError').textContent = ''; await Promise.all([loadJobs(), loadQueue()]);
+      el('loginDialog').close(); form.reset(); el('loginError').textContent = ''; await Promise.all([loadJobs(), loadQueue(), loadExecutionSummary()]);
     };
 
     addEventListener('popstate',()=>{const id=new URL(location.href).searchParams.get('job');if(state.generationLock&&id!==state.generationLock.jobId){const url=new URL(location.href);url.searchParams.set('job',state.generationLock.jobId);history.replaceState({job:state.generationLock.jobId},'',url);selectJob(state.generationLock.jobId,{historyMode:'none'});return}if(id&&id!==state.selected)selectJob(id,{historyMode:'none'})});
-    Promise.all([loadJobs(), loadQueue()]).then(()=>{const id=new URL(location.href).searchParams.get('job');if(id&&state.jobs.some(job=>job.id===id))selectJob(id,{historyMode:'replace'})}).catch(error => { if (error.message !== 'auth') setConnection('API unavailable', 'bad'); });
+    Promise.all([loadJobs(), loadQueue(), loadExecutionSummary()]).then(()=>{const id=new URL(location.href).searchParams.get('job');if(id&&state.jobs.some(job=>job.id===id))selectJob(id,{historyMode:'replace'})}).catch(error => { if (error.message !== 'auth') setConnection('API unavailable', 'bad'); });
   </script>
 </body>
 </html>

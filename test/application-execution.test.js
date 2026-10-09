@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {readFile} from "node:fs/promises";
-import {artifactManifestHash,canonicalManifestRows,EXECUTION_STATUSES,validateSubmittedAt} from "../application-execution/application-execution.js";
+import {artifactManifestHash,canonicalManifestRows,EXECUTION_STATUSES,executionProgress,validateSubmittedAt} from "../application-execution/application-execution.js";
 
 const rows=[
   {artifact_id:"b",artifact_type:"cover_letter",drive_file_id:"drive-b",content_hash:"b".repeat(64),byte_size:20,drive_modified_time:"2026-10-08T10:00:00.000Z"},
@@ -17,6 +17,13 @@ test("manifest hash is deterministic, ordered, and binds verification metadata",
 test("execution states include explicit stops, uncertainty, and submitted",()=>{
   for(const value of ["login_required","user_input_required","submission_uncertain","rejected","submitted"])assert.ok(EXECUTION_STATUSES.includes(value));
   assert.ok(!EXECUTION_STATUSES.includes("applied"));
+});
+
+test("execution progress never confuses queued or blocked work with submission",()=>{
+  assert.equal(executionProgress("approved").step,1);
+  assert.match(executionProgress("approved").next_action,/no browser action or submission/);
+  assert.match(executionProgress("submission_uncertain").next_action,/Do not submit again/);
+  assert.equal(executionProgress("submitted").terminal,true);
 });
 
 test("manifest rejects caller-like incomplete artifact data",async()=>{

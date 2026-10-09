@@ -75,6 +75,11 @@ test("workspace exports a durable browser-executor handoff without claiming or o
   assert.doesNotThrow(()=>new Function(script));
 });
 
+test("workspace shows global receipt-aware execution progress",async()=>{
+  const page=await(await worker.fetch(new Request("https://app.test/"),{})).text();
+  for(const marker of ['id="executionSummary"','id="refreshExecution"','progress_step','Receipt recorded:','loadExecutionSummary()'])assert.ok(page.includes(marker),marker);
+});
+
 test("non-HTTP links never enter intake evidence",()=>{
   assert.equal(classifyLink("javascript:alert(1)","Role").kind,"ignore");
   assert.equal(classifyLink("data:text/html,role","Role").kind,"ignore");
