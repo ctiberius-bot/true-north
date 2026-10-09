@@ -909,6 +909,11 @@ export default {
           reauthenticate:async password=>{
             if(!env.DASHBOARD_PASSWORD||password!==env.DASHBOARD_PASSWORD)throw new Error("human_reauthentication_required");
             return{actor:"chris",reauthenticated:true};
+          },
+          verifyTrustedDevice:async deviceId=>{
+            if(!env.EXECUTOR_DEVICE_VERIFIER?.fetch)return undefined;
+            const response=await env.EXECUTOR_DEVICE_VERIFIER.fetch(new Request("https://executor-device-verifier/verify",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({device_id:deviceId})}));
+            if(!response.ok)return undefined;const value=await response.json();return value?.verified===true&&value?.device_id===deviceId?{verified:true,device_id:deviceId}:undefined;
           }
         });
         if(executionResponse)return executionResponse;

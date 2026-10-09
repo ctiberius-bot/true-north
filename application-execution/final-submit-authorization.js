@@ -1,3 +1,6 @@
+// Client-side canonicalization only. This never grants submit authority. The
+// authoritative lifecycle is the hash-at-rest D1 capability issued/consumed by
+// createApplicationExecutionService and migration 0010.
 const HEX_64=/^[a-f0-9]{64}$/;
 
 function required(value,name,max=500){

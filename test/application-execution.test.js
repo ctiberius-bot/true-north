@@ -52,6 +52,14 @@ test("authenticated execution router exposes destination registration separately
   assert.equal(ignored,null);
 });
 
+test("final-submit routes require reauthentication, verified device, and delegate issuance then atomic consumption",async()=>{
+  const calls=[],service={issueFinalSubmitCapability:async(...args)=>{calls.push(["issue",...args]);return{authorization_id:"cap"}},consumeFinalSubmitCapability:async(...args)=>{calls.push(["consume",...args]);return{authorization_id:"cap",consumed_at:"now"}}},reauthenticate=async password=>password==="correct"?{actor:"chris",reauthenticated:true}:null,verifyTrustedDevice=async deviceId=>({device_id:deviceId,verified:true});
+  const issued=await routeApplicationExecution(new Request("https://truenorth.justsignal.company/api/applications/queue-1/final-submit-authorizations",{method:"POST",headers:{"content-type":"application/json","origin":"https://truenorth.justsignal.company"},body:JSON.stringify({device_id:"mac-1",form_state_hash:"a".repeat(64),confirmation_password:"correct"})}),{service,reauthenticate,verifyTrustedDevice});
+  assert.equal((await issued.json()).authorization_id,"cap");assert.equal(calls[0][0],"issue");assert.deepEqual(calls[0][2],{device_id:"mac-1",form_state_hash:"a".repeat(64)});assert.deepEqual(calls[0][4],{device_id:"mac-1",verified:true});
+  const consumed=await routeApplicationExecution(new Request("https://truenorth.justsignal.company/api/applications/queue-1/consume-final-submit",{method:"POST",headers:{"content-type":"application/json","origin":"https://truenorth.justsignal.company"},body:JSON.stringify({authorization_id:"cap",capability_token:"secret",device_id:"mac-1",destination_url:"https://employer.example/apply",form_state_hash:"a".repeat(64)})}),{service,reauthenticate,verifyTrustedDevice});
+  assert.equal((await consumed.json()).consumed_at,"now");assert.equal(calls[1][0],"consume");assert.deepEqual(calls[1][3],{device_id:"mac-1",verified:true});
+});
+
 test("claim, receipt, revocation, and migration SQL retain fail-closed guards",async()=>{
   const [source,sql]=await Promise.all([readFile(new URL("../application-execution/application-execution.js",import.meta.url),"utf8"),readFile(new URL("../migrations/0003-application-execution.sql",import.meta.url),"utf8")]);
   assert.match(source,/c\.availability='open'.*c\.capture_source='public_server_fetch'.*'-15 minutes'.*application_execution_artifacts/s);

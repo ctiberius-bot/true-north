@@ -1,0 +1,10 @@
+{
+  "manifest_version": 3,
+  "name": "True North Approved Application Executor",
+  "version": "0.1.0",
+  "description": "Executes only an exact, server-consumed True North final-submit capability.",
+  "permissions": ["nativeMessaging", "scripting", "activeTab"],
+  "host_permissions": ["https://truenorth.justsignal.company/*"],
+  "background": {"service_worker": "service-worker.js", "type": "module"},
+  "action": {"default_title": "True North executor (not paired)"}
+}
