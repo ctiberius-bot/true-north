@@ -7,6 +7,7 @@
   "host_permissions": ["https://truenorth.justsignal.company/*"],
   "optional_host_permissions": ["https://*/*"],
   "background": {"service_worker": "service-worker.js", "type": "module"},
+  "content_scripts": [{"matches": ["https://truenorth.justsignal.company/*"], "js": ["dashboard-bridge.js"], "run_at": "document_start"}],
   "externally_connectable": {"matches": ["https://truenorth.justsignal.company/*"]},
   "action": {"default_title": "True North executor (not paired)"}
 }

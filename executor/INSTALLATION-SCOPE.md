@@ -28,6 +28,8 @@ This is a proposal only. It does not grant or perform any listed action.
 4. Create/start a LaunchAgent, only if background polling is desired.
 5. Use the executor on a real employer application.
 
+The source includes `executor/install/macos-installer.js`, which builds an inspectable per-user operation plan and can execute it only through explicitly supplied filesystem/compiler adapters. It is not an auto-installer, was not run, creates no LaunchAgent, and does not bypass Chrome Developer Mode, Gatekeeper, Keychain, pairing, or permission prompts.
+
 ## Drive artifact verification access
 
 The repository includes a reviewable but undeployed private Drive connector. The interactive ChatGPT Drive connection cannot be reused by the Worker. Its token-provider contract requires the verified account `ctiberius@gmail.com` and exactly Google OAuth `drive.file`, and its runtime independently enforces one configured approved folder. That scope is not read-only: it permits creating and editing files True North creates or files Chris explicitly selects for True North. The connector implements only Drive v3 multipart creation, exact-file metadata read, and exact-file byte download. It has no list, search, update, delete, or share route. True North creates a new artifact file, downloads that exact file for byte-for-byte hash verification, records its immutable receipt, and performs no later edit. Deploying the connector, selecting the exact folder, configuring the private token-provider binding, and granting OAuth consent remain separate user actions.

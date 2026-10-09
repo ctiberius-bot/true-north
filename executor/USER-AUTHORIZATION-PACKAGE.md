@@ -26,13 +26,9 @@ This cannot use `activeTab`, because Chrome requires a local gesture. It would r
 
 No automatic-phone-mode approval should be requested until background polling and exact-origin grant revocation are implemented and reviewed.
 
-## C. Keychain and device pairing — not yet ready for approval
+## C. Keychain and device pairing — implemented, not activated
 
-Implemented today: lookup and ECDSA signing with a P-256 private key identified by application tag `company.justsignal.truenorth.executor`. The signer does not export the private key.
-
-Still missing: reviewed create, public-key export, pairing-confirmation, rotation, and revoke commands. Therefore no Keychain creation or pairing approval should be requested yet.
-
-The eventual bounded approval would create one non-exportable P-256 key in the current user's login Keychain, upload only its public SPKI value and device label to `executor_devices`, and allow deletion/revocation of that exact key/device record. It would not read browser, Google, employer, or dashboard credentials.
+The reviewed helper now implements create, public-key export, ECDSA signing, and exact-key revoke for a non-exportable P-256 key tagged `company.justsignal.truenorth.executor`. Pairing requires password reauthentication and an exact SHA-256 public-key fingerprint confirmation; only the public SPKI value, label, and fingerprint enter `executor_devices`. Revocation is separately password reauthenticated. No command has been run against the real Keychain and no device has been paired.
 
 ## D. Server changes
 
@@ -75,4 +71,4 @@ Approval must name the destination folder and authorize creation/readback there.
 
 ## Current recommendation
 
-Do not request installation approval yet. Independent review is pending, and Keychain lifecycle, pairing, background revocation, and the concrete Drive connector remain incomplete. The next safe approval, after those pieces pass review, should choose either local-gesture mode only or local plus the separately bounded phone-automatic mode.
+Do not install, pair, grant Chrome/Google access, or deploy from this document alone. The source now includes reviewable Keychain lifecycle, pairing/revocation, exact-origin grant removal, a per-user installer plan, post-click confirmation observation, a consumed-attempt reconciliation route, and the concrete Drive connector. Independent review is still required. After review, the next user decision should choose local-gesture mode only or local plus the separately bounded phone-automatic mode; Drive consent, its fixed folder, and all deployments remain separate explicit approvals.
