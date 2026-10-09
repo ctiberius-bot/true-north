@@ -6,6 +6,9 @@ workers_dev = false
 [observability]
 enabled = false
 
+[vars]
+OAUTH_CLIENT_ID = "24123296199-9kcpjn9k2nkmikptdvmrguhdlgi7s8d0.apps.googleusercontent.com"
+
 [[durable_objects.bindings]]
 name = "OAUTH_COORDINATOR"
 class_name = "OAuthCoordinator"
