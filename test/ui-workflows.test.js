@@ -66,6 +66,20 @@ test("dashboard offers a manual bounded five-email intake test with in-flight pr
   assert.doesNotMatch(page,/runIntakeTest\.click\(/);
 });
 
+test("workspace exports a durable browser-executor handoff without claiming or opening the employer site",async()=>{
+  const page=await(await worker.fetch(new Request("https://app.test/"),{})).text();
+  for(const marker of ["data-operator-handoff","true_north_browser_execution_handoff","claim_required_before_browser_actions:true","final_submit_requires_user_approval:true","receipt_required_before_applied:true","Handoff downloaded — still not claimed or submitted."])assert.ok(page.includes(marker),marker);
+  assert.doesNotMatch(page,/data-operator-claim/);
+  assert.doesNotMatch(page,/window\.open\(claimed\.destination_url/);
+  const script=page.match(/<script>([\s\S]*)<\/script>/)?.[1];
+  assert.doesNotThrow(()=>new Function(script));
+});
+
+test("workspace shows global receipt-aware execution progress",async()=>{
+  const page=await(await worker.fetch(new Request("https://app.test/"),{})).text();
+  for(const marker of ['id="executionSummary"','id="refreshExecution"','progress_step','Receipt recorded:','loadExecutionSummary()'])assert.ok(page.includes(marker),marker);
+});
+
 test("non-HTTP links never enter intake evidence",()=>{
   assert.equal(classifyLink("javascript:alert(1)","Role").kind,"ignore");
   assert.equal(classifyLink("data:text/html,role","Role").kind,"ignore");

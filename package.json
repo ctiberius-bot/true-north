@@ -1,2 +1,2 @@
-{"name":"true-north-citadel","private":true,"type":"module","scripts":{"test":"node --test test/*.test.js","test:sqlite":"python test/sqlite_integration.py"}}
+{"name":"true-north-citadel","private":true,"type":"module","scripts":{"test":"node --test test/*.test.js","test:sqlite":"python3 test/sqlite_integration.py && python3 test/application-execution-sqlite.py && python3 test/migration-0007-sqlite.py && python3 test/migration-0009-sqlite.py && python3 test/operator-receipt-migration-sqlite.py"}}
 

@@ -1,0 +1,13 @@
+ALTER TABLE application_document_revisions ADD COLUMN protocol_version TEXT NOT NULL DEFAULT '2026-10-04';
+ALTER TABLE application_document_revisions ADD COLUMN download_mime_type TEXT NOT NULL DEFAULT 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+ALTER TABLE application_document_revisions ADD COLUMN source_content_hash TEXT NOT NULL DEFAULT '';
+ALTER TABLE application_document_revisions ADD COLUMN evidence_status TEXT NOT NULL DEFAULT 'model_validated';
+ALTER TABLE selected_jobs ADD COLUMN listing_version_id TEXT REFERENCES listing_versions(id);
+ALTER TABLE application_artifacts ADD COLUMN source_document_revision_id TEXT REFERENCES application_document_revisions(id);
+DELETE FROM application_document_approvals;
+DELETE FROM selected_jobs;
+UPDATE application_document_revisions SET evidence_status='requires_human_revalidation';
+ALTER TABLE ai_requests ADD COLUMN package_authorization_id TEXT;
+CREATE TABLE ai_package_authorizations (id TEXT PRIMARY KEY, canonical_job_id TEXT NOT NULL UNIQUE REFERENCES canonical_jobs(id), listing_version_id TEXT NOT NULL REFERENCES listing_versions(id), arsenal_version TEXT NOT NULL REFERENCES arsenal_versions(version), authorized_microusd INTEGER NOT NULL CHECK(authorized_microusd=29000), reserved_microusd INTEGER NOT NULL DEFAULT 0 CHECK(reserved_microusd>=0), spent_microusd INTEGER NOT NULL DEFAULT 0 CHECK(spent_microusd>=0), authorized_at TEXT NOT NULL, CHECK(reserved_microusd+spent_microusd<=authorized_microusd));
+CREATE TRIGGER reserve_ai_package_budget AFTER INSERT ON ai_requests WHEN NEW.purpose IN('tailored_resume','cover_letter') BEGIN UPDATE ai_package_authorizations SET reserved_microusd=reserved_microusd+NEW.reserved_microusd WHERE id=NEW.package_authorization_id AND canonical_job_id=NEW.canonical_job_id AND spent_microusd+reserved_microusd+NEW.reserved_microusd<=authorized_microusd; SELECT CASE WHEN changes()!=1 THEN RAISE(ABORT,'ai_package_authorization_required') END; END;
+CREATE TRIGGER settle_ai_package_budget AFTER UPDATE OF status ON ai_requests WHEN OLD.status='reserved' AND NEW.status<>'reserved' AND OLD.purpose IN('tailored_resume','cover_letter') BEGIN UPDATE ai_package_authorizations SET reserved_microusd=reserved_microusd-OLD.reserved_microusd,spent_microusd=spent_microusd+NEW.charged_microusd WHERE id=OLD.package_authorization_id AND reserved_microusd>=OLD.reserved_microusd AND spent_microusd+reserved_microusd<=authorized_microusd; SELECT CASE WHEN changes()!=1 THEN RAISE(ABORT,'ai_package_budget_settlement_invariant') END; END;
