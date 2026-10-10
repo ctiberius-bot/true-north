@@ -2,7 +2,7 @@ import {workspaceHtml,polarisLockup,polarisMark} from "./workspace-ui.js";
 import {createApplicationExecutionService,routeApplicationExecution} from "./application-execution/application-execution.js";
 // True North Citadel — private career-operation intake and research queue.
 // Drive is the master. Build-only slice; cleanup is preview-only by design.
-export const VERSION = "2.3.40-2026-10-09";
+export const VERSION = "2.3.41-2026-10-10";
 export const PARSER_VERSION = "email-links-v3";
 export const EXPECTED_MAILBOX = "ctiberius@gmail.com";
 export const SOURCES = ["linkedin", "ladders", "intch", "upwork", "jobright", "indeed", "backstage", "talentnet", "flexjobs", "velvetjobs", "talent", "beyond", "myopportunity"];

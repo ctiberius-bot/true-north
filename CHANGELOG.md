@@ -1,5 +1,11 @@
 # Change log
 
+## 2026-10-10 — v2.3.41 fresh-intake sweep integrity
+
+- Restarted each bounded Gmail intake sweep from the head of a frozen time window, deduplicating already completed messages so newly inserted alerts cannot be skipped by a stale mutable page token.
+- Unified fresh intake and historical catch-up on the exact 14-sender audited inventory, including Backstage and the other audited alert families.
+- Added regression coverage for head insertion, legacy cursors, frozen query bounds, deduplication, and sender parity. Gmail remains read-only.
+
 ## 2026-10-09 — v2.3.40 legible Polaris lockup
 
 - Integrated Claude's approved logo-only handoff on the exact v2.3.39 production base.
