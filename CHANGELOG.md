@@ -1,5 +1,10 @@
 # Change log
 
+## 2026-10-10 — v2.3.44 verified destination candidate
+
+- Extracted explicit HTTPS Apply links from trusted listing content as listing-version evidence.
+- Added a user-assisted verification action that follows a bounded redirect chain only within the explicit host family or known ATS hosts, registers a destination only after a successful server read, and reports login-only pages honestly without weakening approval gates.
+
 ## 2026-10-10 — v2.3.43 guarded final-flow candidate
 
 - Integrated the reviewed executor contract and archived-alert intake coverage onto the deployed Claude UI lineage without activating or installing the executor.
