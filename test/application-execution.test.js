@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {readFile} from "node:fs/promises";
-import {artifactManifestHash,canonicalManifestRows,EXECUTION_STATUSES,executionProgress,validateSubmittedAt} from "../application-execution/application-execution.js";
+import {artifactManifestHash,canonicalManifestRows,EXECUTION_STATUSES,executionProgress,routeApplicationExecution,validateSubmittedAt} from "../application-execution/application-execution.js";
 
 const rows=[
   {artifact_id:"b",artifact_type:"cover_letter",drive_file_id:"drive-b",content_hash:"b".repeat(64),byte_size:20,drive_modified_time:"2026-10-08T10:00:00.000Z"},
@@ -36,6 +36,53 @@ test("manual submission timestamp must be real, nonfuture, and after approval",(
   for(const value of ["not-a-date","2026-10-08T10:59:59Z","2026-10-08T12:01:01Z"])assert.throws(()=>validateSubmittedAt(value,now,approved),/invalid_submitted_at/);
 });
 
+test("authenticated execution router exposes destination registration separately from approval",async()=>{
+  const calls=[],service={
+    registerDestination:async(jobId,input)=>{calls.push({jobId,input});return{id:"destination-1",job_id:jobId,...input}},
+    listDestinations:async jobId=>[{id:"destination-1",job_id:jobId}]
+  };
+  const input={listing_version_id:"lv-1",listing_check_id:"check-1",destination_url:"https://jobs.example/apply",verification_source:"public_server_fetch",verified_at:"2026-10-09T18:00:00.000Z"};
+  const created=await routeApplicationExecution(new Request("https://truenorth.justsignal.company/api/applications/job%2F1/destinations",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(input)}),{service});
+  assert.equal(created.status,200);
+  assert.deepEqual(calls,[{jobId:"job/1",input}]);
+  assert.equal((await created.json()).id,"destination-1");
+  const listed=await routeApplicationExecution(new Request("https://truenorth.justsignal.company/api/applications/job%2F1/destinations"),{service});
+  assert.deepEqual(await listed.json(),[{id:"destination-1",job_id:"job/1"}]);
+  const ignored=await routeApplicationExecution(new Request("https://truenorth.justsignal.company/api/applications/job%2F1/destinations",{method:"DELETE"}),{service});
+  assert.equal(ignored,null);
+});
+
+test("final-submit routes require reauthentication, verified device, and delegate issuance then atomic consumption",async()=>{
+  const calls=[],service={issueFinalSubmitCapability:async(...args)=>{calls.push(["issue",...args]);return{authorization_id:"cap"}},consumeFinalSubmitCapability:async(...args)=>{calls.push(["consume",...args]);return{authorization_id:"cap",consumed_at:"now"}}},reauthenticate=async password=>password==="correct"?{actor:"chris",reauthenticated:true}:null,verifyTrustedDevice=async deviceId=>({device_id:deviceId,verified:true});
+  const issued=await routeApplicationExecution(new Request("https://truenorth.justsignal.company/api/applications/queue-1/final-submit-authorizations",{method:"POST",headers:{"content-type":"application/json","origin":"https://truenorth.justsignal.company"},body:JSON.stringify({device_id:"mac-1",form_state_hash:"a".repeat(64),confirmation_password:"correct"})}),{service,reauthenticate,verifyTrustedDevice});
+  assert.equal((await issued.json()).authorization_id,"cap");assert.equal(calls[0][0],"issue");assert.deepEqual(calls[0][2],{device_id:"mac-1",form_state_hash:"a".repeat(64)});assert.deepEqual(calls[0][4],{device_id:"mac-1",verified:true});
+  const consumed=await routeApplicationExecution(new Request("https://truenorth.justsignal.company/api/applications/queue-1/consume-final-submit",{method:"POST",headers:{"content-type":"application/json","origin":"https://truenorth.justsignal.company"},body:JSON.stringify({authorization_id:"cap",capability_token:"secret",device_id:"mac-1",destination_url:"https://employer.example/apply",form_state_hash:"a".repeat(64)})}),{service,reauthenticate,verifyTrustedDevice});
+  assert.equal((await consumed.json()).consumed_at,"now");assert.equal(calls[1][0],"consume");assert.deepEqual(calls[1][3],{device_id:"mac-1",verified:true});
+});
+
+test("signed executor transport origin is not confused with the stored dashboard approval origin",async()=>{
+  const calls=[],service={
+    claim:async(...args)=>(calls.push(["claim",...args]),{lease_token:"lease"}),
+    consumeFinalSubmitCapability:async(...args)=>(calls.push(["consume",...args]),{consumed_at:"now"}),
+    recordUncertain:async(...args)=>(calls.push(["uncertain",...args]),{status:"submission_uncertain"}),
+    recordTrustedEmployerReceipt:async(...args)=>(calls.push(["receipt",...args]),{status:"submitted"})
+  },verifyTrustedDevice=async deviceId=>({device_id:deviceId,verified:true}),trustedEmployerReceipt=async()=>({source:"trusted_browser_observation",device_id:"mac-1",verified:true}),headers={"content-type":"application/json","origin":"chrome-extension://abcdefghijklmnop","x-application-lease":"lease"};
+  const cases=[
+    ["claim",{device_id:"mac-1",lease_seconds:900}],
+    ["consume-final-submit",{authorization_id:"cap",capability_token:"secret",device_id:"mac-1",destination_url:"https://employer.example/apply",form_state_hash:"a".repeat(64)}],
+    ["uncertain",{device_id:"mac-1",detail:"outcome unknown"}],
+    ["receipt",{authorization_id:"cap",device_id:"mac-1",confirmation_url:"https://employer.example/confirmation",employer_confirmation_ref:null,submitted_at:"2026-10-09T18:00:00Z",detail_hash:"b".repeat(64)}]
+  ];
+  for(const [action,input] of cases){const response=await routeApplicationExecution(new Request(`https://truenorth.justsignal.company/api/applications/queue-1/${action}`,{method:"POST",headers,body:JSON.stringify(input)}),{service,verifyTrustedDevice,trustedEmployerReceipt});assert.equal(response.status,200)}
+  for(const call of calls)assert.equal(call.at(-1),"https://truenorth.justsignal.company");
+});
+
+test("dashboard issuance verifies only the password-free signed intent",async()=>{
+  let verified,issued;const service={issueFinalSubmitCapability:async(...args)=>(issued=args,{authorization_id:"cap"})},reauthenticate=async password=>({actor:"chris",reauthenticated:password==="correct"}),verifyTrustedDevice=async(deviceId,body)=>{verified={deviceId,body};return{device_id:deviceId,verified:true}};
+  const response=await routeApplicationExecution(new Request("https://truenorth.justsignal.company/api/applications/queue-1/final-submit-authorizations",{method:"POST",headers:{"content-type":"application/json","origin":"https://truenorth.justsignal.company"},body:JSON.stringify({device_id:"mac-1",form_state_hash:"a".repeat(64),confirmation_password:"correct"})}),{service,reauthenticate,verifyTrustedDevice});
+  assert.equal(response.status,200);assert.deepEqual(verified,{deviceId:"mac-1",body:{device_id:"mac-1",form_state_hash:"a".repeat(64)}});assert.equal(issued[1].confirmation_password,undefined);
+});
+
 test("claim, receipt, revocation, and migration SQL retain fail-closed guards",async()=>{
   const [source,sql]=await Promise.all([readFile(new URL("../application-execution/application-execution.js",import.meta.url),"utf8"),readFile(new URL("../migrations/0003-application-execution.sql",import.meta.url),"utf8")]);
   assert.match(source,/c\.availability='open'.*c\.capture_source='public_server_fetch'.*'-15 minutes'.*application_execution_artifacts/s);
@@ -44,3 +91,5 @@ test("claim, receipt, revocation, and migration SQL retain fail-closed guards",a
   for(const guard of ["revoke_execution_on_artifact_change","revoke_execution_on_artifact_delete","revoke_execution_on_verification_change","revoke_execution_on_verification_delete","revoke_execution_on_listing_check_change","immutable_execution_destination_update"])assert.match(sql,new RegExp(guard));
   assert.match(sql,/BEGIN IMMEDIATE;[\s\S]*ON CONFLICT ROLLBACK[\s\S]*COMMIT;/);
 });
+
+test("route exposes password-reauthenticated consumed-attempt reconciliation",async()=>{let seen;const service={reconcilePendingSubmitAttempt:async(...args)=>(seen=args,{status:"submission_uncertain"})},reauthenticate=async password=>({actor:"chris",reauthenticated:password==="correct"}),request=new Request("https://truenorth.justsignal.company/api/applications/queue-1/reconcile-submit-attempt",{method:"POST",headers:{"content-type":"application/json","origin":"https://truenorth.justsignal.company"},body:JSON.stringify({authorization_id:"cap-1",outcome:"still_uncertain",attestation:"I could not verify whether this consumed attempt submitted",submitted_at:null,employer_confirmation_ref:null,confirmation_password:"correct"})}),response=await routeApplicationExecution(request,{service,reauthenticate});assert.equal(response.status,200);assert.equal((await response.json()).status,"submission_uncertain");assert.equal(seen[0],"queue-1");assert.equal(seen[1].confirmation_password,undefined);assert.deepEqual(seen[2],{actor:"chris",reauthenticated:true})});

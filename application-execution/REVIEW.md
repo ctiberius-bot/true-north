@@ -22,7 +22,7 @@ Only step 4 creates a receipt and moves the bound pipeline item to `applied`. Qu
 ## Integration cautions
 
 - The current generic pipeline endpoint must reject caller-requested `stage: applied`; this patch owns that transition through a receipt batch only.
-- Keep `registerDestination()` behind reviewed internal listing-verification/admin code. Do not expose it as an approval-time endpoint.
+- Keep destination registration separate from approval. Its authenticated route must continue delegating to `registerDestination()` so exact listing-check, host, source, and timestamp validation cannot be bypassed.
 - D1 `batch()` atomicity is relied on for approval+snapshot+queue and receipt+submitted+pipeline writes.
 - Do not log `X-Application-Lease` or return it after the initial claim response.
 - `expected_package_revision` and all other expected-version fields are required in the approval request and compared with server-derived values.
