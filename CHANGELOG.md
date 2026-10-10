@@ -1,5 +1,10 @@
 # Change log
 
+## 2026-10-10 — v2.3.42 archived-alert intake coverage
+
+- Removed the `in:inbox` restriction from bounded fresh intake so verified alerts archived by Gmail rules remain eligible inside the frozen 24-hour sweep.
+- Preserved Gmail read-only access, exact audited sender coverage, sweep deduplication, and bounded five-message processing.
+
 ## 2026-10-10 — v2.3.41 fresh-intake sweep integrity
 
 - Restarted each bounded Gmail intake sweep from the head of a frozen time window, deduplicating already completed messages so newly inserted alerts cannot be skipped by a stale mutable page token.
