@@ -1,5 +1,10 @@
 # Change log
 
+## 2026-10-10 — v2.3.43 archived-alert full catch-up
+
+- Expanded the no-date-cutoff 14-sender catch-up from Inbox-only to all mail except Spam and Trash, so archived alerts remain discoverable.
+- Started a new durable v5 cursor scope because the earlier v4 Inbox-only scope was already exhausted; completed messages remain idempotently deduplicated.
+
 ## 2026-10-10 — v2.3.42 archived-alert intake coverage
 
 - Removed the `in:inbox` restriction from bounded fresh intake so verified alerts archived by Gmail rules remain eligible inside the frozen 24-hour sweep.
