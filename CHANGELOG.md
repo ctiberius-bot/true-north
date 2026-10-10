@@ -1,5 +1,11 @@
 # Change log
 
+## 2026-10-10 — v2.3.43 guarded final-flow candidate
+
+- Integrated the reviewed executor contract and archived-alert intake coverage onto the deployed Claude UI lineage without activating or installing the executor.
+- Added per-artifact verified Drive materialization from the package UI and server-advertised Writer, Critic, and password-reauthenticated Chris review transitions.
+- Kept application execution blocked when no distinct server-verified employer apply destination exists; a listing page is never relabeled as an application destination.
+
 ## 2026-10-10 — v2.3.41 fresh-intake sweep integrity
 
 - Restarted each bounded Gmail intake sweep from the head of a frozen time window, deduplicating already completed messages so newly inserted alerts cannot be skipped by a stale mutable page token.
