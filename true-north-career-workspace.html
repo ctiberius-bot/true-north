@@ -804,7 +804,9 @@
       return packages.map((pkg, index) => {
         const ownArtifacts = artifacts.filter(a => a.package_id === pkg.id);
         const ownReviews = reviews.filter(r => r.package_id === pkg.id);
-        const canApprove = pkg.status === 'chris_review';
+        const reviewCapability = pkg.review_capability || null;
+        const canAdvance = !!reviewCapability;
+        const requiresPassword = reviewCapability?.requires_password_reauthentication === true;
         const pState = PACKAGE_STATE[pkg.status] || 'draft';
         return `<article class="package" data-package-card="${esc(pkg.id)}">
           <div class="package-head"><div><div class="eyebrow">${index === 0 ? 'Current package' : 'Earlier package'} · revision ${esc(pkg.revision ?? '–')}</div><h3>${statusPair(pState, PACKAGE_LABEL[pkg.status] || humanize(pkg.status))}</h3></div>
@@ -814,7 +816,7 @@
               const verified = verifications.some(v => v.artifact_id === a.id && v.drive_file_id === a.drive_file_id && String(v.content_hash).toLowerCase() === String(a.content_hash).toLowerCase());
               return `<div class="doc" data-doc="${esc(a.id)}"><div class="doc-top"><span class="doc-icon" aria-hidden="true"></span><div style="min-width:0"><div class="doc-name">${esc(ARTIFACT_LABEL[a.artifact_type] || humanize(a.artifact_type))}</div><div class="doc-meta ${verified ? 'tone-good' : 'tone-warn'}">${verified ? 'Drive copy verified' : 'Drive copy not yet verified'}</div></div></div>
                 <div class="doc-meta mono" title="${esc(a.content_hash)}">${esc(String(a.content_hash || '').slice(0, 16))}${a.content_hash ? '…' : 'no hash'}</div>
-                <div class="doc-actions"><button type="button" class="btn btn-sm" data-preview="${esc(a.id)}" data-drive="${esc(a.drive_file_id || '')}" data-label="${esc(ARTIFACT_LABEL[a.artifact_type] || humanize(a.artifact_type))}">Preview</button>${a.drive_file_id ? `<a class="btn btn-sm btn-quiet" href="https://drive.google.com/file/d/${encodeURIComponent(a.drive_file_id)}/view" target="_blank" rel="noreferrer">Open in Drive <span class="ext">↗</span></a>` : '<span class="faint" style="font-size:12.5px;align-self:center">No Drive file</span>'}</div>
+                <div class="doc-actions"><button type="button" class="btn btn-sm" data-preview="${esc(a.id)}" data-drive="${esc(a.drive_file_id || '')}" data-label="${esc(ARTIFACT_LABEL[a.artifact_type] || humanize(a.artifact_type))}">Preview</button>${a.drive_file_id ? `<a class="btn btn-sm btn-quiet" href="https://drive.google.com/file/d/${encodeURIComponent(a.drive_file_id)}/view" target="_blank" rel="noreferrer">Open in Drive <span class="ext">↗</span></a>` : `<button type="button" class="btn btn-sm btn-quiet" data-materialize-drive="${esc(a.id)}">Create verified Drive copy</button>`}</div>
                 ${(a.evidence_map || []).length ? `<details class="tech"><summary>${(a.evidence_map || []).length} cited claims</summary><dl class="kv">${(a.evidence_map || []).map(e => `<dt class="mono">${esc(e.claim_id)}</dt><dd>${esc(e.source_anchor)}</dd>`).join('')}</dl></details>` : ''}
               </div>`;
             }).join('')}</div>
@@ -823,12 +825,12 @@
           </div>
           <form class="decision review-form" data-package="${esc(pkg.id)}" data-revision="${esc(pkg.revision)}">
             <h4>Your decision</h4>
-            ${canApprove ? '' : `<p class="note">Approval opens when the package reaches your review. It is currently <em>${esc(PACKAGE_LABEL[pkg.status] || humanize(pkg.status))}</em>.</p>`}
+            ${canAdvance ? `<p class="note">Next required review: <em>${esc(humanize(reviewCapability.reviewer_role))}</em>. This advances only this exact package revision to ${esc(humanize(reviewCapability.next_status))}.</p>` : `<p class="note">No review transition is available while the package is <em>${esc(PACKAGE_LABEL[pkg.status] || humanize(pkg.status))}</em>.</p>`}
             <div class="decision-grid">
               <label class="field"><span>Review note</span><textarea name="notes" placeholder="Context for the audit trail"></textarea></label>
-              <label class="field"><span>Confirm with your password</span><input name="confirmation_password" type="password" autocomplete="current-password" required></label>
+              ${requiresPassword ? '<label class="field"><span>Confirm with your password</span><input name="confirmation_password" type="password" autocomplete="current-password" required></label>' : ''}
             </div>
-            <div class="decision-actions"><button class="btn btn-primary" name="decision" value="approve" ${canApprove ? '' : 'disabled'}>Approve package</button><button class="btn btn-danger" name="decision" value="reject">Reject package</button></div>
+            <div class="decision-actions"><button class="btn btn-primary" name="decision" value="approve" ${canAdvance ? '' : 'disabled'}>${requiresPassword ? 'Approve exact package' : `Complete ${esc(humanize(reviewCapability?.reviewer_role || 'review'))} review`}</button><button class="btn btn-danger" name="decision" value="reject" ${canAdvance ? '' : 'disabled'}>Reject package</button></div>
             <p class="notice" data-package-notice role="status"></p>
           </form>
         </article>`;
@@ -851,6 +853,24 @@
         const body = doc.format === 'html' ? `<div class="paper">${safeListingHtml(doc.content)}</div>` : `<div class="paper plain">${esc(doc.content)}</div>`;
         viewer.innerHTML = `${bar}<div class="viewer-body">${body}</div>${doc.hash_matches === false ? '<div class="callout bad">This preview does not match the approved file hash.</div>' : ''}`;
       } catch (error) { if (error.message !== 'auth') viewer.innerHTML = `${bar}<div class="viewer-empty">Preview unavailable: ${esc(error.message)}${drive}</div>`; }
+    }
+
+    async function materializeDriveArtifact(button) {
+      const folderId = prompt('Drive folder ID for this private application document:');
+      if (!folderId) return;
+      button.disabled = true;
+      const original = button.textContent;
+      button.textContent = 'Creating and verifying…';
+      try {
+        await post(`/api/artifacts/${encodeURIComponent(button.dataset.materializeDrive)}/materialize-drive`, {folder_id:folderId.trim()});
+        state.keepTab = 'package';
+        await selectJob(state.selected);
+      } catch (error) {
+        button.textContent = `Not created: ${error.message}`;
+        button.disabled = false;
+        return;
+      }
+      button.textContent = original;
     }
 
     function pipelineCard(jobId, pipeline, workflow) {
@@ -931,6 +951,8 @@
       if (tab) setTab(tab.dataset.tab);
       const preview = event.target.closest('[data-preview]');
       if (preview) showPreview(preview);
+      const materialize = event.target.closest('[data-materialize-drive]');
+      if (materialize) materializeDriveArtifact(materialize);
       const close = event.target.closest('[data-close-viewer]');
       if (close) { const v = close.closest('[data-viewer]'); v.hidden = true; v.closest('[data-package-card]').querySelectorAll('.doc').forEach(d => d.setAttribute('aria-current', 'false')); }
       const verify = event.target.closest('[data-public-verify]');
@@ -987,7 +1009,11 @@
         if (!submitter?.value) return;
         submitter.disabled = true;
         try {
-          const data = new FormData(form), result = await post('/api/packages/' + encodeURIComponent(form.dataset.package) + '/review', {reviewer_role:'chris', decision:submitter.value, expected_revision:Number(form.dataset.revision), notes:data.get('notes'), confirmation_password:data.get('confirmation_password')});
+          const data = new FormData(form), pkg = state.workflows.get(state.selected)?.application_packages?.find(item => item.id === form.dataset.package), capability = pkg?.review_capability;
+          if (!capability) throw new Error('package_review_transition_unavailable');
+          const payload = {reviewer_role:capability.reviewer_role, decision:submitter.value, expected_revision:Number(form.dataset.revision), notes:data.get('notes')};
+          if (capability.requires_password_reauthentication) payload.confirmation_password = data.get('confirmation_password');
+          const result = await post('/api/packages/' + encodeURIComponent(form.dataset.package) + '/review', payload);
           notice.textContent = `${submitter.value === 'approve' ? 'Approval' : 'Rejection'} recorded. Backend status: ${result.status}.`; notice.dataset.tone = 'good';
           state.keepTab = 'package'; await selectJob(state.selected);
         } catch (error) { if (error.message !== 'auth') { notice.textContent = `Not recorded: ${error.message}`; notice.dataset.tone = 'bad'; } }
