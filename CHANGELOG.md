@@ -5,6 +5,7 @@
 - Integrated the reviewed executor contract and archived-alert intake coverage onto the deployed Claude UI lineage without activating or installing the executor.
 - Added per-artifact verified Drive materialization from the package UI and server-advertised Writer, Critic, and password-reauthenticated Chris review transitions.
 - Kept application execution blocked when no distinct server-verified employer apply destination exists; a listing page is never relabeled as an application destination.
+- Expanded full catch-up to archived alerts outside Spam and Trash and moved it to a fresh v5 cursor scope because the Inbox-only v4 scope was already exhausted.
 
 ## 2026-10-10 — v2.3.41 fresh-intake sweep integrity
 
